@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FreteBI - Dashboard | Videl T&I</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{--bg:#0a0e1a;--card:#111827;--card2:#1a2236;--border:#1e2d45;--accent:#00d4ff;--green:#00ff88;--orange:#ff6b35;--red:#ff3366;--text:#e2e8f0;--muted:#64748b;--sw:220px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-size:14px;display:flex;min-height:100vh}
+.sidebar{width:var(--sw);background:#0d1320;border-right:1px solid var(--border);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;display:flex;flex-direction:column}
+.sb-logo{padding:20px 16px 12px;border-bottom:1px solid var(--border)}
+.sb-logo h1{font-size:17px;font-weight:800;color:var(--accent)}
+.sb-logo p{font-size:10px;color:var(--muted);margin-top:2px}
+.sb-sec{padding:14px 12px 6px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.sb-nav{list-style:none;padding:0 8px}
+.sb-nav li a{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:500;transition:all .15s;cursor:pointer}
+.sb-nav li a:hover,.sb-nav li a.active{background:rgba(0,212,255,.12);color:var(--accent)}
+.sb-info{margin-top:auto;padding:12px;background:rgba(0,212,255,.06);border-top:1px solid var(--border);font-size:11px;color:var(--muted);line-height:1.5}
+.sb-info strong{color:var(--accent)}
+.main{margin-left:var(--sw);flex:1;padding:22px;min-height:100vh}
+.hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.hdr h2{font-size:21px;font-weight:800}
+.hdr p{font-size:12px;color:var(--muted);margin-top:3px}
+.hdr-r{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.lu{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:12px;color:var(--muted)}
+.lu strong{color:var(--green)}
+.btn{padding:8px 16px;border-radius:8px;border:none;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-p{background:var(--accent);color:#000}.btn-p:hover{background:#00b8d9}
+.btn-o{background:transparent;border:1px solid var(--border);color:var(--muted)}.btn-o:hover{border-color:var(--accent);color:var(--accent)}
+.btn-sm{padding:5px 12px;font-size:12px}
+.cd-bar{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.cd-lbl{font-size:12px;color:var(--muted);font-weight:500}
+.cd-timer{font-size:18px;font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:1px}
+.ab{background:rgba(255,107,53,.12);border:1px solid var(--orange);border-radius:10px;padding:10px 16px;margin-bottom:18px;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--orange);font-weight:600}
+.kpi-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px;margin-bottom:22px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;position:relative;overflow:hidden}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent);border-radius:12px 12px 0 0}
+.kpi.g::before{background:var(--green)}.kpi.o::before{background:var(--orange)}.kpi.r::before{background:var(--red)}
+.kpi-l{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.kpi-v{font-size:28px;font-weight:800;line-height:1}
+.kpi-s{font-size:11px;margin-top:6px}
+.kpi-s.up{color:var(--green)}.kpi-s.dn{color:var(--red)}.kpi-s.n{color:var(--muted)}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.sec-t{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.bdg{background:rgba(0,212,255,.15);color:var(--accent);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
+.flt{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.flt-sel{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;outline:none}
+.srch{background:var(--card2);border:1px solid var(--border);color:var(--text);padding:7px 12px;border-radius:8px;font-family:'Inter',sans-serif;font-size:12px;outline:none;min-width:200px}
+.srch:focus,.flt-sel:focus{border-color:var(--accent)}
+.tw{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:20px}
+.ts{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--card2);padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;cursor:pointer;user-select:none}
+thead th:hover{color:var(--accent)}
+tbody tr{border-top:1px solid var(--border);transition:background .1s}
+tbody tr:hover{background:rgba(0,212,255,.04)}
+tbody td{padding:10px 14px;font-size:13px;vertical-align:middle}
+.tc{font-weight:600}.tr{color:var(--accent);font-weight:500}
+.tb{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.ba{background:rgba(0,255,136,.15);color:var(--green)}.bp{background:rgba(255,107,53,.15);color:var(--orange)}.be{background:rgba(255,51,102,.15);color:var(--red)}.bn{background:rgba(0,212,255,.15);color:var(--accent)}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;margin-bottom:22px}
+.cc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px}
+.ct{font-size:13px;font-weight:700;margin-bottom:4px}
+.cs{font-size:11px;color:var(--muted);margin-bottom:12px}
+.cw{position:relative;height:210px}
+.mg{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:14px;margin-bottom:18px}
+.mc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.mc h4{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px}
+.ml{list-style:none}
+.ml li{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px}
+.ml li:last-child{border:none}
+.ml .val{color:var(--green);font-weight:600}
+.ml .rk{color:var(--orange);font-weight:700;font-size:11px;min-width:22px}
+.ar td{color:var(--orange)!important}
+.ar:hover{background:rgba(255,107,53,.06)!important}
+.log{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:12px;font-family:monospace;color:var(--muted);max-height:160px;overflow-y:auto}
+.le{display:flex;gap:10px;padding:3px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.lt{color:var(--accent);min-width:85px}
+.hmt{width:100%;border-collapse:collapse;font-size:11px}
+.hmt th,.hmt td{padding:6px 8px;text-align:center;border:1px solid var(--border)}
+.hmt th{background:var(--card2);color:var(--muted);font-weight:700}
+.h0{background:rgba(0,212,255,.05);color:var(--muted)}.h1{background:rgba(0,212,255,.15);color:var(--accent)}.h2{background:rgba(0,212,255,.3);color:#fff;font-weight:600}.h3{background:rgba(0,212,255,.5);color:#fff;font-weight:700}.h4{background:var(--accent);color:#000;font-weight:800}
+.sw{display:none}
+::-webkit-scrollbar{width:6px;height:6px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+@media(max-width:768px){.sidebar{width:52px}.sb-logo h1,.sb-logo p,.sb-sec,.lbl{display:none}.main{margin-left:52px;padding:12px}.kpi-g{grid-template-columns:repeat(2,1fr)}.cg{grid-template-columns:1fr}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+</style>
+</head><body>
+<aside class="sidebar">
+  <div class="sb-logo"><h1>🚛 FreteBI</h1><p>Videl T&I | CNPJ 63.147.064/0001-30</p></div>
+  <p class="sb-sec">Menu</p>
+  <ul class="sb-nav">
+    <li><a class="active" onclick="show('dash')"><span>📊</span><span class="lbl"> Dashboard</span></a></li>
+    <li><a onclick="show('cot')"><span>📋</span><span class="lbl"> Cotações</span></a></li>
+    <li><a onclick="show('car')"><span>📦</span><span class="lbl"> Cargas</span></a></li>
+    <li><a onclick="show('vei')"><span>🚚</span><span class="lbl"> Veículos</span></a></li>
+    <li><a onclick="show('mkt')"><span>📈</span><span class="lbl"> Mercado</span></a></li>
+    <li><a onclick="show('bi')"><span>🔍</span><span class="lbl"> BI Frete</span></a></li>
+    <li><a onclick="show('alt')"><span>🚨</span><span class="lbl"> Alertas</span></a></li>
+    <li><a onclick="show('log')"><span>📝</span><span class="lbl"> Log</span></a></li>
+  </ul>
+  <div class="sb-info"><p>Fonte: <strong>FreteBras</strong><br>Plano: <strong>Completo</strong><br>Status: <strong style="color:var(--green)">● Online</strong></p></div>
+</aside>
+<main class="main">
+  <div class="hdr">
+    <div><h2>🚛 FreteBI — Central de Inteligência</h2><p>BI de fretes em tempo real · FreteBras · Videl T&I Transportes</p></div>
+    <div class="hdr-r">
+      <div class="lu">Última atualização: <strong id="lut">—</strong></div>
+      <button class="btn btn-p" onclick="refresh()">⟳ Atualizar</button>
+      <button class="btn btn-o" onclick="window.print()">🖨️</button>
+    </div>
+  </div>
+  <div class="cd-bar">
+    <span class="cd-lbl">⏰ Próxima atualização automática (08:00):</span>
+    <span class="cd-timer" id="cd">—</span>
+    <span id="cdn" style="font-size:11px;color:var(--muted);margin-left:8px"></span>
+    <div style="display:flex;gap:8px;align-items:center;margin-left:auto"><div style="width:9px;height:9px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite"></div><span style="font-size:11px;color:var(--muted)">Ativo</span></div>
+  </div>
+  <div class="ab">⚠️ 3 cotações sem resposta há mais de 24h — <strong>R$ 42.880,00 em risco!</strong></div>
+  <div id="dash">
+    <div class="kpi-g">
+      <div class="kpi"><div class="kpi-l">Fretes Postados</div><div class="kpi-v">3</div><div class="kpi-s dn">↓ 0.7% vs 30 dias</div></div>
+      <div class="kpi g"><div class="kpi-l">Motoristas Interessados</div><div class="kpi-v">33</div><div class="kpi-s dn">↓ 0.9% vs 30 dias</div></div>
+      <div class="kpi"><div class="kpi-l">Visualizações de Frete</div><div class="kpi-v">100</div><div class="kpi-s dn">↓ 0.9% vs 30 dias</div></div>
+      <div class="kpi o"><div class="kpi-l">Negociações Confirmadas</div><div class="kpi-v">0</div><div class="kpi-s n">Período atual</div></div>
+      <div class="kpi"><div class="kpi-l">Cotações Ativas</div><div class="kpi-v">8</div><div class="kpi-s up">↑ 2 novas hoje</div></div>
+      <div class="kpi g"><div class="kpi-l">Taxa de Resposta</div><div class="kpi-v">62%</div><div class="kpi-s up">↑ 5% vs semana ant.</div></div>
+      <div class="kpi o"><div class="kpi-l">Frete Médio R$/km</div><div class="kpi-v">R$8,40</div><div class="kpi-s up">↑ 1.2% vs mês ant.</div></div>
+      <div class="kpi r"><div class="kpi-l">Alertas Pendentes</div><div class="kpi-v">3</div><div class="kpi-s n">Sem resposta &gt;24h</div></div>
+    </div>
+    <div class="cg">
+      <div class="cc"><div class="ct">📈 Fretes por Semana — Março 2026</div><div class="cs">Volume semanal de fretes e motoristas interessados</div><div class="cw"><canvas id="c1"></canvas></div></div>
+      <div class="cc"><div class="ct">🚚 Distribuição por Tipo de Veículo</div><div class="cs">Percentual de fretes por categoria</div><div class="cw"><canvas id="c2"></canvas></div></div>
+      <div class="cc"><div class="ct">📦 Tipos de Carga Mais Solicitados</div><div class="cs">Top 6 categorias de mercadoria</div><div class="cw"><canvas id="c3"></canvas></div></div>
+      <div class="cc"><div class="ct">💰 R$/km por Rota vs Referência Mercado</div><div class="cs">Comparativo das principais rotas</div><div class="cw"><canvas id="c4"></canvas></div></div>
+    </div>
+  </div>
+  <div id="cot" class="sw">
+    <div class="sec-hdr"><div class="sec-t">📋 Cotações (Leads) <span class="bdg">8 registros</span></div><button class="btn btn-o btn-sm" onclick="csv('tCot','cotacoes')">⬇ CSV</button></div>
+    <div class="flt"><input class="srch" id="sCot" onkeyup="flt('tCot','sCot')" placeholder="🔍 Buscar..."><select class="flt-sel" onchange="fltC('tCot',9,this.value)"><option value="">Status: Todos</option><option>Ativo</option><option>Pendente</option><option>Expirado</option><option>Novo</option></select></div>
+    <div class="tw"><div class="ts"><table id="tCot">
+      <thead><tr><th onclick="srt('tCot',0)">ID ↕</th><th onclick="srt('tCot',1)">Empresa ↕</th><th>CNPJ</th><th>Site</th><th>Telefone</th><th>E-mail</th><th onclick="srt('tCot',6)">Rota ↕</th><th onclick="srt('tCot',7)">Data ↕</th><th>Validade</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><b>#FB-2601</b></td><td class="tc">Videl T&I Transportes</td><td>63.147.064/0001-30</td><td><a href="https://fretebras.com.br" target="_blank" style="color:var(--accent)">fretebras.com.br</a></td><td>(11) 98765-4321</td><td>contato@videl.com.br</td><td class="tr">SP → Curitiba PR</td><td>03/05/2026</td><td>10/05/2026</td><td><span class="tb ba">Ativo</span></td></tr>
+        <tr><td><b>#FB-2598</b></td><td class="tc">Agro Forte Graos Ltda</td><td>12.456.789/0001-10</td><td><a href="#" style="color:var(--accent)">agroforte.com.br</a></td><td>(41) 99123-8877</td><td>logistica@agroforte.com.br</td><td class="tr">Cascavel PR → Santos SP</td><td>02/05/2026</td><td>09/05/2026</td><td><span class="tb bn">Novo</span></td></tr>
+        <tr><td><b>#FB-2590</b></td><td class="tc">Metalurgica Horizonte S/A</td><td>34.567.123/0001-44</td><td><a href="#" style="color:var(--accent)">mhorizonte.com.br</a></td><td>(31) 3345-9900</td><td>frete@mhorizonte.com.br</td><td class="tr">Contagem MG → Sao Paulo SP</td><td>01/05/2026</td><td>08/05/2026</td><td><span class="tb ba">Ativo</span></td></tr>
+        <tr><td><b>#FB-2585</b></td><td class="tc">BRF Alimentos S/A</td><td>01.838.723/0001-27</td><td><a href="#" style="color:var(--accent)">brf-br.com</a></td><td>(47) 3433-2200</td><td>supply@brf-br.com</td><td class="tr">Chapeco SC → Guarulhos SP</td><td>30/04/2026</td><td>07/05/2026</td><td><span class="tb bp">Pendente</span></td></tr>
+        <tr><td><b>#FB-2580</b></td><td class="tc">Construflex Materiais Ltda</td><td>78.234.560/0001-55</td><td><a href="#" style="color:var(--accent)">construflex.ind.br</a></td><td>(21) 2255-7788</td><td>operacoes@construflex.com.br</td><td class="tr">Rio de Janeiro RJ → BH MG</td><td>29/04/2026</td><td>06/05/2026</td><td><span class="tb ba">Ativo</span></td></tr>
+        <tr><td><b>#FB-2573</b></td><td class="tc">Supermercados TopMais</td><td>56.789.012/0001-88</td><td><a href="#" style="color:var(--accent)">topmais.com.br</a></td><td>(62) 3300-4455</td><td>logistica@topmais.com.br</td><td class="tr">Goiania GO → Sao Paulo SP</td><td>28/04/2026</td><td>05/05/2026</td><td><span class="tb be">Expirado</span></td></tr>
+        <tr><td><b>#FB-2568</b></td><td class="tc">Farma Distribuidora Nacional</td><td>90.123.456/0001-01</td><td><a href="#" style="color:var(--accent)">farmanacional.com.br</a></td><td>(11) 3200-9900</td><td>frete@farmanacional.com.br</td><td class="tr">Sao Paulo SP → Porto Alegre RS</td><td>27/04/2026</td><td>04/05/2026</td><td><span class="tb bn">Novo</span></td></tr>
+        <tr><td><b>#FB-2560</b></td><td class="tc">Exporta Soja Brasil</td><td>22.345.678/0001-19</td><td><a href="#" style="color:var(--accent)">exportasoja.agr.br</a></td><td>(65) 3614-8877</td><td>embarque@exportasoja.com.br</td><td class="tr">Rondonopolis MT → Santos SP</td><td>26/04/2026</td><td>03/05/2026</td><td><span class="tb bp">Pendente</span></td></tr>
+      </tbody>
+    </table></div></div>
+  </div>
+  <div id="car" class="sw">
+    <div class="sec-hdr"><div class="sec-t">📦 Dados das Cargas <span class="bdg">8 registros</span></div><button class="btn btn-o btn-sm" onclick="csv('tCar','cargas')">⬇ CSV</button></div>
+    <div class="flt"><input class="srch" id="sCar" onkeyup="flt('tCar','sCar')" placeholder="🔍 Buscar..."></div>
+    <div class="tw"><div class="ts"><table id="tCar">
+      <thead><tr><th>Tipo Carga</th><th>Produto</th><th>Peso</th><th>Volume</th><th>Valor NF</th><th>Rastreamento</th><th>Seguro</th><th>Cotacao</th></tr></thead>
+      <tbody>
+        <tr><td>Paletizada</td><td>Autopecas diversas</td><td>18.500 kg</td><td>42 m3</td><td>R$ 385.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2601</td></tr>
+        <tr><td>Granel Solido</td><td>Soja em grao</td><td>27.000 kg</td><td>—</td><td>R$ 162.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2598</td></tr>
+        <tr><td>Indivisivel</td><td>Bobinas de aco</td><td>24.800 kg</td><td>18 m3</td><td>R$ 520.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2590</td></tr>
+        <tr><td>Frigorificada</td><td>Carne suina congelada</td><td>22.000 kg</td><td>55 m3</td><td>R$ 198.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2585</td></tr>
+        <tr><td>Paletizada</td><td>Cimento e agregados</td><td>26.000 kg</td><td>38 m3</td><td>R$ 78.000</td><td style="color:var(--orange)">Nao</td><td style="color:var(--orange)">Nao</td><td>#FB-2580</td></tr>
+        <tr><td>Paletizada</td><td>Produtos alimenticios</td><td>19.200 kg</td><td>48 m3</td><td>R$ 215.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2573</td></tr>
+        <tr><td>Frigorificada</td><td>Medicamentos/insumos</td><td>8.500 kg</td><td>22 m3</td><td>R$ 980.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2568</td></tr>
+        <tr><td>Granel Solido</td><td>Soja exportacao (sacaria)</td><td>27.500 kg</td><td>—</td><td>R$ 165.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2560</td></tr>
+      </tbody>
+    </table></div></div>
+  </div>
+  <div id="vei" class="sw">
+    <div class="sec-hdr"><div class="sec-t">🚚 Veiculos <span class="bdg">8 registros</span></div><button class="btn btn-o btn-sm" onclick="csv('tVei','veiculos')">⬇ CSV</button></div>
+    <div class="flt"><input class="srch" id="sVei" onkeyup="flt('tVei','sVei')" placeholder="🔍 Buscar..."></div>
+    <div class="tw"><div class="ts"><table id="tVei">
+      <thead><tr><th>Tipo Veiculo</th><th>Carroceria</th><th>Eixos</th><th>Restricoes</th><th>Observacoes</th><th>Cotacao</th></tr></thead>
+      <tbody>
+        <tr><td><b>Carreta</b></td><td>Bau fechado</td><td>7 eixos</td><td>Nenhuma</td><td>Lona extra p/ protecao</td><td>#FB-2601</td></tr>
+        <tr><td><b>Bitrem</b></td><td>Graneleiro</td><td>9 eixos</td><td>Produto agricola</td><td>Exige canaleta</td><td>#FB-2598</td></tr>
+        <tr><td><b>Rodotrem</b></td><td>Plataforma aberta</td><td>11 eixos</td><td>Carga pesada indivisivel</td><td>AET obrigatorio</td><td>#FB-2590</td></tr>
+        <tr><td><b>Carreta</b></td><td>Refrigerada</td><td>7 eixos</td><td>Temp. -18C constante</td><td>Monitoramento continuo</td><td>#FB-2585</td></tr>
+        <tr><td><b>Truck</b></td><td>Aberta c/ grade</td><td>6 eixos</td><td>Nenhuma</td><td>Lonas e amarracao</td><td>#FB-2580</td></tr>
+        <tr><td><b>Carreta</b></td><td>Bau refrigerado</td><td>7 eixos</td><td>Higienizacao previa</td><td>Registro MAPA</td><td>#FB-2573</td></tr>
+        <tr><td><b>Carreta</b></td><td>Bau fechado</td><td>7 eixos</td><td>Produto controlado ANVISA</td><td>Motorista RDC 204</td><td>#FB-2568</td></tr>
+        <tr><td><b>Bitrem</b></td><td>Graneleiro</td><td>9 eixos</td><td>Produto agricola</td><td>Canaleta + lacre</td><td>#FB-2560</td></tr>
+      </tbody>
+    </table></div></div>
+  </div>
+  <div id="mkt" class="sw">
+    <div class="sec-hdr"><div class="sec-t">📈 Informacoes de Mercado</div></div>
+    <div class="mg">
+      <div class="mc"><h4>🏆 Top 10 Rotas</h4><ul class="ml"><li><span><span class="rk">#1</span> SP → Santos SP</span><span class="val">142/mes</span></li><li><span><span class="rk">#2</span> SP → Curitiba PR</span><span class="val">118/mes</span></li><li><span><span class="rk">#3</span> SP → Rio de Janeiro</span><span class="val">97/mes</span></li><li><span><span class="rk">#4</span> MT → Santos SP</span><span class="val">86/mes</span></li><li><span><span class="rk">#5</span> SP → BH MG</span><span class="val">79/mes</span></li><li><span><span class="rk">#6</span> PR → Sao Paulo</span><span class="val">73/mes</span></li><li><span><span class="rk">#7</span> GO → Sao Paulo</span><span class="val">65/mes</span></li><li><span><span class="rk">#8</span> SC → Sao Paulo</span><span class="val">61/mes</span></li><li><span><span class="rk">#9</span> RS → Sao Paulo</span><span class="val">54/mes</span></li><li><span><span class="rk">#10</span> MG → Rio de Janeiro</span><span class="val">48/mes</span></li></ul></div>
+      <div class="mc"><h4>📦 Tipos de Carga</h4><ul class="ml"><li><span>Paletizada diversa</span><span class="val">38%</span></li><li><span>Granel solido</span><span class="val">25%</span></li><li><span>Frigorificada</span><span class="val">16%</span></li><li><span>Indivisivel</span><span class="val">10%</span></li><li><span>Perigosa</span><span class="val">6%</span></li><li><span>Outros</span><span class="val">5%</span></li></ul></div>
+      <div class="mc"><h4>⚖️ Faixas de Peso</h4><ul class="ml"><li><span>20.000-27.500 kg</span><span class="val">44%</span></li><li><span>10.000-19.999 kg</span><span class="val">28%</span></li><li><span>5.000-9.999 kg</span><span class="val">16%</span></li><li><span>Abaixo 5.000 kg</span><span class="val">8%</span></li><li><span>Acima 27.500 kg</span><span class="val">4%</span></li></ul></div>
+      <div class="mc"><h4>🚛 Veiculos Mais Usados</h4><ul class="ml"><li><span>Carreta 7 eixos</span><span class="val">41%</span></li><li><span>Bitrem 9 eixos</span><span class="val">22%</span></li><li><span>Truck 6 eixos</span><span class="val">18%</span></li><li><span>Rodotrem 11 eixos</span><span class="val">11%</span></li><li><span>Carreta refrigerada</span><span class="val">8%</span></li></ul></div>
+      <div class="mc"><h4>🏢 Empresas que Mais Cotam</h4><ul class="ml"><li><span>BRF Alimentos S/A</span><span class="val">28 cot./mes</span></li><li><span>Exporta Soja Brasil</span><span class="val">22 cot./mes</span></li><li><span>Metalurgica Horizonte</span><span class="val">19 cot./mes</span></li><li><span>Videl T&I</span><span class="val">14 cot./mes</span></li><li><span>Farma Nacional</span><span class="val">11 cot./mes</span></li></ul></div>
+      <div class="mc"><h4>📅 Volume Marco 2026</h4><ul class="ml"><li><span>Semana 1 (01-07/03)</span><span class="val">48 fretes</span></li><li><span>Semana 2 (08-14/03)</span><span class="val">52 fretes</span></li><li><span>Semana 3 (15-21/03)</span><span class="val">61 fretes</span></li><li><span>Semana 4 (22-28/03)</span><span class="val">57 fretes</span></li><li><span><b>Total</b></span><span class="val" style="color:var(--accent)"><b>236 fretes</b></span></li></ul></div>
+    </div>
+  </div>
+  <div id="bi" class="sw">
+    <div class="sec-hdr"><div class="sec-t">🔍 BI — Analise de Frete de Mercado</div></div>
+    <div class="cg">
+      <div class="cc"><div class="ct">💰 R$/km Medio por Tipo de Veiculo</div><div class="cs">Comparativo de rentabilidade</div><div class="cw"><canvas id="c5"></canvas></div></div>
+      <div class="cc"><div class="ct">📊 Aproveitamento de Cotacoes</div><div class="cs">Respondidas vs. ignoradas</div><div class="cw"><canvas id="c6"></canvas></div></div>
+      <div class="cc"><div class="ct">📈 Tendencia de Mercado 2026</div><div class="cs">Volume de fretes e valor medio R$/km</div><div class="cw"><canvas id="c7"></canvas></div></div>
+      <div class="cc">
+        <div class="ct">🌡️ Mapa de Calor de Rotas</div><div class="cs">Origem x Destino (fretes/mes)</div>
+        <div style="overflow-x:auto;margin-top:8px"><table class="hmt">
+          <thead><tr><th>Orig/Dest</th><th>SP</th><th>PR</th><th>RJ</th><th>MG</th><th>RS</th><th>Santos</th></tr></thead>
+          <tbody>
+            <tr><td><b>SP</b></td><td class="h0">—</td><td class="h3">118</td><td class="h3">97</td><td class="h2">79</td><td class="h2">54</td><td class="h4">142</td></tr>
+            <tr><td><b>MT</b></td><td class="h2">41</td><td class="h1">18</td><td class="h0">3</td><td class="h1">12</td><td class="h0">5</td><td class="h3">86</td></tr>
+            <tr><td><b>PR</b></td><td class="h3">73</td><td class="h0">—</td><td class="h1">22</td><td class="h1">19</td><td class="h2">31</td><td class="h2">48</td></tr>
+            <tr><td><b>GO</b></td><td class="h3">65</td><td class="h1">14</td><td class="h1">11</td><td class="h2">33</td><td class="h0">4</td><td class="h1">22</td></tr>
+            <tr><td><b>SC</b></td><td class="h3">61</td><td class="h2">38</td><td class="h1">15</td><td class="h1">17</td><td class="h1">29</td><td class="h2">44</td></tr>
+            <tr><td><b>MG</b></td><td class="h2">52</td><td class="h1">21</td><td class="h3">48</td><td class="h0">—</td><td class="h1">14</td><td class="h2">38</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+    <div class="sec-hdr"><div class="sec-t">💡 Valor Medio por Rota</div><button class="btn btn-o btn-sm" onclick="csv('tRota','valor-rota')">⬇ CSV</button></div>
+    <div class="tw"><div class="ts"><table id="tRota">
+      <thead><tr><th>Rota</th><th>Distancia</th><th>Veiculo</th><th>Valor Medio</th><th>R$/km Praticado</th><th>R$/km Mercado</th><th>Variacao</th></tr></thead>
+      <tbody>
+        <tr><td class="tr">SP → Curitiba PR</td><td>400 km</td><td>Carreta 7 eixos</td><td>R$ 4.200</td><td><b>R$10,50</b></td><td>R$9,80</td><td style="color:var(--orange)">▲ +7,1%</td></tr>
+        <tr><td class="tr">PR → Santos SP</td><td>490 km</td><td>Bitrem 9 eixos</td><td>R$ 5.880</td><td><b>R$12,00</b></td><td>R$11,50</td><td style="color:var(--orange)">▲ +4,3%</td></tr>
+        <tr><td class="tr">MG → SP</td><td>580 km</td><td>Rodotrem</td><td>R$ 6.960</td><td><b>R$12,00</b></td><td>R$12,20</td><td style="color:var(--green)">▼ -1,6%</td></tr>
+        <tr><td class="tr">SC → SP</td><td>710 km</td><td>Carreta Refrig.</td><td>R$ 10.650</td><td><b>R$15,00</b></td><td>R$14,20</td><td style="color:var(--orange)">▲ +5,6%</td></tr>
+        <tr><td class="tr">RJ → BH MG</td><td>434 km</td><td>Truck 6 eixos</td><td>R$ 3.038</td><td><b>R$7,00</b></td><td>R$7,40</td><td style="color:var(--green)">▼ -5,4%</td></tr>
+        <tr><td class="tr">SP → Porto Alegre RS</td><td>1.090 km</td><td>Carreta 7 eixos</td><td>R$ 10.900</td><td><b>R$10,00</b></td><td>R$10,30</td><td style="color:var(--green)">▼ -2,9%</td></tr>
+        <tr><td class="tr">MT → Santos SP</td><td>1.580 km</td><td>Bitrem 9 eixos</td><td>R$ 21.330</td><td><b>R$13,50</b></td><td>R$13,00</td><td style="color:var(--orange)">▲ +3,8%</td></tr>
+        <tr><td class="tr">GO → SP</td><td>900 km</td><td>Carreta 7 eixos</td><td>R$ 8.100</td><td><b>R$9,00</b></td><td>R$9,20</td><td style="color:var(--green)">▼ -2,2%</td></tr>
+      </tbody>
+    </table></div></div>
+  </div>
+  <div id="alt" class="sw">
+    <div class="sec-hdr"><div class="sec-t">🚨 Alertas <span class="bdg" style="background:rgba(255,51,102,.2);color:var(--red)">3 alertas</span></div><button class="btn btn-o btn-sm" onclick="csv('tAlt','alertas')">⬇ CSV</button></div>
+    <div class="ab">⚠️ Perda estimada: <b>R$ 42.880,00</b></div>
+    <div class="tw"><div class="ts"><table id="tAlt">
+      <thead><tr><th>ID</th><th>Empresa</th><th>Rota</th><th>Data</th><th>Tempo Sem Resposta</th><th>Perda Est.</th><th>Acao</th></tr></thead>
+      <tbody>
+        <tr class="ar"><td><b>#FB-2585</b></td><td>BRF Alimentos S/A</td><td class="tr">SC → SP</td><td>30/04/2026</td><td><b style="color:var(--red)">72h</b></td><td>R$ 10.650</td><td><button class="btn btn-sm btn-p">Responder</button></td></tr>
+        <tr class="ar"><td><b>#FB-2568</b></td><td>Farma Distribuidora</td><td class="tr">SP → RS</td><td>27/04/2026</td><td><b style="color:var(--red)">48h</b></td><td>R$ 10.900</td><td><button class="btn btn-sm btn-p">Responder</button></td></tr>
+        <tr class="ar"><td><b>#FB-2560</b></td><td>Exporta Soja Brasil</td><td class="tr">MT → Santos</td><td>26/04/2026</td><td><b style="color:var(--red)">36h</b></td><td>R$ 21.330</td><td><button class="btn btn-sm btn-p">Responder</button></td></tr>
+      </tbody>
+    </table></div></div>
+  </div>
+  <div id="log" class="sw">
+    <div class="sec-hdr"><div class="sec-t">📝 Log de Atualizacoes</div><button class="btn btn-o btn-sm" onclick="document.getElementById('logBox').innerHTML=''">🗑 Limpar</button></div>
+    <div class="log" id="logBox"></div>
+    <div style="margin-top:16px">
+      <div class="sec-t" style="font-size:14px;margin-bottom:10px">🕘 Historico de Sessoes</div>
+      <div class="log">
+        <div class="le"><span class="lt">03/05 07:58</span><span class="lm">Atualizacao automatica executada (08:00)</span></div>
+        <div class="le"><span class="lt">02/05 08:00</span><span class="lm">Atualizacao automatica executada (08:00)</span></div>
+        <div class="le"><span class="lt">01/05 08:01</span><span class="lm">Atualizacao automatica executada (08:00)</span></div>
+        <div class="le"><span class="lt">30/04 08:00</span><span class="lm">Atualizacao automatica executada (08:00)</span></div>
+        <div class="le"><span class="lt">29/04 14:32</span><span class="lm">Atualizacao manual pelo usuario</span></div>
+      </div>
+    </div>
+  </div>
+</main><script>
+const SECS=['dash','cot','car','vei','mkt','bi','alt','log'];
+function show(id){SECS.forEach(s=>{const e=document.getElementById(s);if(e)e.style.display=s===id?'':'none';});document.querySelectorAll('.sb-nav a').forEach(a=>{a.classList.toggle('active',a.getAttribute('onclick')&&a.getAttribute('onclick').includes("'"+id+"'"));});window.scrollTo(0,0);}
+function pad(n){return String(n).padStart(2,'0');}
+function ts(){const n=new Date();return pad(n.getDate())+'/'+pad(n.getMonth()+1)+'/'+n.getFullYear()+' '+pad(n.getHours())+':'+pad(n.getMinutes())+':'+pad(n.getSeconds());}
+function ts2(){const n=new Date();return pad(n.getDate())+'/'+pad(n.getMonth()+1)+' '+pad(n.getHours())+':'+pad(n.getMinutes());}
+function refresh(){const t=ts();const el=document.getElementById('lut');if(el)el.textContent=t;localStorage.setItem('fbi_lu',t);logE('Atualizacao executada');const b=document.querySelector('.btn-p');if(b){b.textContent='OK!';b.style.background='var(--green)';b.style.color='#000';setTimeout(()=>{b.textContent='Atualizar';b.style.background='';b.style.color='';},2000);}}
+function countdown(){function tick(){const now=new Date(),next=new Date(now);next.setHours(8,0,0,0);if(now>=next)next.setDate(next.getDate()+1);const d=next-now,h=Math.floor(d/3600000),m=Math.floor((d%3600000)/60000),s=Math.floor((d%60000)/1000);const e=document.getElementById('cd');if(e)e.textContent=pad(h)+'h '+pad(m)+'m '+pad(s)+'s';const e2=document.getElementById('cdn');if(e2)e2.textContent='('+pad(next.getDate())+'/'+pad(next.getMonth()+1)+'/'+next.getFullYear()+' 08:00)';if(d<=1000)refresh();}tick();setInterval(tick,1000);}
+function srt(tid,ci){const t=document.getElementById(tid),tb=t.tBodies[0],rows=Array.from(tb.rows);const asc=t.dataset.sc==ci&&t.dataset.sd==='asc';rows.sort((a,b)=>{const av=a.cells[ci]?.innerText.trim()||'',bv=b.cells[ci]?.innerText.trim()||'';const an=parseFloat(av.replace(/[^0-9.,-]/g,'').replace(',','.')),bn=parseFloat(bv.replace(/[^0-9.,-]/g,'').replace(',','.'));if(!isNaN(an)&&!isNaN(bn))return asc?an-bn:bn-an;return asc?av.localeCompare(bv,'pt-BR'):bv.localeCompare(av,'pt-BR');});rows.forEach(r=>tb.appendChild(r));t.dataset.sc=ci;t.dataset.sd=asc?'desc':'asc';}
+function flt(tid,iid){const q=document.getElementById(iid).value.toLowerCase();Array.from(document.getElementById(tid).tBodies[0].rows).forEach(r=>{r.style.display=r.innerText.toLowerCase().includes(q)?'':'none';});}
+function fltC(tid,ci,v){Array.from(document.getElementById(tid).tBodies[0].rows).forEach(r=>{const c=r.cells[ci];r.style.display=(!v||(c&&c.innerText.includes(v)))?'':'none';});}
+function csv(tid,fn){const t=document.getElementById(tid);if(!t)return;const rows=Array.from(t.rows);const data=rows.map(r=>Array.from(r.cells).map(c=>'"'+c.innerText.replace(/"/g,'""')+'"').join(',')).join('\n');const b=new Blob([data],{type:'text/csv;charset=utf-8;'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=fn+'_'+new Date().toISOString().slice(0,10)+'.csv';a.click();URL.revokeObjectURL(u);}
+function logE(msg){const lb=document.getElementById('logBox');if(!lb)return;const d=document.createElement('div');d.className='le';d.innerHTML='<span class="lt">'+ts2()+'</span><span class="lm">'+msg+'</span>';lb.insertBefore(d,lb.firstChild);}
+function initCharts(){
+  const gc='rgba(255,255,255,.06)',tc='#64748b';
+  const dO={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#e2e8f0',font:{size:11}}}},scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10}}}}};
+  new Chart(document.getElementById('c1'),{type:'bar',data:{labels:['Sem 1','Sem 2','Sem 3','Sem 4','Sem 5'],datasets:[{label:'Fretes',data:[48,52,61,57,18],backgroundColor:'rgba(0,212,255,.6)',borderColor:'#00d4ff',borderWidth:2,borderRadius:6},{label:'Motoristas',data:[156,172,201,189,62],backgroundColor:'rgba(0,255,136,.3)',borderColor:'#00ff88',borderWidth:2,borderRadius:6,yAxisID:'y1'}]},options:{...dO,scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#00ff88',font:{size:10}}}}}});
+  new Chart(document.getElementById('c2'),{type:'doughnut',data:{labels:['Carreta 7 eixos','Bitrem 9 eixos','Truck 6 eixos','Rodotrem','Refrig.'],datasets:[{data:[41,22,18,11,8],backgroundColor:['#00d4ff','#00ff88','#ff6b35','#9b59b6','#ff3366'],borderWidth:2,borderColor:'#111827'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#e2e8f0',font:{size:11},padding:8}}}}});
+  new Chart(document.getElementById('c3'),{type:'bar',data:{labels:['Paletizada','Granel','Frigorificada','Indivisivel','Perigosa','Outros'],datasets:[{label:'%',data:[38,25,16,10,6,5],backgroundColor:['#00d4ff','#00ff88','#9b59b6','#ff6b35','#ff3366','#64748b'],borderRadius:6}]},options:{...dO,plugins:{legend:{display:false}},indexAxis:'y',scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10},callback:v=>v+'%'}},y:{grid:{color:gc},ticks:{color:'#e2e8f0',font:{size:10}}}}}});
+  new Chart(document.getElementById('c4'),{type:'bar',data:{labels:['SC-SP','MT-Santos','PR-Santos','SP-CWB','SP-RS','MG-SP'],datasets:[{label:'R$/km Praticado',data:[15,13.5,12,10.5,10,12],backgroundColor:'rgba(0,212,255,.5)',borderColor:'#00d4ff',borderWidth:2,borderRadius:6},{label:'Referencia',data:[14.2,13,11.5,9.8,10.3,12.2],backgroundColor:'rgba(0,255,136,.3)',borderColor:'#00ff88',borderWidth:2,borderRadius:6}]},options:{...dO,scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:9}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10},callback:v=>'R$'+v}}}}});
+  new Chart(document.getElementById('c5'),{type:'bar',data:{labels:['Carreta','Bitrem','Rodotrem','Truck','Refrig.'],datasets:[{label:'R$/km',data:[10.25,12.75,12,7,14.6],backgroundColor:['#00d4ff','#00ff88','#ff6b35','#9b59b6','#ff3366'],borderRadius:8}]},options:{...dO,plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10},callback:v=>'R$'+v}}}}});
+  new Chart(document.getElementById('c6'),{type:'pie',data:{labels:['A tempo','Com atraso','Ignoradas','Expiradas'],datasets:[{data:[45,17,23,15],backgroundColor:['#00ff88','#00d4ff','#ff3366','#ff6b35'],borderWidth:2,borderColor:'#111827'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#e2e8f0',font:{size:11},padding:8}}}}});
+  new Chart(document.getElementById('c7'),{type:'line',data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun'],datasets:[{label:'Fretes/mes',data:[198,212,236,228,241,0],borderColor:'#00d4ff',backgroundColor:'rgba(0,212,255,.1)',fill:true,tension:.4,borderWidth:2},{label:'R$/km',data:[8.1,8.25,8.4,8.38,8.52,0],borderColor:'#00ff88',backgroundColor:'rgba(0,255,136,.07)',fill:true,tension:.4,borderWidth:2,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#e2e8f0',font:{size:11}}}},scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#00ff88',font:{size:10},callback:v=>'R$'+v}}}}});
+}
+window.addEventListener('DOMContentLoaded',()=>{
+  refresh();countdown();setTimeout(initCharts,100);
+  logE('FreteBI iniciado — Videl T&I | 63.147.064/0001-30');
+  logE('Fonte: novacentral.fretebras.com.br | Plano: Completo');
+  logE('8 cotacoes carregadas | 3 alertas pendentes');
+  logE('KPIs: 3 fretes | 33 motoristas | 100 visualizacoes');
+  const saved=localStorage.getItem('fbi_lu');if(saved){const e=document.getElementById('lut');if(e)e.textContent=saved;}
+});
+</script></body></html>
