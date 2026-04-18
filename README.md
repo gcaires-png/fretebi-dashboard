@@ -1,2 +1,2 @@
-# fretebi-dashboard
-🚛 FreteBI — Dashboard de Business Intelligence de Fetes | Videl T&amp;I | FreteBras
+# fretebi-sistema
+🚛 FreteBI — Sistema de Business Intelligence de Fretes | Videl T&amp;I | FreteBras
