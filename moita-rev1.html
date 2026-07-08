@@ -300,7 +300,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
           <div class="cm-avatar">🤖</div>
           <div class="cm-body">
             <div class="cm-name">MOITA REV1</div>
-            <div class="cm-text">Olá! Sou o Moita Rev1, seu analista de logística virtual. Estou monitorando <b>8 cotações ativas</b>, com <b>3 alertas pendentes</b>. Posso buscar motoristas, cruzar cotações, verificar documentos no Gmail ou emitir docs via Bsoft. O que precisa?</div>
+            <div class="cm-text">Olá! Sou o Moita Rev1, analista de logística virtual da Videl T&L. Opero via <b>logistica@videltel.com.br</b>.<br><br>Estou monitorando <b>8 cotações ativas</b>, com <b>3 alertas pendentes</b>. Posso buscar motoristas, cruzar cotações, verificar Gmail e criar <b>rascunhos de CT-e no Bsoft</b> para revisão humana. O que precisa?</div>
           </div>
         </div>
       </div>
@@ -413,7 +413,8 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       <div class="card-t" style="font-size:18px">📄 Gestão de Documentos (Bsoft)</div>
       <div style="display:flex;gap:8px">
         <button class="btn btn-p btn-sm" onclick="addChat('Listar documentos pendentes de emissão no Bsoft')">📋 Pendentes</button>
-        <button class="btn btn-g btn-sm" onclick="addChat('Emitir próximo documento pendente no Bsoft')">+ Emitir Doc</button>
+        <button class="btn btn-g btn-sm" onclick="addChat('Criar rascunho de CT-e no Bsoft para revisão humana')">+ Rascunho CT-e</button>
+        <a href="https://cte.bsoft.app" target="_blank" class="btn btn-o btn-sm">🔗 Abrir Bsoft</a>
       </div>
     </div>
 
@@ -638,7 +639,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       <div class="conn"><div class="conn-icon">🏦</div><div class="conn-name">Banco PJ</div><div class="conn-st on">● Conectado</div></div>
       <div class="conn"><div class="conn-icon">🎨</div><div class="conn-name">Miro</div><div class="conn-st on">● Conectado</div></div>
       <div class="conn"><div class="conn-icon">🚛</div><div class="conn-name">FreteBras</div><div class="conn-st" style="color:var(--orange)">● Manual</div></div>
-      <div class="conn"><div class="conn-icon">📋</div><div class="conn-name">Bsoft</div><div class="conn-st" style="color:var(--orange)">● Manual</div></div>
+      <div class="conn" onclick="window.open('https://cte.bsoft.app','_blank')"><div class="conn-icon">📋</div><div class="conn-name">Bsoft CT-e</div><div class="conn-st" style="color:var(--accent)">● API REST</div></div>
       <div class="conn"><div class="conn-icon">🌐</div><div class="conn-name">Videl Platform</div><div class="conn-st on">● Online</div></div>
     </div>
   </div>
@@ -653,6 +654,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
         <ul class="op-list" style="font-size:13px">
           <li class="op-item"><div class="op-info"><div class="op-title" style="color:var(--muted)">Nome</div><div class="op-desc" style="color:var(--text);font-weight:600">Moita Rev1</div></div></li>
           <li class="op-item"><div class="op-info"><div class="op-title" style="color:var(--muted)">Função</div><div class="op-desc" style="color:var(--text);font-weight:600">Analista de Logística Virtual</div></div></li>
+          <li class="op-item"><div class="op-info"><div class="op-title" style="color:var(--muted)">E-mail Operacional</div><div class="op-desc" style="color:var(--text);font-weight:600">logistica@videltel.com.br</div></div></li>
           <li class="op-item"><div class="op-info"><div class="op-title" style="color:var(--muted)">Empresa</div><div class="op-desc" style="color:var(--text);font-weight:600">Videl T&I Transportes</div></div></li>
           <li class="op-item"><div class="op-info"><div class="op-title" style="color:var(--muted)">CNPJ</div><div class="op-desc" style="color:var(--text);font-weight:600">63.147.064/0001-30</div></div></li>
           <li class="op-item"><div class="op-info"><div class="op-title" style="color:var(--muted)">Versão</div><div class="op-desc" style="color:var(--text);font-weight:600">1.0.0</div></div></li>
@@ -728,8 +730,10 @@ function generateResponse(msg){
     return 'Cruzamento de dados em andamento...<br><br><b>Resultado:</b><br>• 8 cotações analisadas<br>• 18 motoristas compatíveis identificados<br>• 3 matches diretos (rota + veículo + disponibilidade)<br><br>Veja detalhes na aba <b>💰 Cotações</b>.';
   if(m.includes('gmail')||m.includes('e-mail')||m.includes('email'))
     return 'Verificando Gmail... Buscando e-mails com palavras-chave de logística (CT-e, MDF-e, NF, frete, cotação, embarque).<br><br>Vá até a aba <b>📧 Gmail</b> e clique em "Sincronizar" para ver os resultados em tempo real.';
+  if(m.includes('rascunho')||m.includes('draft'))
+    return '📝 <b>Fluxo de Rascunho CT-e (Bsoft):</b><br><br>1. Eu (Moita) preencho os dados do CT-e via API Bsoft<br>2. Salvo como <b>RASCUNHO</b> na plataforma<br>3. Analista humano acessa <a href="https://cte.bsoft.app" target="_blank" style="color:var(--accent)">cte.bsoft.app</a> para <b>revisar</b><br>4. Humano aprova e <b>emite</b> oficialmente para SEFAZ<br><br>Qual operação devo preparar o rascunho?';
   if(m.includes('emitir')||m.includes('bsoft')||m.includes('dacte')||m.includes('ct-e')||m.includes('mdf'))
-    return 'Para emissão de documentos no Bsoft:<br><br>📋 <b>Pendentes:</b><br>• DACTE ref. CT-e #42891 (SP→Curitiba)<br>• MDF-e Op. #FB-2601<br>• CT-e Op. #FB-2598 (aguarda motorista)<br>• NFS-e Op. #FB-2590 (falta dados fiscais)<br><br>Acesse o Bsoft para emitir. Registrarei automaticamente quando concluído.';
+    return 'Documentos no Bsoft (<a href="https://cte.bsoft.app" target="_blank" style="color:var(--accent)">cte.bsoft.app</a>):<br><br>📋 <b>Rascunhos para revisão humana:</b><br>• DACTE ref. CT-e #42891 (SP→Curitiba)<br>• MDF-e Op. #FB-2601<br><br>⏳ <b>Aguardando dados:</b><br>• CT-e Op. #FB-2598 (aguarda motorista)<br>• NFS-e Op. #FB-2590 (falta dados fiscais)<br><br>⚠️ Lembrete: Eu crio rascunhos, o analista humano revisa e emite.';
   if(m.includes('relatório')||m.includes('relatorio'))
     return 'Gerando relatório...<br><br><b>📊 Resumo do Dia — 08/07/2026:</b><br>• 8 cotações ativas (2 novas)<br>• 3 operações em andamento<br>• 12 documentos emitidos no mês<br>• 3 alertas pendentes (R$ 42.880 em risco)<br>• 5 motoristas contratados no mês<br><br>Deseja que eu envie para a equipe via Slack?';
   if(m.includes('slack'))
