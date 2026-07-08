@@ -314,39 +314,134 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
   <!-- ========== MOTORISTAS ========== -->
   <div id="motoristas" class="sw">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-      <div class="card-t" style="font-size:18px">🚛 Gestão de Motoristas</div>
+      <div class="card-t" style="font-size:18px">🚛 Gestão de Motoristas & Geolocalização</div>
       <div style="display:flex;gap:8px">
-        <input class="chat-input" style="display:contents"><input type="text" id="sMotor" placeholder="🔍 Buscar motorista..." style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;outline:none;width:250px" onkeyup="fltTbl('tMotor',this.value)"></div>
+        <input type="text" id="sMotor" placeholder="🔍 Buscar motorista..." style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;outline:none;width:250px" onkeyup="fltTbl('tMotor',this.value)">
         <button class="btn btn-p btn-sm" onclick="addChat('Buscar novos motoristas disponíveis na região')">+ Buscar Novos</button>
       </div>
     </div>
 
-    <div class="grid-3" style="margin-bottom:20px">
-      <div class="card kpi" style="border-top:3px solid var(--accent)">
-        <div class="kpi-v" style="color:var(--accent);font-size:24px">33</div>
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="card kpi" style="border-top:3px solid var(--accent);padding:14px">
+        <div class="kpi-v" style="color:var(--accent);font-size:22px">33</div>
         <div class="kpi-l">Motoristas Interessados</div>
       </div>
-      <div class="card kpi" style="border-top:3px solid var(--green)">
-        <div class="kpi-v" style="color:var(--green);font-size:24px">5</div>
+      <div class="card kpi" style="border-top:3px solid var(--green);padding:14px">
+        <div class="kpi-v" style="color:var(--green);font-size:22px">5</div>
         <div class="kpi-l">Contratados (mês)</div>
       </div>
-      <div class="card kpi" style="border-top:3px solid var(--purple)">
-        <div class="kpi-v" style="color:var(--purple);font-size:24px">12</div>
+      <div class="card kpi" style="border-top:3px solid var(--purple);padding:14px">
+        <div class="kpi-v" style="color:var(--purple);font-size:22px">12</div>
         <div class="kpi-l">Na Base Videl</div>
+      </div>
+      <div class="card kpi" style="border-top:3px solid var(--orange);padding:14px">
+        <div class="kpi-v" style="color:var(--orange);font-size:22px">4</div>
+        <div class="kpi-l">Disponíveis na Região</div>
       </div>
     </div>
 
+    <!-- Busca por Geolocalização -->
+    <div class="card card-glow" style="margin-bottom:20px;border-left:3px solid var(--accent)">
+      <div class="card-t">📍 Busca por Geolocalização</div>
+      <div class="card-s">Encontre motoristas próximos à operação — analise demanda na localidade</div>
+      <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">Cidade/Região da Operação</label>
+          <input type="text" id="geoCity" placeholder="Ex: Jaraguá do Sul - SC" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;outline:none">
+        </div>
+        <div style="flex:1;min-width:200px">
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">Ponto de Coleta/Entrega</label>
+          <input type="text" id="geoPoint" placeholder="Ex: Porto de Itajaí" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 14px;border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;outline:none">
+        </div>
+        <div style="min-width:140px">
+          <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px">Raio de Busca</label>
+          <select id="geoRadius" style="width:100%;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;outline:none">
+            <option value="50">50 km</option>
+            <option value="100">100 km</option>
+            <option value="200" selected>200 km</option>
+            <option value="500">500 km (estado)</option>
+          </select>
+        </div>
+        <div style="display:flex;align-items:flex-end">
+          <button class="btn btn-p" onclick="searchGeo()">🔍 Buscar Motoristas</button>
+        </div>
+      </div>
+      <div id="geoResults" style="margin-top:14px;display:none">
+        <!-- Resultados da busca geolocalizada aparecem aqui -->
+      </div>
+    </div>
+
+    <!-- Exemplo: Análise de Operação por Localidade -->
+    <div class="grid-2" style="margin-bottom:20px">
+      <div class="card" style="border-left:3px solid var(--green)">
+        <div class="card-t">🏭 Análise de Localidade — Exemplo</div>
+        <div class="card-s">Bold S.A. · Jaraguá do Sul-SC → Porto de Itajaí-SC</div>
+        <ul class="op-list" style="font-size:12px">
+          <li class="op-item">
+            <div class="op-icon" style="background:rgba(0,212,255,.15);width:28px;height:28px;font-size:12px">📍</div>
+            <div class="op-info"><div class="op-title">Cliente: Bold S.A. — Jaraguá do Sul, SC</div><div class="op-desc">Origem da carga · Região Norte de SC</div></div>
+          </li>
+          <li class="op-item">
+            <div class="op-icon" style="background:rgba(0,255,136,.15);width:28px;height:28px;font-size:12px">🚢</div>
+            <div class="op-info"><div class="op-title">Destino: Porto de Itajaí, SC</div><div class="op-desc">~60 km de distância · Contêiner</div></div>
+          </li>
+          <li class="op-item">
+            <div class="op-icon" style="background:rgba(165,94,234,.15);width:28px;height:28px;font-size:12px">🚛</div>
+            <div class="op-info"><div class="op-title">Motoristas na região: 3 disponíveis</div><div class="op-desc">Base Videl: 1 · FreteBras: 2 · Raio 100km</div></div>
+          </li>
+          <li class="op-item">
+            <div class="op-icon" style="background:rgba(255,159,67,.15);width:28px;height:28px;font-size:12px">💰</div>
+            <div class="op-info"><div class="op-title">Preço médio na região: R$ 8,50/km</div><div class="op-desc">Demanda alta no Porto de Itajaí · Safra ativa</div></div>
+          </li>
+        </ul>
+        <div style="margin-top:10px"><button class="btn btn-g btn-sm" onclick="addChat('Buscar motoristas em Jaraguá do Sul / Itajaí SC para operação Bold, contêiner para o porto')">Buscar Nesta Região</button></div>
+      </div>
+
+      <div class="card">
+        <div class="card-t">📊 Demanda por Região</div>
+        <div class="card-s">Motoristas disponíveis vs. demanda de fretes</div>
+        <ul class="op-list" style="font-size:12px">
+          <li class="op-item">
+            <div class="op-info"><div class="op-title">SC — Norte (Jaraguá, Joinville, Itajaí)</div><div class="op-desc">🟢 3 motoristas · 5 fretes ativos</div></div>
+            <div class="op-meta"><span class="op-status st-pend">Demanda alta</span></div>
+          </li>
+          <li class="op-item">
+            <div class="op-info"><div class="op-title">SP — Capital e Grande SP</div><div class="op-desc">🟢 8 motoristas · 12 fretes ativos</div></div>
+            <div class="op-meta"><span class="op-status st-ok">Equilibrado</span></div>
+          </li>
+          <li class="op-item">
+            <div class="op-info"><div class="op-title">PR — Cascavel, Curitiba, Paranaguá</div><div class="op-desc">🟡 4 motoristas · 7 fretes ativos</div></div>
+            <div class="op-meta"><span class="op-status st-pend">Demanda alta</span></div>
+          </li>
+          <li class="op-item">
+            <div class="op-info"><div class="op-title">MG — Contagem, BH, Triângulo</div><div class="op-desc">🟢 5 motoristas · 4 fretes ativos</div></div>
+            <div class="op-meta"><span class="op-status st-ok">Equilibrado</span></div>
+          </li>
+          <li class="op-item">
+            <div class="op-info"><div class="op-title">MT — Rondonópolis, Canarana</div><div class="op-desc">🔴 1 motorista · 3 fretes ativos</div></div>
+            <div class="op-meta"><span class="op-status st-err">Escassez</span></div>
+          </li>
+          <li class="op-item">
+            <div class="op-info"><div class="op-title">GO — Goiânia, Anápolis</div><div class="op-desc">🟡 2 motoristas · 3 fretes ativos</div></div>
+            <div class="op-meta"><span class="op-status st-pend">Demanda alta</span></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Tabela de Motoristas -->
+    <div class="card-t" style="margin-bottom:10px">👥 Base de Motoristas Videl</div>
     <div class="tw">
       <div class="ts">
         <table class="tbl" id="tMotor">
-          <thead><tr><th>Motorista</th><th>CPF</th><th>Veículo</th><th>Região</th><th>Telefone</th><th>Disponível</th><th>Última Op.</th><th>Avaliação</th><th>Ação</th></tr></thead>
+          <thead><tr><th>Motorista</th><th>CPF</th><th>Veículo</th><th>Região/Cidade</th><th>WhatsApp</th><th>Disponível</th><th>Última Op.</th><th>Avaliação</th><th>Ação</th></tr></thead>
           <tbody>
-            <tr><td><b>João Silva Santos</b></td><td>***.***.***-42</td><td>Carreta 7 eixos</td><td>SP / PR</td><td>(11) 98765-XXXX</td><td><span class="op-status st-ok">Sim</span></td><td>05/07/2026</td><td>⭐ 4.8</td><td><button class="btn btn-p btn-xs" onclick="addChat('Contratar João Silva para próxima operação')">Contratar</button></td></tr>
-            <tr><td><b>Carlos Eduardo Lima</b></td><td>***.***.***-18</td><td>Bitrem 9 eixos</td><td>PR / SC / SP</td><td>(41) 99876-XXXX</td><td><span class="op-status st-ok">Sim</span></td><td>02/07/2026</td><td>⭐ 4.6</td><td><button class="btn btn-p btn-xs" onclick="addChat('Contratar Carlos Eduardo para próxima operação')">Contratar</button></td></tr>
-            <tr><td><b>Roberto Almeida</b></td><td>***.***.***-55</td><td>Rodotrem 11 eixos</td><td>MG / SP</td><td>(31) 97654-XXXX</td><td><span class="op-status st-pend">Em rota</span></td><td>07/07/2026</td><td>⭐ 4.9</td><td><button class="btn btn-o btn-xs" disabled>Ocupado</button></td></tr>
-            <tr><td><b>Fernando Costa</b></td><td>***.***.***-71</td><td>Truck 6 eixos</td><td>RJ / MG</td><td>(21) 96543-XXXX</td><td><span class="op-status st-ok">Sim</span></td><td>28/06/2026</td><td>⭐ 4.3</td><td><button class="btn btn-p btn-xs" onclick="addChat('Contratar Fernando Costa para próxima operação')">Contratar</button></td></tr>
-            <tr><td><b>Marcos Pereira</b></td><td>***.***.***-33</td><td>Carreta Refrigerada</td><td>SC / RS / SP</td><td>(47) 99812-XXXX</td><td><span class="op-status st-ok">Sim</span></td><td>01/07/2026</td><td>⭐ 4.7</td><td><button class="btn btn-p btn-xs" onclick="addChat('Contratar Marcos Pereira para próxima operação')">Contratar</button></td></tr>
-            <tr><td><b>Antônio Souza</b></td><td>***.***.***-89</td><td>Bitrem 9 eixos</td><td>GO / MT / SP</td><td>(62) 98321-XXXX</td><td><span class="op-status st-pend">Em rota</span></td><td>06/07/2026</td><td>⭐ 4.5</td><td><button class="btn btn-o btn-xs" disabled>Ocupado</button></td></tr>
+            <tr><td><b>João Silva Santos</b></td><td>***.***.***-42</td><td>Carreta 7 eixos</td><td>📍 São Paulo SP</td><td>(11) 98765-XXXX</td><td><span class="op-status st-ok">Sim</span></td><td>05/07/2026</td><td>⭐ 4.8</td><td><button class="btn btn-p btn-xs" onclick="addChat('Contratar João Silva para próxima operação — enviar proposta via WhatsApp')">Contratar</button></td></tr>
+            <tr><td><b>Carlos Eduardo Lima</b></td><td>***.***.***-18</td><td>Bitrem 9 eixos</td><td>📍 Cascavel PR</td><td>(41) 99876-XXXX</td><td><span class="op-status st-ok">Sim</span></td><td>02/07/2026</td><td>⭐ 4.6</td><td><button class="btn btn-p btn-xs" onclick="addChat('Contratar Carlos Eduardo para próxima operação — enviar proposta via WhatsApp')">Contratar</button></td></tr>
+            <tr><td><b>Roberto Almeida</b></td><td>***.***.***-55</td><td>Rodotrem 11 eixos</td><td>📍 Contagem MG</td><td>(31) 97654-XXXX</td><td><span class="op-status st-pend">Em rota</span></td><td>07/07/2026</td><td>⭐ 4.9</td><td><button class="btn btn-o btn-xs" disabled>Ocupado</button></td></tr>
+            <tr><td><b>Fernando Costa</b></td><td>***.***.***-71</td><td>Truck 6 eixos</td><td>📍 Rio de Janeiro RJ</td><td>(21) 96543-XXXX</td><td><span class="op-status st-ok">Sim</span></td><td>28/06/2026</td><td>⭐ 4.3</td><td><button class="btn btn-p btn-xs" onclick="addChat('Contratar Fernando Costa para próxima operação — enviar proposta via WhatsApp')">Contratar</button></td></tr>
+            <tr><td><b>Marcos Pereira</b></td><td>***.***.***-33</td><td>Carreta Refrigerada</td><td>📍 Joinville SC</td><td>(47) 99812-XXXX</td><td><span class="op-status st-ok">Sim</span></td><td>01/07/2026</td><td>⭐ 4.7</td><td><button class="btn btn-p btn-xs" onclick="addChat('Contratar Marcos Pereira para próxima operação — enviar proposta via WhatsApp')">Contratar</button></td></tr>
+            <tr><td><b>Antônio Souza</b></td><td>***.***.***-89</td><td>Bitrem 9 eixos</td><td>📍 Goiânia GO</td><td>(62) 98321-XXXX</td><td><span class="op-status st-pend">Em rota</span></td><td>06/07/2026</td><td>⭐ 4.5</td><td><button class="btn btn-o btn-xs" disabled>Ocupado</button></td></tr>
           </tbody>
         </table>
       </div>
@@ -633,9 +728,9 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       <div class="conn"><div class="conn-icon">📧</div><div class="conn-name">Gmail</div><div class="conn-st on">● Conectado</div></div>
       <div class="conn"><div class="conn-icon">📁</div><div class="conn-name">Google Drive</div><div class="conn-st on">● Conectado</div></div>
       <div class="conn"><div class="conn-icon">📅</div><div class="conn-name">Google Calendar</div><div class="conn-st on">● Conectado</div></div>
-      <div class="conn"><div class="conn-icon">💬</div><div class="conn-name">Slack</div><div class="conn-st on">● Conectado</div></div>
+      <div class="conn"><div class="conn-icon">💬</div><div class="conn-name">Chat Moita</div><div class="conn-st on">● Ativo</div></div>
       <div class="conn"><div class="conn-icon">⚡</div><div class="conn-name">Zapier</div><div class="conn-st on">● Conectado</div></div>
-      <div class="conn"><div class="conn-icon">👥</div><div class="conn-name">Lusha</div><div class="conn-st on">● Conectado</div></div>
+      <div class="conn"><div class="conn-icon">📱</div><div class="conn-name">WhatsApp</div><div class="conn-st" style="color:var(--orange)">● Zapier</div></div>
       <div class="conn"><div class="conn-icon">🏦</div><div class="conn-name">Banco PJ</div><div class="conn-st on">● Conectado</div></div>
       <div class="conn"><div class="conn-icon">🎨</div><div class="conn-name">Miro</div><div class="conn-st on">● Conectado</div></div>
       <div class="conn"><div class="conn-icon">🚛</div><div class="conn-name">FreteBras</div><div class="conn-st" style="color:var(--orange)">● Manual</div></div>
@@ -770,6 +865,33 @@ function syncGmail(){
     btn.textContent='🔄 Sincronizar Gmail';
     btn.disabled=false;
   },1500);
+}
+
+function searchGeo(){
+  const city=document.getElementById('geoCity').value.trim();
+  const point=document.getElementById('geoPoint').value.trim();
+  const radius=document.getElementById('geoRadius').value;
+  if(!city){alert('Informe a cidade/região da operação.');return}
+  const res=document.getElementById('geoResults');
+  res.style.display='block';
+  res.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted)"><div style="font-size:24px;margin-bottom:8px">🔄</div>Buscando motoristas em '+radius+'km de '+escHtml(city)+'...</div>';
+  setTimeout(()=>{
+    const drivers=[
+      {name:'Carlos Silva',city:'Joinville-SC',dist:45,veiculo:'Truck Baú',placa:'QRS-4E56',whats:'(47) 99876-5432',status:'Disponível'},
+      {name:'Roberto Santos',city:'Blumenau-SC',dist:78,veiculo:'Carreta Sider',placa:'ABC-1D23',whats:'(47) 99765-4321',status:'Disponível'},
+      {name:'Marcos Oliveira',city:'Itajaí-SC',dist:12,veiculo:'Bitruck',placa:'DEF-2G34',whats:'(47) 99654-3210',status:'Em rota (volta)'},
+      {name:'José Pereira',city:'Brusque-SC',dist:92,veiculo:'Truck Baú',placa:'GHI-3H45',whats:'(47) 99543-2109',status:'Disponível'},
+      {name:'Anderson Costa',city:'Navegantes-SC',dist:18,veiculo:'Carreta',placa:'JKL-4I56',whats:'(48) 99432-1098',status:'Disponível'}
+    ].filter(d=>d.dist<=parseInt(radius));
+    let html='<div style="margin-bottom:10px;font-size:12px;color:var(--accent)">📍 '+drivers.length+' motoristas encontrados em '+radius+'km de <strong>'+escHtml(city)+'</strong>'+(point?' → '+escHtml(point):'')+'</div>';
+    html+='<div style="overflow-x:auto"><table class="tbl" style="font-size:12px"><thead><tr><th>Motorista</th><th>Cidade</th><th>Dist.</th><th>Veículo</th><th>Placa</th><th>WhatsApp</th><th>Status</th><th>Ação</th></tr></thead><tbody>';
+    drivers.forEach(d=>{
+      const stColor=d.status==='Disponível'?'var(--green)':'var(--amber)';
+      html+='<tr><td><strong>'+d.name+'</strong></td><td>'+d.city+'</td><td>'+d.dist+' km</td><td>'+d.veiculo+'</td><td><code>'+d.placa+'</code></td><td>'+d.whats+'</td><td><span style="color:'+stColor+'">●</span> '+d.status+'</td><td><button class="btn btn-p" style="font-size:10px;padding:4px 10px" onclick="addChat(\'contratar motorista '+d.name+'\')">Contratar</button></td></tr>';
+    });
+    html+='</tbody></table></div>';
+    res.innerHTML=html;
+  },1200);
 }
 
 function fltTbl(tid,q){
