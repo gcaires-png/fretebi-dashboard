@@ -2,6 +2,7 @@
   "rascunho": true,
   "gerado_por": "Moita Rev1",
   "gerado_em": "2026-07-09",
+  "atualizado_em": "2026-07-09T23:50:00",
   "embarque": "EMB-2026-00066",
   "status": "RASCUNHO - AGUARDANDO REVISÃO HUMANA",
 
@@ -12,29 +13,27 @@
     "cfop": "6353",
     "cfop_descricao": "Prestação de serviço de transporte interestadual (SP → MA)",
     "natureza_operacao": "PRESTACAO DE SERVICO DE TRANSPORTE",
-    "forma_pagamento": "A PRAZO"
+    "forma_pagamento": "A PRAZO",
+    "tipo_operacional": "RETORNO"
   },
 
   "emitente": {
     "razao_social": "VIDEL T&I TRANSPORTES",
     "cnpj": "63.147.064/0001-30",
     "ie": "A CONSULTAR",
-    "endereco": "A CONFIRMAR",
-    "cidade": "A CONFIRMAR",
-    "uf": "A CONFIRMAR",
-    "cep": "A CONFIRMAR",
-    "telefone": "A CONFIRMAR"
+    "endereco": "Itupeva/SP (base operacional)",
+    "cidade": "Itupeva",
+    "uf": "SP",
+    "nota": "Emitente e remetente é a própria Videl T&I em Itupeva/SP"
   },
 
   "remetente": {
-    "razao_social": "A CONFIRMAR (empresa da NF-e 2263)",
-    "cnpj": "A CONFIRMAR (da NF-e)",
-    "ie": "A CONFIRMAR",
-    "endereco": "A CONFIRMAR",
+    "razao_social": "VIDEL T&I TRANSPORTES",
+    "cnpj": "63.147.064/0001-30",
+    "ie": "A CONSULTAR",
     "cidade": "Itupeva",
     "uf": "SP",
-    "cep": "A CONFIRMAR",
-    "nota": "Remetente deve ser extraído da NF-e 2263 (Visão Cosméticos)"
+    "nota": "Remetente é a própria Videl em Itupeva (confirmado pelo usuário)"
   },
 
   "destinatario": {
@@ -49,50 +48,96 @@
     "telefone": "54991841267",
     "email": "nfe@agricolaferrari.com.br",
     "contato": "DIEGO - Diretor Logística",
-    "nota": "ATENÇÃO: Destino do embarque é Rosário/MA, mas endereço cadastrado do cliente é Passo Fundo/RS. Verificar endereço de entrega correto."
+    "nota": "Endereço de entrega: Rosário/MA (verificar com destinatário se usa endereço do cadastro RS ou entrega em MA)"
   },
 
   "tomador_servico": {
-    "tipo": "REMETENTE ou DESTINATÁRIO - A CONFIRMAR",
-    "nota": "Definir quem é o tomador (quem paga o frete). Condição de pagamento: 60 DIAS."
+    "tipo": "PREENCHIDO NA PLATAFORMA",
+    "nota": "Verificar na plataforma Videl quem está definido como tomador"
   },
+
+  "nfe_referenciada": {
+    "chave_acesso": "32260627483260000383550010000022631708331391",
+    "numero": "2263",
+    "serie": "1",
+    "emitente_nfe": {
+      "razao_social": "GRAMTOK DISTRIBUICAO E LOGISTICA LTDA",
+      "cnpj": "27.483.260/0003-83",
+      "ie": "083943242",
+      "endereco": "RODOVIA GOVERNADOR MARIO COVAS, S/N",
+      "bairro": "JACUHY",
+      "cidade": "SERRA",
+      "uf": "ES",
+      "cep": "29161230"
+    },
+    "destinatario_nfe": {
+      "razao_social": "VISAO COMERCIO ATACADISTA DE COSMETICOS EIRELI",
+      "cnpj": "31.546.496/0001-27",
+      "ie": "151967119",
+      "endereco": "AVENIDA ALFA",
+      "bairro": "DOM JOSE RODRIGUES",
+      "cidade": "JUAZEIRO",
+      "uf": "BA",
+      "cep": "48909-000"
+    },
+    "transportador_nfe": {
+      "razao_social": "GRAMTOK DISTRIBUICAO E LOGISTICA EIRELI",
+      "cnpj": "27.483.260/0001-11",
+      "placa": "FXI3B44"
+    },
+    "valor_total_nfe": 36914.91,
+    "valor_produtos": 35462.76,
+    "valor_icms": 4255.58,
+    "valor_ipi": 1452.15,
+    "volumes": "665 CAIXAS",
+    "peso_bruto": 6167.308,
+    "data_emissao": "2026-06-18",
+    "produtos": "Cosméticos Tok Bothânico (shampoo, condicionador, sabonete líquido)"
+  },
+
+  "divergencias_detectadas": [
+    {
+      "campo": "Valor NF",
+      "embarque": "R$ 50.000,00",
+      "nfe_real": "R$ 36.914,91",
+      "acao": "CORRIGIR valor no embarque para R$ 36.914,91"
+    },
+    {
+      "campo": "Peso",
+      "embarque": "2.000 kg",
+      "nfe_real": "6.167 kg",
+      "acao": "CORRIGIR peso no embarque para 6.167 kg"
+    }
+  ],
 
   "valores": {
     "valor_total_servico": 10000.00,
     "valor_frete": 10000.00,
-    "valor_pedagio": "A CALCULAR (SP → MA, ~2.500 km)",
-    "valor_seguro": "A CALCULAR (taxa RC-DC: 0,018% sobre R$50.000 = ~R$9,00)",
-    "valor_outras_despesas": 0,
-    "valor_mercadoria": 50000.00,
-    "peso_bruto_kg": 2000.00
+    "valor_pedagio": "A CALCULAR",
+    "valor_seguro_rcdc": 6.64,
+    "valor_seguro_rcdc_calculo": "0,018% × R$ 36.914,91 = R$ 6,64",
+    "valor_mercadoria_nfe": 36914.91,
+    "peso_bruto_kg": 6167.308,
+    "volumes": 665
   },
 
   "icms": {
     "cst": "00",
     "base_calculo": 10000.00,
-    "aliquota": "A CONFIRMAR (alíquota interestadual SP→MA)",
-    "valor_icms": "A CALCULAR",
-    "nota": "Verificar alíquota ICMS interestadual SP→MA (geralmente 7%)"
-  },
-
-  "nfe_referenciada": {
-    "chave_acesso": "A EXTRAIR DO PDF DA NF-e 2263",
-    "numero": "2263",
-    "serie": "A CONFIRMAR",
-    "emitente_nfe": "Visão Cosméticos (dados a confirmar do PDF)",
-    "valor_nfe": 50000.00,
-    "arquivo_plataforma": "/uploads/file-1783639869041-156968972.pdf",
-    "nota": "Chave de acesso de 44 dígitos deve ser extraída do XML ou DANFE da NF-e"
+    "aliquota_percentual": 7.0,
+    "aliquota_justificativa": "Interestadual SP (Sul/Sudeste) → MA (Norte/Nordeste) = 7% (Art. 155, §2º, IV CF + Resolução 22/89)",
+    "valor_icms": 700.00
   },
 
   "motorista": {
     "nome": "Adriano Alves da Silva",
     "cpf": "303.810.448-58",
+    "rg": "01197749303",
     "celular": "14 98131-4622",
     "cnh_categoria": "C",
-    "cnh_numero": "A PREENCHER",
-    "cnh_uf": "A PREENCHER",
-    "cnh_validade": "A PREENCHER"
+    "cnh_numero": "NÃO CADASTRADO NA PLATAFORMA",
+    "cnh_validade": "NÃO CADASTRADO NA PLATAFORMA",
+    "status": "em_viagem"
   },
 
   "veiculo": {
@@ -106,13 +151,13 @@
     "chassi": "9BSR6X200E386031",
     "eixos": 3,
     "capacidade_kg": 23000,
-    "rntrc": "A PREENCHER"
+    "rntrc": "NÃO CADASTRADO"
   },
 
   "rota": {
     "origem": "Itupeva/SP",
     "destino": "Rosário/MA",
-    "distancia_estimada_km": "~2.500",
+    "distancia_estimada_km": 2500,
     "data_coleta": "2026-07-10",
     "data_entrega_prevista": "2026-07-13"
   },
@@ -121,8 +166,9 @@
     "aprovado": true,
     "valor_carga_dentro_limite": true,
     "carga_permitida": true,
-    "tipo_carga": "Cosméticos",
-    "observacoes": "Carga de cosméticos NÃO consta na lista de exclusões do seguro. Valor R$50.000 dentro do limite de R$1.000.000."
+    "tipo_carga": "Cosméticos (Tok Bothânico - shampoo, condicionador, sabonete)",
+    "ncm_principal": "33051000 / 33059000 / 34012010",
+    "observacoes": "Cosméticos NÃO constam na lista de exclusões. Valor R$ 36.914,91 dentro do limite de R$ 1.000.000"
   },
 
   "comissoes": {
@@ -133,16 +179,22 @@
     "representante": "Gearlison Caires"
   },
 
-  "pendencias_para_emissao": [
-    "1. EXTRAIR chave de acesso (44 dígitos) da NF-e 2263 do PDF anexado",
-    "2. CONFIRMAR dados do remetente (Visão Cosméticos - CNPJ, IE, endereço completo)",
-    "3. CONFIRMAR quem é o tomador do serviço (remetente ou destinatário)",
-    "4. CONFIRMAR endereço de entrega (Rosário/MA ou Passo Fundo/RS?)",
-    "5. PREENCHER número e validade da CNH do motorista",
-    "6. PREENCHER RNTRC do veículo/transportador",
-    "7. CALCULAR e confirmar alíquota ICMS interestadual (SP→MA = 7%?)",
-    "8. CALCULAR valor do pedágio (rota SP→MA)",
-    "9. CONFIRMAR dados completos do emitente (Videl T&I - IE, endereço)",
-    "10. REALIZAR averbação do seguro antes do embarque"
+  "pendencias_resolvidas": [
+    "Chave de acesso NF-e 2263 extraída: 32260627483260000383550010000022631708331391",
+    "Dados do remetente: Videl T&I em Itupeva/SP (confirmado)",
+    "Tomador: preenchido na plataforma (confirmado)",
+    "ICMS calculado: 7% (SP→MA) = R$ 700,00",
+    "Dados da NF-e extraídos completos (emitente, destinatário, valores, produtos)"
+  ],
+
+  "pendencias_restantes": [
+    "1. CORRIGIR valor NF no embarque: R$ 50.000 → R$ 36.914,91",
+    "2. CORRIGIR peso no embarque: 2.000 kg → 6.167 kg",
+    "3. CONFIRMAR endereço de entrega (Rosário/MA vs Passo Fundo/RS)",
+    "4. PREENCHER CNH do motorista (número e validade não cadastrados)",
+    "5. PREENCHER RNTRC do veículo",
+    "6. PREENCHER IE e endereço completo da Videl T&I (emitente)",
+    "7. CALCULAR pedágio (rota SP→MA)",
+    "8. REALIZAR averbação do seguro antes do embarque"
   ]
 }
