@@ -1,0 +1,148 @@
+{
+  "rascunho": true,
+  "gerado_por": "Moita Rev1",
+  "gerado_em": "2026-07-09",
+  "embarque": "EMB-2026-00066",
+  "status": "RASCUNHO - AGUARDANDO REVISÃO HUMANA",
+
+  "identificacao": {
+    "tipo_cte": "ORIGINAL",
+    "modal": "RODOVIARIO",
+    "tipo_servico": "NORMAL",
+    "cfop": "6353",
+    "cfop_descricao": "Prestação de serviço de transporte interestadual (SP → MA)",
+    "natureza_operacao": "PRESTACAO DE SERVICO DE TRANSPORTE",
+    "forma_pagamento": "A PRAZO"
+  },
+
+  "emitente": {
+    "razao_social": "VIDEL T&I TRANSPORTES",
+    "cnpj": "63.147.064/0001-30",
+    "ie": "A CONSULTAR",
+    "endereco": "A CONFIRMAR",
+    "cidade": "A CONFIRMAR",
+    "uf": "A CONFIRMAR",
+    "cep": "A CONFIRMAR",
+    "telefone": "A CONFIRMAR"
+  },
+
+  "remetente": {
+    "razao_social": "A CONFIRMAR (empresa da NF-e 2263)",
+    "cnpj": "A CONFIRMAR (da NF-e)",
+    "ie": "A CONFIRMAR",
+    "endereco": "A CONFIRMAR",
+    "cidade": "Itupeva",
+    "uf": "SP",
+    "cep": "A CONFIRMAR",
+    "nota": "Remetente deve ser extraído da NF-e 2263 (Visão Cosméticos)"
+  },
+
+  "destinatario": {
+    "razao_social": "AGRÍCOLA FERRARI LTDA",
+    "cnpj": "91.748.483/0001-62",
+    "ie": "0910260222",
+    "endereco": "Rodovia BR-285",
+    "bairro": "Valinhos",
+    "cidade": "Passo Fundo",
+    "uf": "RS",
+    "cep": "99043-800",
+    "telefone": "54991841267",
+    "email": "nfe@agricolaferrari.com.br",
+    "contato": "DIEGO - Diretor Logística",
+    "nota": "ATENÇÃO: Destino do embarque é Rosário/MA, mas endereço cadastrado do cliente é Passo Fundo/RS. Verificar endereço de entrega correto."
+  },
+
+  "tomador_servico": {
+    "tipo": "REMETENTE ou DESTINATÁRIO - A CONFIRMAR",
+    "nota": "Definir quem é o tomador (quem paga o frete). Condição de pagamento: 60 DIAS."
+  },
+
+  "valores": {
+    "valor_total_servico": 10000.00,
+    "valor_frete": 10000.00,
+    "valor_pedagio": "A CALCULAR (SP → MA, ~2.500 km)",
+    "valor_seguro": "A CALCULAR (taxa RC-DC: 0,018% sobre R$50.000 = ~R$9,00)",
+    "valor_outras_despesas": 0,
+    "valor_mercadoria": 50000.00,
+    "peso_bruto_kg": 2000.00
+  },
+
+  "icms": {
+    "cst": "00",
+    "base_calculo": 10000.00,
+    "aliquota": "A CONFIRMAR (alíquota interestadual SP→MA)",
+    "valor_icms": "A CALCULAR",
+    "nota": "Verificar alíquota ICMS interestadual SP→MA (geralmente 7%)"
+  },
+
+  "nfe_referenciada": {
+    "chave_acesso": "A EXTRAIR DO PDF DA NF-e 2263",
+    "numero": "2263",
+    "serie": "A CONFIRMAR",
+    "emitente_nfe": "Visão Cosméticos (dados a confirmar do PDF)",
+    "valor_nfe": 50000.00,
+    "arquivo_plataforma": "/uploads/file-1783639869041-156968972.pdf",
+    "nota": "Chave de acesso de 44 dígitos deve ser extraída do XML ou DANFE da NF-e"
+  },
+
+  "motorista": {
+    "nome": "Adriano Alves da Silva",
+    "cpf": "303.810.448-58",
+    "celular": "14 98131-4622",
+    "cnh_categoria": "C",
+    "cnh_numero": "A PREENCHER",
+    "cnh_uf": "A PREENCHER",
+    "cnh_validade": "A PREENCHER"
+  },
+
+  "veiculo": {
+    "placa": "FVQ0J00",
+    "renavam": "01105212332",
+    "tipo": "CARRETA",
+    "marca": "SCANIA",
+    "modelo": "/R 440 A6X2",
+    "ano": "2014/2014",
+    "cor": "BRANCA",
+    "chassi": "9BSR6X200E386031",
+    "eixos": 3,
+    "capacidade_kg": 23000,
+    "rntrc": "A PREENCHER"
+  },
+
+  "rota": {
+    "origem": "Itupeva/SP",
+    "destino": "Rosário/MA",
+    "distancia_estimada_km": "~2.500",
+    "data_coleta": "2026-07-10",
+    "data_entrega_prevista": "2026-07-13"
+  },
+
+  "seguro_verificacao": {
+    "aprovado": true,
+    "valor_carga_dentro_limite": true,
+    "carga_permitida": true,
+    "tipo_carga": "Cosméticos",
+    "observacoes": "Carga de cosméticos NÃO consta na lista de exclusões do seguro. Valor R$50.000 dentro do limite de R$1.000.000."
+  },
+
+  "comissoes": {
+    "comissao_externa_percentual": 2.5,
+    "comissao_externa_valor": 250.00,
+    "comissao_interna_percentual": 1.5,
+    "comissao_interna_valor": 150.00,
+    "representante": "Gearlison Caires"
+  },
+
+  "pendencias_para_emissao": [
+    "1. EXTRAIR chave de acesso (44 dígitos) da NF-e 2263 do PDF anexado",
+    "2. CONFIRMAR dados do remetente (Visão Cosméticos - CNPJ, IE, endereço completo)",
+    "3. CONFIRMAR quem é o tomador do serviço (remetente ou destinatário)",
+    "4. CONFIRMAR endereço de entrega (Rosário/MA ou Passo Fundo/RS?)",
+    "5. PREENCHER número e validade da CNH do motorista",
+    "6. PREENCHER RNTRC do veículo/transportador",
+    "7. CALCULAR e confirmar alíquota ICMS interestadual (SP→MA = 7%?)",
+    "8. CALCULAR valor do pedágio (rota SP→MA)",
+    "9. CONFIRMAR dados completos do emitente (Videl T&I - IE, endereço)",
+    "10. REALIZAR averbação do seguro antes do embarque"
+  ]
+}

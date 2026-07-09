@@ -1,0 +1,90 @@
+{
+  "version": "1.0",
+  "atualizado_em": "2026-07-09",
+  "seguradora": "Allianz Seguros S.A.",
+  "estipulante": "Videl T&I Transportes - CNPJ 63.147.064/0001-30",
+  "coberturas": {
+    "RCDC": {
+      "nome": "Responsabilidade Civil Desaparecimento de Carga",
+      "apolice": "RC-DC",
+      "limites": {
+        "geral": 1000000,
+        "grupo_A": 500000,
+        "rio_metropolitana": 500000,
+        "conteineres": 300000
+      },
+      "taxa": 0.00018,
+      "premio_minimo_mensal": 500,
+      "vigencia": "12 meses",
+      "cobertura": "Desaparecimento total da carga durante transporte rodoviário"
+    },
+    "RCV": {
+      "nome": "Responsabilidade Civil Veicular",
+      "apolice": "RC-V",
+      "limites": {
+        "por_veiculo_viagem": 550000,
+        "danos_corporais": "incluso no LMG",
+        "danos_materiais": "incluso no LMG"
+      },
+      "premio_por_viagem": {
+        "ate_400km": 10.00,
+        "acima_400km": "proporcional"
+      },
+      "cobertura": "Danos corporais e materiais a terceiros causados por veículos subcontratados"
+    },
+    "RCTRC": {
+      "nome": "Responsabilidade Civil Transportador Rodoviário de Carga",
+      "apolice": "RCTR-C",
+      "limites": {
+        "geral": 1000000,
+        "grupo_A": 500000,
+        "conteineres": 300000,
+        "limpeza_contaminacao": 100000,
+        "danos_fora_transito": 100000
+      },
+      "premio_minimo_mensal": 500,
+      "desconto_tabela": 0.50,
+      "cobertura": "Danos à carga transportada por acidente, tombamento, colisão, incêndio, etc."
+    }
+  },
+  "cargas_excluidas": [
+    "Animais vivos",
+    "Armas, munições e explosivos",
+    "Cigarros e produtos de tabaco/fumo",
+    "Grãos (cereais, sementes a granel)",
+    "Farinha de peixe",
+    "Obras de arte e antiguidades",
+    "Relógios acima de R$2.000",
+    "Veículos de coleção",
+    "Material radioativo ou nuclear",
+    "Pedras preciosas e semipreciosas",
+    "Metais preciosos (ouro, prata, platina)",
+    "Dinheiro, títulos e documentos",
+    "Produtos perecíveis sem refrigeração adequada"
+  ],
+  "requisitos_obrigatorios": [
+    "RNTRC válido do transportador",
+    "CT-e ou documento de transporte equivalente emitido",
+    "Averbação da viagem realizada antes do embarque",
+    "Motorista com CNH válida e compatível",
+    "Veículo em condições adequadas de transporte"
+  ],
+  "regras_operacionais": {
+    "valor_maximo_carga": 1000000,
+    "valor_maximo_por_viagem_veiculo": 550000,
+    "valor_maximo_conteineres": 300000,
+    "verificar_antes_aceitar": [
+      "Tipo de carga NÃO está na lista de exclusões",
+      "Valor da carga NÃO excede limite da cobertura aplicável",
+      "Motorista possui RNTRC e CNH válidos",
+      "Veículo está em condições adequadas",
+      "Rota não passa por área de risco especial sem autorização"
+    ]
+  },
+  "alertas": {
+    "graos_excluidos": "ATENÇÃO: Grãos são EXCLUÍDOS da cobertura. Operações com gergelim, soja, milho, trigo etc. NÃO têm cobertura de seguro. Escalar para gestão antes de aceitar.",
+    "grupo_A_limite_menor": "Cargas Grupo A (alto risco) têm limite reduzido de R$500.000. Verificar classificação.",
+    "conteineres_limite_menor": "Contêineres têm limite reduzido de R$300.000. Verificar valor da carga.",
+    "averbacao_obrigatoria": "Toda viagem DEVE ser averbada ANTES do embarque. Sem averbação = sem cobertura."
+  }
+}
