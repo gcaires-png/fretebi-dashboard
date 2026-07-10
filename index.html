@@ -106,11 +106,11 @@ tbody td{padding:10px 14px;font-size:13px;vertical-align:middle}
   <ul class="sb-nav">
     <li><a href="moita-rev1.html" style="color:var(--green)"><span>🤖</span><span class="lbl"> Moita Rev1</span></a></li>
   </ul>
-  <div class="sb-info"><p>Fonte: <strong>FreteBras</strong><br>Plano: <strong>Completo</strong><br>Status: <strong style="color:var(--green)">● Online</strong></p></div>
+  <div class="sb-info"><p>Fonte: <strong>Plataforma Videl</strong><br>Registros: <strong>67 embarques</strong><br>Status: <strong style="color:var(--green)">● Online</strong></p></div>
 </aside>
 <main class="main">
   <div class="hdr">
-    <div><h2>🚛 FreteBI — Central de Inteligência</h2><p>BI de fretes em tempo real · FreteBras · Videl T&I Transportes</p></div>
+    <div><h2>🚛 FreteBI — Central de Inteligência</h2><p>Dados reais da Plataforma Videl · videltel.com.br · atualizado 10/07/2026</p></div>
     <div class="hdr-r">
       <div class="lu">Última atualização: <strong id="lut">—</strong></div>
       <button class="btn btn-p" onclick="refresh()">⟳ Atualizar</button>
@@ -123,104 +123,117 @@ tbody td{padding:10px 14px;font-size:13px;vertical-align:middle}
     <span id="cdn" style="font-size:11px;color:var(--muted);margin-left:8px"></span>
     <div style="display:flex;gap:8px;align-items:center;margin-left:auto"><div style="width:9px;height:9px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite"></div><span style="font-size:11px;color:var(--muted)">Ativo</span></div>
   </div>
-  <div class="ab">⚠️ 3 cotações sem resposta há mais de 24h — <strong>R$ 42.880,00 em risco!</strong></div>
+  <div class="ab">⚠️ 4 embarques sem motorista alocado · COT-2026-00073 (Bold, contêiner R$ 461.962) acima do limite de seguro de contêiner (R$ 300k)</div>
   <div id="dash">
     <div class="kpi-g">
-      <div class="kpi"><div class="kpi-l">Fretes Postados</div><div class="kpi-v">3</div><div class="kpi-s dn">↓ 0.7% vs 30 dias</div></div>
-      <div class="kpi g"><div class="kpi-l">Motoristas Interessados</div><div class="kpi-v">33</div><div class="kpi-s dn">↓ 0.9% vs 30 dias</div></div>
-      <div class="kpi"><div class="kpi-l">Visualizações de Frete</div><div class="kpi-v">100</div><div class="kpi-s dn">↓ 0.9% vs 30 dias</div></div>
-      <div class="kpi o"><div class="kpi-l">Negociações Confirmadas</div><div class="kpi-v">0</div><div class="kpi-s n">Período atual</div></div>
-      <div class="kpi"><div class="kpi-l">Cotações Ativas</div><div class="kpi-v">8</div><div class="kpi-s up">↑ 2 novas hoje</div></div>
-      <div class="kpi g"><div class="kpi-l">Taxa de Resposta</div><div class="kpi-v">62%</div><div class="kpi-s up">↑ 5% vs semana ant.</div></div>
-      <div class="kpi o"><div class="kpi-l">Frete Médio R$/km</div><div class="kpi-v">R$8,40</div><div class="kpi-s up">↑ 1.2% vs mês ant.</div></div>
-      <div class="kpi r"><div class="kpi-l">Alertas Pendentes</div><div class="kpi-v">3</div><div class="kpi-s n">Sem resposta &gt;24h</div></div>
+<div class="kpi"><div class="kpi-l">Embarques Totais</div><div class="kpi-v">67</div><div class="kpi-s n">50 entregues · 5 em trânsito</div></div>
+      <div class="kpi g"><div class="kpi-l">Faturamento Fretes</div><div class="kpi-v" style="font-size:22px">R$ 576,5k</div><div class="kpi-s up">Acumulado total</div></div>
+      <div class="kpi"><div class="kpi-l">Cotações</div><div class="kpi-v">73</div><div class="kpi-s up">65 aprovadas</div></div>
+      <div class="kpi o"><div class="kpi-l">Valor Cotações</div><div class="kpi-v" style="font-size:22px">R$ 541,9k</div><div class="kpi-s n">Pipeline aprovado</div></div>
+      <div class="kpi"><div class="kpi-l">Base Motoristas</div><div class="kpi-v">1.425</div><div class="kpi-s n">76 veículos cadastrados</div></div>
+      <div class="kpi g"><div class="kpi-l">Frete Médio</div><div class="kpi-v" style="font-size:22px">R$ 9.429</div><div class="kpi-s n">por embarque</div></div>
+      <div class="kpi o"><div class="kpi-l">Documentos Fiscais</div><div class="kpi-v">259</div><div class="kpi-s n">54 CT-e · 76 NF-e</div></div>
+      <div class="kpi r"><div class="kpi-l">Atrasados</div><div class="kpi-v">4</div><div class="kpi-s n">3 s/ motorista · ação</div></div>
+
     </div>
     <div class="cg">
-      <div class="cc"><div class="ct">📈 Fretes por Semana — Março 2026</div><div class="cs">Volume semanal de fretes e motoristas interessados</div><div class="cw"><canvas id="c1"></canvas></div></div>
+      <div class="cc"><div class="ct">📈 Embarques por Mês — 2026</div><div class="cs">Volume mensal de embarques na plataforma</div><div class="cw"><canvas id="c1"></canvas></div></div>
       <div class="cc"><div class="ct">🚚 Distribuição por Tipo de Veículo</div><div class="cs">Percentual de fretes por categoria</div><div class="cw"><canvas id="c2"></canvas></div></div>
-      <div class="cc"><div class="ct">📦 Tipos de Carga Mais Solicitados</div><div class="cs">Top 6 categorias de mercadoria</div><div class="cw"><canvas id="c3"></canvas></div></div>
-      <div class="cc"><div class="ct">💰 R$/km por Rota vs Referência Mercado</div><div class="cs">Comparativo das principais rotas</div><div class="cw"><canvas id="c4"></canvas></div></div>
+      <div class="cc"><div class="ct">📊 Embarques por Status</div><div class="cs">Distribuição atual dos 67 embarques</div><div class="cw"><canvas id="c3"></canvas></div></div>
+      <div class="cc"><div class="ct">💰 Faturamento por Cliente</div><div class="cs">Top 5 clientes por valor de frete</div><div class="cw"><canvas id="c4"></canvas></div></div>
     </div>
   </div>
   <div id="cot" class="sw">
-    <div class="sec-hdr"><div class="sec-t">📋 Cotações (Leads) <span class="bdg">8 registros</span></div><button class="btn btn-o btn-sm" onclick="csv('tCot','cotacoes')">⬇ CSV</button></div>
-    <div class="flt"><input class="srch" id="sCot" onkeyup="flt('tCot','sCot')" placeholder="🔍 Buscar..."><select class="flt-sel" onchange="fltC('tCot',9,this.value)"><option value="">Status: Todos</option><option>Ativo</option><option>Pendente</option><option>Expirado</option><option>Novo</option></select></div>
+    <div class="sec-hdr"><div class="sec-t">📋 Cotações <span class="bdg">73 registros · 65 aprovadas</span></div><button class="btn btn-o btn-sm" onclick="csv('tCot','cotacoes')">⬇ CSV</button></div>
+    <div class="flt"><input class="srch" id="sCot" onkeyup="flt('tCot','sCot')" placeholder="🔍 Buscar..."><select class="flt-sel" onchange="fltC('tCot',7,this.value)"><option value="">Status: Todos</option><option>Aprovada</option><option>Rascunho</option><option>Enviada</option><option>Minuta</option></select></div>
     <div class="tw"><div class="ts"><table id="tCot">
-      <thead><tr><th onclick="srt('tCot',0)">ID ↕</th><th onclick="srt('tCot',1)">Empresa ↕</th><th>CNPJ</th><th>Site</th><th>Telefone</th><th>E-mail</th><th onclick="srt('tCot',6)">Rota ↕</th><th onclick="srt('tCot',7)">Data ↕</th><th>Validade</th><th>Status</th></tr></thead>
+      <thead><tr><th onclick="srt('tCot',0)">Nº ↕</th><th onclick="srt('tCot',1)">Cliente ↕</th><th>Rota</th><th>Tipo Carga</th><th>Valor NF</th><th>Frete</th><th onclick="srt('tCot',6)">Data ↕</th><th>Status</th></tr></thead>
       <tbody>
-        <tr><td><b>#FB-2601</b></td><td class="tc">Videl T&I Transportes</td><td>63.147.064/0001-30</td><td><a href="https://fretebras.com.br" target="_blank" style="color:var(--accent)">fretebras.com.br</a></td><td>(11) 98765-4321</td><td>contato@videl.com.br</td><td class="tr">SP → Curitiba PR</td><td>03/05/2026</td><td>10/05/2026</td><td><span class="tb ba">Ativo</span></td></tr>
-        <tr><td><b>#FB-2598</b></td><td class="tc">Agro Forte Graos Ltda</td><td>12.456.789/0001-10</td><td><a href="#" style="color:var(--accent)">agroforte.com.br</a></td><td>(41) 99123-8877</td><td>logistica@agroforte.com.br</td><td class="tr">Cascavel PR → Santos SP</td><td>02/05/2026</td><td>09/05/2026</td><td><span class="tb bn">Novo</span></td></tr>
-        <tr><td><b>#FB-2590</b></td><td class="tc">Metalurgica Horizonte S/A</td><td>34.567.123/0001-44</td><td><a href="#" style="color:var(--accent)">mhorizonte.com.br</a></td><td>(31) 3345-9900</td><td>frete@mhorizonte.com.br</td><td class="tr">Contagem MG → Sao Paulo SP</td><td>01/05/2026</td><td>08/05/2026</td><td><span class="tb ba">Ativo</span></td></tr>
-        <tr><td><b>#FB-2585</b></td><td class="tc">BRF Alimentos S/A</td><td>01.838.723/0001-27</td><td><a href="#" style="color:var(--accent)">brf-br.com</a></td><td>(47) 3433-2200</td><td>supply@brf-br.com</td><td class="tr">Chapeco SC → Guarulhos SP</td><td>30/04/2026</td><td>07/05/2026</td><td><span class="tb bp">Pendente</span></td></tr>
-        <tr><td><b>#FB-2580</b></td><td class="tc">Construflex Materiais Ltda</td><td>78.234.560/0001-55</td><td><a href="#" style="color:var(--accent)">construflex.ind.br</a></td><td>(21) 2255-7788</td><td>operacoes@construflex.com.br</td><td class="tr">Rio de Janeiro RJ → BH MG</td><td>29/04/2026</td><td>06/05/2026</td><td><span class="tb ba">Ativo</span></td></tr>
-        <tr><td><b>#FB-2573</b></td><td class="tc">Supermercados TopMais</td><td>56.789.012/0001-88</td><td><a href="#" style="color:var(--accent)">topmais.com.br</a></td><td>(62) 3300-4455</td><td>logistica@topmais.com.br</td><td class="tr">Goiania GO → Sao Paulo SP</td><td>28/04/2026</td><td>05/05/2026</td><td><span class="tb be">Expirado</span></td></tr>
-        <tr><td><b>#FB-2568</b></td><td class="tc">Farma Distribuidora Nacional</td><td>90.123.456/0001-01</td><td><a href="#" style="color:var(--accent)">farmanacional.com.br</a></td><td>(11) 3200-9900</td><td>frete@farmanacional.com.br</td><td class="tr">Sao Paulo SP → Porto Alegre RS</td><td>27/04/2026</td><td>04/05/2026</td><td><span class="tb bn">Novo</span></td></tr>
-        <tr><td><b>#FB-2560</b></td><td class="tc">Exporta Soja Brasil</td><td>22.345.678/0001-19</td><td><a href="#" style="color:var(--accent)">exportasoja.agr.br</a></td><td>(65) 3614-8877</td><td>embarque@exportasoja.com.br</td><td class="tr">Rondonopolis MT → Santos SP</td><td>26/04/2026</td><td>03/05/2026</td><td><span class="tb bp">Pendente</span></td></tr>
+        <tr><td><b>COT-2026-00073</b></td><td class="tc">BOLD</td><td class="tr">ITAJAI/SC → JARAGUA DO SUL/SC</td><td>CONTAINER</td><td>R$ 461.962</td><td>R$ 4.000</td><td>10/07/2026</td><td><span class="tb ba">Aprovada</span></td></tr>
+        <tr><td><b>COT-2026-00072</b></td><td class="tc">Tok Bothanico</td><td class="tr">Aguai/SP → Cabedelo/PB</td><td>carga seca</td><td>R$ 82.533</td><td>R$ 24.911</td><td>08/07/2026</td><td><span class="tb ba">Aprovada</span></td></tr>
+        <tr><td><b>COT-2026-00071</b></td><td class="tc">Tok Bothanico</td><td class="tr">Aguaí/SP/SP → Feira de Santana/BA</td><td>Carga seca</td><td>R$ 170.000</td><td>R$ 22.500</td><td>08/07/2026</td><td><span class="tb ba">Aprovada</span></td></tr>
+        <tr><td><b>COT-2026-00070</b></td><td class="tc">BOLD</td><td class="tr">ITAJAI/SC → JARAGUÁ DO SUL /SC</td><td>CONTAINER</td><td>R$ 100.000</td><td>R$ 2.000</td><td>07/07/2026</td><td><span class="tb ba">Aprovada</span></td></tr>
+        <tr><td><b>COT-2026-00067</b></td><td class="tc">AVT DISTRIBUIDORA SOLAR</td><td class="tr">NOVA ODESSA/SP → ITAQUIRAI /MS</td><td>Kits Solares</td><td>R$ 75.000</td><td>R$ 6.000</td><td>07/07/2026</td><td><span class="tb ba">Aprovada</span></td></tr>
+        <tr><td><b>COT-2026-00066</b></td><td class="tc">AVT DISTRIBUIDORA SOLAR</td><td class="tr">TRÊS LAGOAS /MS → JUSCIMEIRA/MT</td><td>Kits Solares</td><td>R$ 87.000</td><td>R$ 5.800</td><td>07/07/2026</td><td><span class="tb ba">Aprovada</span></td></tr>
+        <tr><td><b>COT-2026-00065</b></td><td class="tc">AVT DISTRIBUIDORA SOLAR</td><td class="tr">Nova Odessa/SP → São Paulo/SP</td><td>Kits Solares</td><td>R$ 73.000</td><td>R$ 2.500</td><td>07/07/2026</td><td><span class="tb ba">Aprovada</span></td></tr>
+        <tr><td><b>COT-2026-00064</b></td><td class="tc">AUTHOMATHIKA</td><td class="tr">Sertãozinho SP/SP → Montes Claros de Goias /GO</td><td>Moveis</td><td>R$ 50.000</td><td>R$ 6.500</td><td>06/07/2026</td><td><span class="tb ba">Aprovada</span></td></tr>
+        <tr><td><b>COT-2026-00063</b></td><td class="tc">AVT DISTRIBUIDORA SOLAR</td><td class="tr">NOVA ODESSA/SP → CAMBUCI/SP</td><td>PARAFUSO</td><td>R$ 56.000</td><td>R$ 2.000</td><td>03/07/2026</td><td><span class="tb ba">Aprovada</span></td></tr>
+        <tr><td><b>COT-2026-00062</b></td><td class="tc">AVT DISTRIBUIDORA SOLAR</td><td class="tr">TRES LAGOAS/MS → PONTA PORÃ/MS</td><td>KITS SOLARES</td><td>R$ 285.000</td><td>R$ 5.000</td><td>02/07/2026</td><td><span class="tb ba">Aprovada</span></td></tr>
+        <tr><td><b>COT-2026-00061</b></td><td class="tc">AVT DISTRIBUIDORA SOLAR</td><td class="tr">TRES LAGOAS/MS → DOURADOS/MS</td><td>KITS SOLARES</td><td>R$ 128.000</td><td>R$ 5.000</td><td>02/07/2026</td><td><span class="tb ba">Aprovada</span></td></tr>
+        <tr><td><b>COT-2026-00059</b></td><td class="tc">AGRÍCOLA FERRARI LTDA</td><td class="tr">CANARANA/MT → PARANAGUA/PR</td><td>GERGELIM</td><td>R$ 240.000</td><td>R$ 19.600</td><td>01/07/2026</td><td><span class="tb ba">Aprovada</span></td></tr>
       </tbody>
     </table></div></div>
   </div>
   <div id="car" class="sw">
-    <div class="sec-hdr"><div class="sec-t">📦 Dados das Cargas <span class="bdg">8 registros</span></div><button class="btn btn-o btn-sm" onclick="csv('tCar','cargas')">⬇ CSV</button></div>
+    <div class="sec-hdr"><div class="sec-t">📦 Embarques <span class="bdg">67 registros</span></div><button class="btn btn-o btn-sm" onclick="csv('tCar','embarques')">⬇ CSV</button></div>
     <div class="flt"><input class="srch" id="sCar" onkeyup="flt('tCar','sCar')" placeholder="🔍 Buscar..."></div>
     <div class="tw"><div class="ts"><table id="tCar">
-      <thead><tr><th>Tipo Carga</th><th>Produto</th><th>Peso</th><th>Volume</th><th>Valor NF</th><th>Rastreamento</th><th>Seguro</th><th>Cotacao</th></tr></thead>
+      <thead><tr><th>Nº Embarque</th><th>Cliente</th><th>Rota</th><th>Peso</th><th>Valor NF</th><th>Frete</th><th>Motorista</th><th>CT-e</th></tr></thead>
       <tbody>
-        <tr><td>Paletizada</td><td>Autopecas diversas</td><td>18.500 kg</td><td>42 m3</td><td>R$ 385.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2601</td></tr>
-        <tr><td>Granel Solido</td><td>Soja em grao</td><td>27.000 kg</td><td>—</td><td>R$ 162.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2598</td></tr>
-        <tr><td>Indivisivel</td><td>Bobinas de aco</td><td>24.800 kg</td><td>18 m3</td><td>R$ 520.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2590</td></tr>
-        <tr><td>Frigorificada</td><td>Carne suina congelada</td><td>22.000 kg</td><td>55 m3</td><td>R$ 198.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2585</td></tr>
-        <tr><td>Paletizada</td><td>Cimento e agregados</td><td>26.000 kg</td><td>38 m3</td><td>R$ 78.000</td><td style="color:var(--orange)">Nao</td><td style="color:var(--orange)">Nao</td><td>#FB-2580</td></tr>
-        <tr><td>Paletizada</td><td>Produtos alimenticios</td><td>19.200 kg</td><td>48 m3</td><td>R$ 215.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2573</td></tr>
-        <tr><td>Frigorificada</td><td>Medicamentos/insumos</td><td>8.500 kg</td><td>22 m3</td><td>R$ 980.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2568</td></tr>
-        <tr><td>Granel Solido</td><td>Soja exportacao (sacaria)</td><td>27.500 kg</td><td>—</td><td>R$ 165.000</td><td style="color:var(--green)">Sim</td><td style="color:var(--green)">Sim</td><td>#FB-2560</td></tr>
+        <tr><td><b>EMB-2026-00067</b></td><td class="tc">BOLD</td><td class="tr">ITAJAI → JARAGUA DO SUL</td><td>51.652 kg</td><td>R$ 461.962</td><td>R$ 4.000</td><td>—</td><td style="color:var(--orange)">Não</td></tr>
+        <tr><td><b>EMB-2026-00066</b></td><td class="tc">AGRICOLA FERRARI LTDA</td><td class="tr">Itupeva → Rosário</td><td>6.167 kg</td><td>R$ 36.915</td><td>R$ 10.000</td><td>Adriano Alves da Silva</td><td style="color:var(--green)">Sim</td></tr>
+        <tr><td><b>EMB-2026-00065</b></td><td class="tc">Tok Bothanico</td><td class="tr">Aguai → Cabedelo</td><td>13.000 kg</td><td>R$ 82.533</td><td>R$ 24.911</td><td>RAFAEL DA SILVEIRA ALVES</td><td style="color:var(--orange)">Não</td></tr>
+        <tr><td><b>EMB-2026-00064</b></td><td class="tc">Tok Bothanico</td><td class="tr">Aguaí/SP → Feira de Santana</td><td>31.500 kg</td><td>R$ 170.000</td><td>R$ 22.500</td><td>—</td><td style="color:var(--orange)">Não</td></tr>
+        <tr><td><b>EMB-2026-00063</b></td><td class="tc">BOLD</td><td class="tr">ITAJAI → JARAGUÁ DO SUL </td><td>28.000 kg</td><td>R$ 100.000</td><td>R$ 2.000</td><td>Rodrigo De oliveira</td><td style="color:var(--orange)">Não</td></tr>
+        <tr><td><b>EMB-2026-00062</b></td><td class="tc">Carlos</td><td class="tr">ITAJAI → JARAGUÁ DO SUL</td><td>6.000 kg</td><td>R$ 100.000</td><td>R$ 2.000</td><td>Gabriel SCHMITT</td><td style="color:var(--orange)">Não</td></tr>
+        <tr><td><b>EMB-2026-00061</b></td><td class="tc">Gabriel Expedição</td><td class="tr">CASACAVEL → BRASILANDIA DO SUL</td><td>15.400 kg</td><td>R$ 10.000</td><td>R$ 2.200</td><td>Valmor Joao Constantino</td><td style="color:var(--orange)">Não</td></tr>
+        <tr><td><b>EMB-2026-00060</b></td><td class="tc">AVT DISTRIBUIDORA SOLAR</td><td class="tr">NOVA ODESSA → ITAQUIRAI </td><td>4.350 kg</td><td>R$ 75.000</td><td>R$ 6.000</td><td>Adeli De Santana Sousa</td><td style="color:var(--orange)">Não</td></tr>
+        <tr><td><b>EMB-2026-00059</b></td><td class="tc">AVT DISTRIBUIDORA SOLAR</td><td class="tr">TRÊS LAGOAS  → JUSCIMEIRA</td><td>4.500 kg</td><td>R$ 87.000</td><td>R$ 5.800</td><td>Elvio Rodrigues Correa</td><td style="color:var(--orange)">Não</td></tr>
+        <tr><td><b>EMB-2026-00058</b></td><td class="tc">AVT DISTRIBUIDORA SOLAR</td><td class="tr">Nova Odessa → São Paulo</td><td>3.500 kg</td><td>R$ 73.000</td><td>R$ 2.500</td><td>—</td><td style="color:var(--orange)">Não</td></tr>
+        <tr><td><b>EMB-2026-00057</b></td><td class="tc">AUTHOMATHIKA</td><td class="tr">Sertãozinho SP → Montes Claros de Goias </td><td>3.000 kg</td><td>R$ 50.000</td><td>R$ 6.500</td><td>—</td><td style="color:var(--orange)">Não</td></tr>
+        <tr><td><b>EMB-2026-00056</b></td><td class="tc">AVT DISTRIBUIDORA SOLAR</td><td class="tr">NOVA ODESSA → CAMBUCI</td><td>3.000 kg</td><td>R$ 56.000</td><td>R$ 2.000</td><td>Fernando Jesus Dos Santos</td><td style="color:var(--orange)">Não</td></tr>
       </tbody>
     </table></div></div>
   </div>
   <div id="vei" class="sw">
-    <div class="sec-hdr"><div class="sec-t">🚚 Veiculos <span class="bdg">8 registros</span></div><button class="btn btn-o btn-sm" onclick="csv('tVei','veiculos')">⬇ CSV</button></div>
+    <div class="sec-hdr"><div class="sec-t">🚚 Veículos <span class="bdg">76 registros</span></div><button class="btn btn-o btn-sm" onclick="csv('tVei','veiculos')">⬇ CSV</button></div>
     <div class="flt"><input class="srch" id="sVei" onkeyup="flt('tVei','sVei')" placeholder="🔍 Buscar..."></div>
     <div class="tw"><div class="ts"><table id="tVei">
-      <thead><tr><th>Tipo Veiculo</th><th>Carroceria</th><th>Eixos</th><th>Restricoes</th><th>Observacoes</th><th>Cotacao</th></tr></thead>
+      <thead><tr><th>Placa</th><th>Tipo</th><th>Marca/Modelo</th><th>Ano</th><th>Eixos</th><th>Capacidade</th><th>Motorista</th><th>Status</th></tr></thead>
       <tbody>
-        <tr><td><b>Carreta</b></td><td>Bau fechado</td><td>7 eixos</td><td>Nenhuma</td><td>Lona extra p/ protecao</td><td>#FB-2601</td></tr>
-        <tr><td><b>Bitrem</b></td><td>Graneleiro</td><td>9 eixos</td><td>Produto agricola</td><td>Exige canaleta</td><td>#FB-2598</td></tr>
-        <tr><td><b>Rodotrem</b></td><td>Plataforma aberta</td><td>11 eixos</td><td>Carga pesada indivisivel</td><td>AET obrigatorio</td><td>#FB-2590</td></tr>
-        <tr><td><b>Carreta</b></td><td>Refrigerada</td><td>7 eixos</td><td>Temp. -18C constante</td><td>Monitoramento continuo</td><td>#FB-2585</td></tr>
-        <tr><td><b>Truck</b></td><td>Aberta c/ grade</td><td>6 eixos</td><td>Nenhuma</td><td>Lonas e amarracao</td><td>#FB-2580</td></tr>
-        <tr><td><b>Carreta</b></td><td>Bau refrigerado</td><td>7 eixos</td><td>Higienizacao previa</td><td>Registro MAPA</td><td>#FB-2573</td></tr>
-        <tr><td><b>Carreta</b></td><td>Bau fechado</td><td>7 eixos</td><td>Produto controlado ANVISA</td><td>Motorista RDC 204</td><td>#FB-2568</td></tr>
-        <tr><td><b>Bitrem</b></td><td>Graneleiro</td><td>9 eixos</td><td>Produto agricola</td><td>Canaleta + lacre</td><td>#FB-2560</td></tr>
+        <tr><td><b>NZV8900</b></td><td>Truck</td><td>VOLVO VM 260 6X2R</td><td>2011</td><td>3 eixos</td><td>14t</td><td>RAFAEL DA SILVEIRA ALVES</td><td>Em Viagem</td></tr>
+        <tr><td><b>IDI2C68</b></td><td>Carreta</td><td>Mercedes LS 1935</td><td>1995</td><td>2 eixos</td><td>5t</td><td>Disponível</td><td>Disponivel</td></tr>
+        <tr><td><b>RXU2H27</b></td><td>Carreta</td><td>SR /RANDON SR BS CO 03E</td><td>2021</td><td>3 eixos</td><td>19t</td><td>Disponível</td><td>Disponivel</td></tr>
+        <tr><td><b>RXU5C23 </b></td><td>Carreta</td><td>VW /25.460 CTM 6X2</td><td>2022</td><td>3 eixos</td><td>23t</td><td>Disponível</td><td>Disponivel</td></tr>
+        <tr><td><b>CLJ3J47</b></td><td>Truck</td><td>VW /12.140 T</td><td>1998</td><td>3 eixos</td><td>14t</td><td>Disponível</td><td>Disponivel</td></tr>
+        <tr><td><b>HCC0G23</b></td><td>Truck</td><td>M.BENZ /L 1620</td><td>2004</td><td>3 eixos</td><td>15t</td><td>Disponível</td><td>Disponivel</td></tr>
+        <tr><td><b>BWQ3F52</b></td><td>Truck</td><td>M.BENZ /L 1618</td><td>1993</td><td>3 eixos</td><td>16t</td><td>Disponível</td><td>Disponivel</td></tr>
+        <tr><td><b>BXJ3J51</b></td><td>Truck</td><td>M.BENZ /L 113</td><td>1972</td><td>2 eixos</td><td>1t</td><td>Disponível</td><td>Disponivel</td></tr>
+        <tr><td><b>NCP3A55</b></td><td>Carreta</td><td>REB SCHIFFER SSC3E CA</td><td>2014</td><td>4 eixos</td><td>21t</td><td>Disponível</td><td>Disponivel</td></tr>
+        <tr><td><b>CYN6F63</b></td><td>Carreta</td><td>M.BENZ 1938 S</td><td>1999</td><td>3 eixos</td><td>13t</td><td>Disponível</td><td>Disponivel</td></tr>
+        <tr><td><b>CGO5D31</b></td><td>Tres_Quartos</td><td>Mercedes L 608 E</td><td>1986</td><td>2 eixos</td><td>4t</td><td>Disponível</td><td>Disponivel</td></tr>
+        <tr><td><b>RJS6E42</b></td><td>Carreta_Ls</td><td>VW METEOR 6X2</td><td>2022</td><td>3 eixos</td><td>27t</td><td>Disponível</td><td>Disponivel</td></tr>
+        <tr><td><b>ELW6033</b></td><td>Tres_Quartos</td><td>VW /9.150 E DELIVERY</td><td>2011</td><td>2 eixos</td><td>5t</td><td>Disponível</td><td>Disponivel</td></tr>
+        <tr><td><b>NFW1I90</b></td><td>Carreta_Ls</td><td>VOLVO FH12</td><td>2005</td><td>3 eixos</td><td>27t</td><td>Aurelio Cardoso De Oliveira</td><td>Em Viagem</td></tr>
       </tbody>
     </table></div></div>
   </div>
   <div id="mkt" class="sw">
     <div class="sec-hdr"><div class="sec-t">📈 Informacoes de Mercado</div></div>
     <div class="mg">
-      <div class="mc"><h4>🏆 Top 10 Rotas</h4><ul class="ml"><li><span><span class="rk">#1</span> SP → Santos SP</span><span class="val">142/mes</span></li><li><span><span class="rk">#2</span> SP → Curitiba PR</span><span class="val">118/mes</span></li><li><span><span class="rk">#3</span> SP → Rio de Janeiro</span><span class="val">97/mes</span></li><li><span><span class="rk">#4</span> MT → Santos SP</span><span class="val">86/mes</span></li><li><span><span class="rk">#5</span> SP → BH MG</span><span class="val">79/mes</span></li><li><span><span class="rk">#6</span> PR → Sao Paulo</span><span class="val">73/mes</span></li><li><span><span class="rk">#7</span> GO → Sao Paulo</span><span class="val">65/mes</span></li><li><span><span class="rk">#8</span> SC → Sao Paulo</span><span class="val">61/mes</span></li><li><span><span class="rk">#9</span> RS → Sao Paulo</span><span class="val">54/mes</span></li><li><span><span class="rk">#10</span> MG → Rio de Janeiro</span><span class="val">48/mes</span></li></ul></div>
-      <div class="mc"><h4>📦 Tipos de Carga</h4><ul class="ml"><li><span>Paletizada diversa</span><span class="val">38%</span></li><li><span>Granel solido</span><span class="val">25%</span></li><li><span>Frigorificada</span><span class="val">16%</span></li><li><span>Indivisivel</span><span class="val">10%</span></li><li><span>Perigosa</span><span class="val">6%</span></li><li><span>Outros</span><span class="val">5%</span></li></ul></div>
-      <div class="mc"><h4>⚖️ Faixas de Peso</h4><ul class="ml"><li><span>20.000-27.500 kg</span><span class="val">44%</span></li><li><span>10.000-19.999 kg</span><span class="val">28%</span></li><li><span>5.000-9.999 kg</span><span class="val">16%</span></li><li><span>Abaixo 5.000 kg</span><span class="val">8%</span></li><li><span>Acima 27.500 kg</span><span class="val">4%</span></li></ul></div>
-      <div class="mc"><h4>🚛 Veiculos Mais Usados</h4><ul class="ml"><li><span>Carreta 7 eixos</span><span class="val">41%</span></li><li><span>Bitrem 9 eixos</span><span class="val">22%</span></li><li><span>Truck 6 eixos</span><span class="val">18%</span></li><li><span>Rodotrem 11 eixos</span><span class="val">11%</span></li><li><span>Carreta refrigerada</span><span class="val">8%</span></li></ul></div>
-      <div class="mc"><h4>🏢 Empresas que Mais Cotam</h4><ul class="ml"><li><span>BRF Alimentos S/A</span><span class="val">28 cot./mes</span></li><li><span>Exporta Soja Brasil</span><span class="val">22 cot./mes</span></li><li><span>Metalurgica Horizonte</span><span class="val">19 cot./mes</span></li><li><span>Videl T&I</span><span class="val">14 cot./mes</span></li><li><span>Farma Nacional</span><span class="val">11 cot./mes</span></li></ul></div>
-      <div class="mc"><h4>📅 Volume Marco 2026</h4><ul class="ml"><li><span>Semana 1 (01-07/03)</span><span class="val">48 fretes</span></li><li><span>Semana 2 (08-14/03)</span><span class="val">52 fretes</span></li><li><span>Semana 3 (15-21/03)</span><span class="val">61 fretes</span></li><li><span>Semana 4 (22-28/03)</span><span class="val">57 fretes</span></li><li><span><b>Total</b></span><span class="val" style="color:var(--accent)"><b>236 fretes</b></span></li></ul></div>
+      <div class="mc"><h4>🏆 Top Rotas (embarques reais)</h4><ul class="ml"><li><span>TRES LAGOAS → DOURADOS</span><span class="val">4 emb.</span></li><li><span>CANARANA → PARANAGUA</span><span class="val">4 emb.</span></li><li><span>ITAPEVI → VITORIA</span><span class="val">2 emb.</span></li><li><span>CANARAMA → PARANAGUA</span><span class="val">2 emb.</span></li><li><span>Indefinida → Indefinida</span><span class="val">2 emb.</span></li><li><span>ITAJAI → JARAGUA DO SUL</span><span class="val">1 emb.</span></li><li><span>Itupeva → Rosário</span><span class="val">1 emb.</span></li><li><span>Aguai → Cabedelo</span><span class="val">1 emb.</span></li></ul></div>
+      <div class="mc"><h4>🏢 Clientes que Mais Embarcam</h4><ul class="ml"><li><span>AVT DISTRIBUIDORA SOLAR</span><span class="val">22 emb.</span></li><li><span>Tok Bothanico</span><span class="val">11 emb.</span></li><li><span>AGRÍCOLA FERRARI LTDA</span><span class="val">9 emb.</span></li><li><span>AUTHOMATHIKA</span><span class="val">6 emb.</span></li><li><span>BOLD</span><span class="val">2 emb.</span></li><li><span>Grupo Gera</span><span class="val">2 emb.</span></li></ul></div>
+      <div class="mc"><h4>💰 Faturamento por Cliente</h4><ul class="ml"><li><span>AGRÍCOLA FERRARI LTDA</span><span class="val">R$ 169.570</span></li><li><span>AVT DISTRIBUIDORA SOLAR</span><span class="val">R$ 123.520</span></li><li><span>Tok Bothanico</span><span class="val">R$ 100.648</span></li><li><span>AUTHOMATHIKA</span><span class="val">R$ 35.500</span></li><li><span>DIEGO</span><span class="val">R$ 27.874</span></li><li><span>Cliente Teste</span><span class="val">R$ 14.476</span></li></ul></div>
+      <div class="mc"><h4>📍 Destinos por UF</h4><ul class="ml"><li><span>SP</span><span class="val">13 emb.</span></li><li><span>PR</span><span class="val">12 emb.</span></li><li><span>GO</span><span class="val">10 emb.</span></li><li><span>MS</span><span class="val">8 emb.</span></li><li><span>MT</span><span class="val">4 emb.</span></li><li><span>MG</span><span class="val">4 emb.</span></li></ul></div>
     </div>
   </div>
   <div id="bi" class="sw">
     <div class="sec-hdr"><div class="sec-t">🔍 BI — Analise de Frete de Mercado</div></div>
     <div class="cg">
-      <div class="cc"><div class="ct">💰 R$/km Medio por Tipo de Veiculo</div><div class="cs">Comparativo de rentabilidade</div><div class="cw"><canvas id="c5"></canvas></div></div>
-      <div class="cc"><div class="ct">📊 Aproveitamento de Cotacoes</div><div class="cs">Respondidas vs. ignoradas</div><div class="cw"><canvas id="c6"></canvas></div></div>
-      <div class="cc"><div class="ct">📈 Tendencia de Mercado 2026</div><div class="cs">Volume de fretes e valor medio R$/km</div><div class="cw"><canvas id="c7"></canvas></div></div>
+      <div class="cc"><div class="ct">💰 Frete Médio por Cliente</div><div class="cs">Ticket médio de frete por cliente</div><div class="cw"><canvas id="c5"></canvas></div></div>
+      <div class="cc"><div class="ct">📄 Documentos Fiscais (259)</div><div class="cs">Status dos documentos · 54 CT-e, 76 NF-e</div><div class="cw"><canvas id="c6"></canvas></div></div>
+      <div class="cc"><div class="ct">📈 Tendência de Embarques 2026</div><div class="cs">Volume mensal de embarques</div><div class="cw"><canvas id="c7"></canvas></div></div>
       <div class="cc">
-        <div class="ct">🌡️ Mapa de Calor de Rotas</div><div class="cs">Origem x Destino (fretes/mes)</div>
+        <div class="ct">🌡️ Mapa de Calor Origem × Destino (UF)</div><div class="cs">Fluxo real de embarques por UF</div>
         <div style="overflow-x:auto;margin-top:8px"><table class="hmt">
-          <thead><tr><th>Orig/Dest</th><th>SP</th><th>PR</th><th>RJ</th><th>MG</th><th>RS</th><th>Santos</th></tr></thead>
+          <thead><tr><th>Orig/Dest</th><th>SP</th><th>PR</th><th>GO</th><th>MS</th><th>MT</th><th>MG</th></tr></thead>
           <tbody>
-            <tr><td><b>SP</b></td><td class="h0">—</td><td class="h3">118</td><td class="h3">97</td><td class="h2">79</td><td class="h2">54</td><td class="h4">142</td></tr>
-            <tr><td><b>MT</b></td><td class="h2">41</td><td class="h1">18</td><td class="h0">3</td><td class="h1">12</td><td class="h0">5</td><td class="h3">86</td></tr>
-            <tr><td><b>PR</b></td><td class="h3">73</td><td class="h0">—</td><td class="h1">22</td><td class="h1">19</td><td class="h2">31</td><td class="h2">48</td></tr>
-            <tr><td><b>GO</b></td><td class="h3">65</td><td class="h1">14</td><td class="h1">11</td><td class="h2">33</td><td class="h0">4</td><td class="h1">22</td></tr>
-            <tr><td><b>SC</b></td><td class="h3">61</td><td class="h2">38</td><td class="h1">15</td><td class="h1">17</td><td class="h1">29</td><td class="h2">44</td></tr>
-            <tr><td><b>MG</b></td><td class="h2">52</td><td class="h1">21</td><td class="h3">48</td><td class="h0">—</td><td class="h1">14</td><td class="h2">38</td></tr>
+            <tr><td><b>SP</b></td><td class="h4">11</td><td class="h1">2</td><td class="h3">7</td><td class="h1">1</td><td class="h0">—</td><td class="h1">2</td></tr>
+            <tr><td><b>MS</b></td><td class="h1">1</td><td class="h1">1</td><td class="h1">1</td><td class="h3">7</td><td class="h1">2</td><td class="h0">—</td></tr>
+            <tr><td><b>MT</b></td><td class="h0">—</td><td class="h3">6</td><td class="h0">—</td><td class="h0">—</td><td class="h0">—</td><td class="h0">—</td></tr>
+            <tr><td><b>TO</b></td><td class="h0">—</td><td class="h1">2</td><td class="h0">—</td><td class="h0">—</td><td class="h1">2</td><td class="h0">—</td></tr>
+            <tr><td><b>SC</b></td><td class="h0">—</td><td class="h0">—</td><td class="h0">—</td><td class="h0">—</td><td class="h0">—</td><td class="h0">—</td></tr>
+            <tr><td><b>GO</b></td><td class="h0">—</td><td class="h0">—</td><td class="h1">2</td><td class="h0">—</td><td class="h0">—</td><td class="h0">—</td></tr>
           </tbody>
         </table></div>
       </div>
@@ -241,14 +254,16 @@ tbody td{padding:10px 14px;font-size:13px;vertical-align:middle}
     </table></div></div>
   </div>
   <div id="alt" class="sw">
-    <div class="sec-hdr"><div class="sec-t">🚨 Alertas <span class="bdg" style="background:rgba(255,51,102,.2);color:var(--red)">3 alertas</span></div><button class="btn btn-o btn-sm" onclick="csv('tAlt','alertas')">⬇ CSV</button></div>
-    <div class="ab">⚠️ Perda estimada: <b>R$ 42.880,00</b></div>
+    <div class="sec-hdr"><div class="sec-t">🚨 Alertas <span class="bdg" style="background:rgba(255,51,102,.2);color:var(--red)">5 alertas</span></div><button class="btn btn-o btn-sm" onclick="csv('tAlt','alertas')">⬇ CSV</button></div>
+    <div class="ab">⚠️ Embarques sem motorista + trava de seguro (contêiner Bold acima de R$ 300k)</div>
     <div class="tw"><div class="ts"><table id="tAlt">
-      <thead><tr><th>ID</th><th>Empresa</th><th>Rota</th><th>Data</th><th>Tempo Sem Resposta</th><th>Perda Est.</th><th>Acao</th></tr></thead>
+      <thead><tr><th>Nº</th><th>Cliente</th><th>Rota</th><th>Motivo</th><th>Prioridade</th><th>Frete</th><th>Ação</th></tr></thead>
       <tbody>
-        <tr class="ar"><td><b>#FB-2585</b></td><td>BRF Alimentos S/A</td><td class="tr">SC → SP</td><td>30/04/2026</td><td><b style="color:var(--red)">72h</b></td><td>R$ 10.650</td><td><button class="btn btn-sm btn-p">Responder</button></td></tr>
-        <tr class="ar"><td><b>#FB-2568</b></td><td>Farma Distribuidora</td><td class="tr">SP → RS</td><td>27/04/2026</td><td><b style="color:var(--red)">48h</b></td><td>R$ 10.900</td><td><button class="btn btn-sm btn-p">Responder</button></td></tr>
-        <tr class="ar"><td><b>#FB-2560</b></td><td>Exporta Soja Brasil</td><td class="tr">MT → Santos</td><td>26/04/2026</td><td><b style="color:var(--red)">36h</b></td><td>R$ 21.330</td><td><button class="btn btn-sm btn-p">Responder</button></td></tr>
+        <tr class="ar"><td><b>COT-2026-00073</b></td><td>BOLD</td><td class="tr">Itajaí → Jaraguá do Sul</td><td>Contêiner R$ 461.962 &gt; limite seguro R$ 300k</td><td><b style="color:var(--red)">Crítico</b></td><td>R$ 4.000</td><td><button class="btn btn-sm btn-p">Revisar</button></td></tr>
+        <tr class="ar"><td><b>EMB-2026-00067</b></td><td>BOLD</td><td class="tr">ITAJAI → JARAGUA DO SUL</td><td>Sem motorista alocado</td><td><b style="color:var(--red)">Ação</b></td><td>R$ 4.000</td><td><button class="btn btn-sm btn-p">Alocar</button></td></tr>
+        <tr class="ar"><td><b>EMB-2026-00064</b></td><td>Tok Bothanico</td><td class="tr">Aguaí/SP → Feira de Santana</td><td>Sem motorista alocado</td><td><b style="color:var(--red)">Ação</b></td><td>R$ 22.500</td><td><button class="btn btn-sm btn-p">Alocar</button></td></tr>
+        <tr class="ar"><td><b>EMB-2026-00058</b></td><td>AVT DISTRIBUIDORA SOLAR</td><td class="tr">Nova Odessa → São Paulo</td><td>Sem motorista alocado</td><td><b style="color:var(--red)">Ação</b></td><td>R$ 2.500</td><td><button class="btn btn-sm btn-p">Alocar</button></td></tr>
+        <tr class="ar"><td><b>EMB-2026-00030</b></td><td>AGRÍCOLA FERRARI LTDA</td><td class="tr">CANARAMA → PARANAGUA</td><td>Sem motorista alocado</td><td><b style="color:var(--red)">Ação</b></td><td>R$ 24.750</td><td><button class="btn btn-sm btn-p">Alocar</button></td></tr>
       </tbody>
     </table></div></div>
   </div>
@@ -282,13 +297,13 @@ function logE(msg){const lb=document.getElementById('logBox');if(!lb)return;cons
 function initCharts(){
   const gc='rgba(255,255,255,.06)',tc='#64748b';
   const dO={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#e2e8f0',font:{size:11}}}},scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10}}}}};
-  new Chart(document.getElementById('c1'),{type:'bar',data:{labels:['Sem 1','Sem 2','Sem 3','Sem 4','Sem 5'],datasets:[{label:'Fretes',data:[48,52,61,57,18],backgroundColor:'rgba(0,212,255,.6)',borderColor:'#00d4ff',borderWidth:2,borderRadius:6},{label:'Motoristas',data:[156,172,201,189,62],backgroundColor:'rgba(0,255,136,.3)',borderColor:'#00ff88',borderWidth:2,borderRadius:6,yAxisID:'y1'}]},options:{...dO,scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#00ff88',font:{size:10}}}}}});
-  new Chart(document.getElementById('c2'),{type:'doughnut',data:{labels:['Carreta 7 eixos','Bitrem 9 eixos','Truck 6 eixos','Rodotrem','Refrig.'],datasets:[{data:[41,22,18,11,8],backgroundColor:['#00d4ff','#00ff88','#ff6b35','#9b59b6','#ff3366'],borderWidth:2,borderColor:'#111827'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#e2e8f0',font:{size:11},padding:8}}}}});
-  new Chart(document.getElementById('c3'),{type:'bar',data:{labels:['Paletizada','Granel','Frigorificada','Indivisivel','Perigosa','Outros'],datasets:[{label:'%',data:[38,25,16,10,6,5],backgroundColor:['#00d4ff','#00ff88','#9b59b6','#ff6b35','#ff3366','#64748b'],borderRadius:6}]},options:{...dO,plugins:{legend:{display:false}},indexAxis:'y',scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10},callback:v=>v+'%'}},y:{grid:{color:gc},ticks:{color:'#e2e8f0',font:{size:10}}}}}});
-  new Chart(document.getElementById('c4'),{type:'bar',data:{labels:['SC-SP','MT-Santos','PR-Santos','SP-CWB','SP-RS','MG-SP'],datasets:[{label:'R$/km Praticado',data:[15,13.5,12,10.5,10,12],backgroundColor:'rgba(0,212,255,.5)',borderColor:'#00d4ff',borderWidth:2,borderRadius:6},{label:'Referencia',data:[14.2,13,11.5,9.8,10.3,12.2],backgroundColor:'rgba(0,255,136,.3)',borderColor:'#00ff88',borderWidth:2,borderRadius:6}]},options:{...dO,scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:9}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10},callback:v=>'R$'+v}}}}});
-  new Chart(document.getElementById('c5'),{type:'bar',data:{labels:['Carreta','Bitrem','Rodotrem','Truck','Refrig.'],datasets:[{label:'R$/km',data:[10.25,12.75,12,7,14.6],backgroundColor:['#00d4ff','#00ff88','#ff6b35','#9b59b6','#ff3366'],borderRadius:8}]},options:{...dO,plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10},callback:v=>'R$'+v}}}}});
-  new Chart(document.getElementById('c6'),{type:'pie',data:{labels:['A tempo','Com atraso','Ignoradas','Expiradas'],datasets:[{data:[45,17,23,15],backgroundColor:['#00ff88','#00d4ff','#ff3366','#ff6b35'],borderWidth:2,borderColor:'#111827'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#e2e8f0',font:{size:11},padding:8}}}}});
-  new Chart(document.getElementById('c7'),{type:'line',data:{labels:['Jan','Fev','Mar','Abr','Mai','Jun'],datasets:[{label:'Fretes/mes',data:[198,212,236,228,241,0],borderColor:'#00d4ff',backgroundColor:'rgba(0,212,255,.1)',fill:true,tension:.4,borderWidth:2},{label:'R$/km',data:[8.1,8.25,8.4,8.38,8.52,0],borderColor:'#00ff88',backgroundColor:'rgba(0,255,136,.07)',fill:true,tension:.4,borderWidth:2,yAxisID:'y1'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#e2e8f0',font:{size:11}}}},scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#00ff88',font:{size:10},callback:v=>'R$'+v}}}}});
+  new Chart(document.getElementById('c1'),{type:'bar',data:{labels:['Abr','Mai','Jun','Jul'],datasets:[{label:'Embarques',data:[2,4,37,24],backgroundColor:'rgba(0,212,255,.6)',borderColor:'#00d4ff',borderWidth:2,borderRadius:6}]},options:{...dO,scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#00ff88',font:{size:10}}}}}});
+  new Chart(document.getElementById('c2'),{type:'doughnut',data:{labels:['Truck','Carreta','Carreta LS','Três Quartos','Bitrem'],datasets:[{data:[7,7,3,2,1],backgroundColor:['#00d4ff','#00ff88','#ff6b35','#9b59b6','#ff3366'],borderWidth:2,borderColor:'#111827'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#e2e8f0',font:{size:11},padding:8}}}}});
+  new Chart(document.getElementById('c3'),{type:'bar',data:{labels:['Entregue','Em trânsito','Programado','Atrasado'],datasets:[{label:'Embarques',data:[50,5,4,4],backgroundColor:['#00d4ff','#00ff88','#9b59b6','#ff6b35','#ff3366','#64748b'],borderRadius:6}]},options:{...dO,plugins:{legend:{display:false}},indexAxis:'y',scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10},callback:v=>v+'%'}},y:{grid:{color:gc},ticks:{color:'#e2e8f0',font:{size:10}}}}}});
+  new Chart(document.getElementById('c4'),{type:'bar',data:{labels:['A. Ferrari','AVT Solar','Tok Both.','Authomathika','Diego'],datasets:[{label:'Faturamento R$',data:[169570,123520,100648,35500,27874],backgroundColor:'rgba(0,212,255,.5)',borderColor:'#00d4ff',borderWidth:2,borderRadius:6}]},options:{...dO,scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:9}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10},callback:v=>'R$'+v}}}}});
+  new Chart(document.getElementById('c5'),{type:'bar',data:{labels:['A.Ferrari','Tok','AVT','Bold','Gabriel'],datasets:[{label:'Frete médio R$',data:[18841,9150,5614,3000,2200],backgroundColor:['#00d4ff','#00ff88','#ff6b35','#9b59b6','#ff3366'],borderRadius:8}]},options:{...dO,plugins:{legend:{display:false}},scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10},callback:v=>'R$'+v}}}}});
+  new Chart(document.getElementById('c6'),{type:'pie',data:{labels:['Autorizados','Pendentes','Outros'],datasets:[{data:[42,12,205],backgroundColor:['#00ff88','#00d4ff','#ff3366','#ff6b35'],borderWidth:2,borderColor:'#111827'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:'#e2e8f0',font:{size:11},padding:8}}}}});
+  new Chart(document.getElementById('c7'),{type:'line',data:{labels:['Abr','Mai','Jun','Jul'],datasets:[{label:'Embarques/mês',data:[2,4,37,24],borderColor:'#00d4ff',backgroundColor:'rgba(0,212,255,.1)',fill:true,tension:.4,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#e2e8f0',font:{size:11}}}},scales:{x:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y:{grid:{color:gc},ticks:{color:tc,font:{size:10}}},y1:{position:'right',grid:{drawOnChartArea:false},ticks:{color:'#00ff88',font:{size:10},callback:v=>'R$'+v}}}}});
 }
 window.addEventListener('DOMContentLoaded',()=>{
   refresh();countdown();setTimeout(initCharts,100);
