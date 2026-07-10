@@ -1,0 +1,202 @@
+{
+  "rascunho": true,
+  "gerado_por": "Moita Rev1",
+  "gerado_em": "2026-07-09",
+  "atualizado_em": "2026-07-09T23:50:00",
+  "embarque": "EMB-2026-00066",
+  "status": "RASCUNHO - AGUARDANDO REVISÃO HUMANA",
+
+  "identificacao": {
+    "tipo_cte": "ORIGINAL",
+    "modal": "RODOVIARIO",
+    "tipo_servico": "NORMAL",
+    "cfop": "6353",
+    "cfop_descricao": "Prestação de serviço de transporte interestadual (SP → MA)",
+    "natureza_operacao": "PRESTACAO DE SERVICO DE TRANSPORTE",
+    "forma_pagamento": "A PRAZO",
+    "tipo_operacional": "RETORNO"
+  },
+
+  "emitente": {
+    "razao_social": "VIDEL TRANSPORTE E LOGISTICA LTDA",
+    "cnpj": "63.147.064/0001-30",
+    "ie": "129273392",
+    "endereco": "Itupeva/SP (base operacional)",
+    "cidade": "Itupeva",
+    "uf": "SP",
+    "nota": "IE extraída do CT-e #161 emitido via Hivecloud em 09/07/2026"
+  },
+
+  "remetente": {
+    "razao_social": "VIDEL TRANSPORTE E LOGISTICA LTDA",
+    "cnpj": "63.147.064/0001-30",
+    "ie": "129273392",
+    "cidade": "Itupeva",
+    "uf": "SP",
+    "nota": "Remetente é a própria Videl em Itupeva (confirmado pelo usuário)"
+  },
+
+  "destinatario": {
+    "razao_social": "AGRÍCOLA FERRARI LTDA",
+    "cnpj": "91.748.483/0001-62",
+    "ie": "0910260222",
+    "endereco": "Rodovia BR-285",
+    "bairro": "Valinhos",
+    "cidade": "Passo Fundo",
+    "uf": "RS",
+    "cep": "99043-800",
+    "telefone": "54991841267",
+    "email": "nfe@agricolaferrari.com.br",
+    "contato": "DIEGO - Diretor Logística",
+    "nota": "Endereço de entrega: Rosário/MA (verificar com destinatário se usa endereço do cadastro RS ou entrega em MA)"
+  },
+
+  "tomador_servico": {
+    "tipo": "PREENCHIDO NA PLATAFORMA",
+    "nota": "Verificar na plataforma Videl quem está definido como tomador"
+  },
+
+  "nfe_referenciada": {
+    "chave_acesso": "32260627483260000383550010000022631708331391",
+    "numero": "2263",
+    "serie": "1",
+    "emitente_nfe": {
+      "razao_social": "GRAMTOK DISTRIBUICAO E LOGISTICA LTDA",
+      "cnpj": "27.483.260/0003-83",
+      "ie": "083943242",
+      "endereco": "RODOVIA GOVERNADOR MARIO COVAS, S/N",
+      "bairro": "JACUHY",
+      "cidade": "SERRA",
+      "uf": "ES",
+      "cep": "29161230"
+    },
+    "destinatario_nfe": {
+      "razao_social": "VISAO COMERCIO ATACADISTA DE COSMETICOS EIRELI",
+      "cnpj": "31.546.496/0001-27",
+      "ie": "151967119",
+      "endereco": "AVENIDA ALFA",
+      "bairro": "DOM JOSE RODRIGUES",
+      "cidade": "JUAZEIRO",
+      "uf": "BA",
+      "cep": "48909-000"
+    },
+    "transportador_nfe": {
+      "razao_social": "GRAMTOK DISTRIBUICAO E LOGISTICA EIRELI",
+      "cnpj": "27.483.260/0001-11",
+      "placa": "FXI3B44"
+    },
+    "valor_total_nfe": 36914.91,
+    "valor_produtos": 35462.76,
+    "valor_icms": 4255.58,
+    "valor_ipi": 1452.15,
+    "volumes": "665 CAIXAS",
+    "peso_bruto": 6167.308,
+    "data_emissao": "2026-06-18",
+    "produtos": "Cosméticos Tok Bothânico (shampoo, condicionador, sabonete líquido)"
+  },
+
+  "divergencias_detectadas": [
+    {
+      "campo": "Valor NF",
+      "embarque": "R$ 50.000,00",
+      "nfe_real": "R$ 36.914,91",
+      "acao": "CORRIGIR valor no embarque para R$ 36.914,91"
+    },
+    {
+      "campo": "Peso",
+      "embarque": "2.000 kg",
+      "nfe_real": "6.167 kg",
+      "acao": "CORRIGIR peso no embarque para 6.167 kg"
+    }
+  ],
+
+  "valores": {
+    "valor_total_servico": 10000.00,
+    "valor_frete": 10000.00,
+    "valor_pedagio": "A CALCULAR",
+    "valor_seguro_rcdc": 6.64,
+    "valor_seguro_rcdc_calculo": "0,018% × R$ 36.914,91 = R$ 6,64",
+    "valor_mercadoria_nfe": 36914.91,
+    "peso_bruto_kg": 6167.308,
+    "volumes": 665
+  },
+
+  "icms": {
+    "cst": "00",
+    "base_calculo": 10000.00,
+    "aliquota_percentual": 7.0,
+    "aliquota_justificativa": "Interestadual SP (Sul/Sudeste) → MA (Norte/Nordeste) = 7% (Art. 155, §2º, IV CF + Resolução 22/89)",
+    "valor_icms": 700.00
+  },
+
+  "motorista": {
+    "nome": "Adriano Alves da Silva",
+    "cpf": "303.810.448-58",
+    "rg": "01197749303",
+    "celular": "14 98131-4622",
+    "cnh_categoria": "C",
+    "cnh_numero": "NÃO CADASTRADO NA PLATAFORMA",
+    "cnh_validade": "NÃO CADASTRADO NA PLATAFORMA",
+    "status": "em_viagem"
+  },
+
+  "veiculo": {
+    "placa": "FVQ0J00",
+    "renavam": "01105212332",
+    "tipo": "CARRETA",
+    "marca": "SCANIA",
+    "modelo": "/R 440 A6X2",
+    "ano": "2014/2014",
+    "cor": "BRANCA",
+    "chassi": "9BSR6X200E386031",
+    "eixos": 3,
+    "capacidade_kg": 23000,
+    "rntrc": "NÃO CADASTRADO"
+  },
+
+  "rota": {
+    "origem": "Itupeva/SP",
+    "destino": "Rosário/MA",
+    "distancia_estimada_km": 2500,
+    "data_coleta": "2026-07-10",
+    "data_entrega_prevista": "2026-07-13"
+  },
+
+  "seguro_verificacao": {
+    "aprovado": true,
+    "valor_carga_dentro_limite": true,
+    "carga_permitida": true,
+    "tipo_carga": "Cosméticos (Tok Bothânico - shampoo, condicionador, sabonete)",
+    "ncm_principal": "33051000 / 33059000 / 34012010",
+    "observacoes": "Cosméticos NÃO constam na lista de exclusões. Valor R$ 36.914,91 dentro do limite de R$ 1.000.000"
+  },
+
+  "comissoes": {
+    "comissao_externa_percentual": 2.5,
+    "comissao_externa_valor": 250.00,
+    "comissao_interna_percentual": 1.5,
+    "comissao_interna_valor": 150.00,
+    "representante": "Gearlison Caires"
+  },
+
+  "pendencias_resolvidas": [
+    "Chave de acesso NF-e 2263 extraída: 32260627483260000383550010000022631708331391",
+    "Dados do remetente: Videl T&I em Itupeva/SP (confirmado)",
+    "Tomador: preenchido na plataforma (confirmado)",
+    "ICMS calculado: 7% (SP→MA) = R$ 700,00",
+    "Dados da NF-e extraídos completos (emitente, destinatário, valores, produtos)",
+    "IE Videl: 129273392 (extraída do CT-e #161 autorizado em 09/07/2026 via Hivecloud)",
+    "Razão social correta: VIDEL TRANSPORTE E LOGISTICA LTDA"
+  ],
+
+  "pendencias_restantes": [
+    "1. CORRIGIR valor NF no embarque: R$ 50.000 → R$ 36.914,91",
+    "2. CORRIGIR peso no embarque: 2.000 kg → 6.167 kg",
+    "3. CONFIRMAR endereço de entrega (Rosário/MA vs Passo Fundo/RS)",
+    "4. PREENCHER CNH do motorista (número e validade não cadastrados)",
+    "5. PREENCHER RNTRC do veículo",
+    "6. [RESOLVIDO] IE Videl: 129273392 — extraída do e-mail Hivecloud CT-e #161",
+    "7. CALCULAR pedágio (rota SP→MA)",
+    "8. REALIZAR averbação do seguro antes do embarque"
+  ]
+}

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- RASCUNHO CT-e | EMB-2026-00066 | Gerado por Moita Rev1 (Fable) em 10/07/2026 -->
+<!-- NAO EMITIR SEM REVISAO HUMANA. Ambiente: tpAmb=2 (homologacao) ate validacao. -->
+<!-- Pendencias: CNH/RNTRC do motorista; confirmar endereco de entrega (Rosario/MA vs cadastro Passo Fundo/RS); numeracao real do talao Bsoft. -->
+<CTe xmlns="http://www.portalfiscal.inf.br/cte">
+  <infCte versao="4.00" Id="CTe-RASCUNHO-EMB-2026-00066">
+    <ide>
+      <cUF>35</cUF><!-- SP: UF de inicio da prestacao -->
+      <CFOP>6353</CFOP><!-- Prestacao interestadual a estabelecimento comercial -->
+      <natOp>PRESTACAO DE SERVICO DE TRANSPORTE</natOp>
+      <mod>57</mod>
+      <serie>1</serie>
+      <nCT>A_DEFINIR_PELO_TALAO_BSOFT</nCT>
+      <dhEmi>2026-07-10T12:00:00-03:00</dhEmi>
+      <tpImp>1</tpImp>
+      <tpEmis>1</tpEmis>
+      <tpAmb>2</tpAmb><!-- HOMOLOGACAO enquanto rascunho -->
+      <tpCTe>0</tpCTe><!-- 0=Normal (ORIGINAL) -->
+      <procEmi>0</procEmi>
+      <cMunEnv>3523404</cMunEnv><!-- Itupeva/SP (IBGE) -->
+      <xMunEnv>ITUPEVA</xMunEnv>
+      <UFEnv>SP</UFEnv>
+      <modal>01</modal><!-- Rodoviario -->
+      <tpServ>0</tpServ><!-- Normal -->
+      <cMunIni>3523404</cMunIni>
+      <xMunIni>ITUPEVA</xMunIni>
+      <UFIni>SP</UFIni>
+      <cMunFim>2109502</cMunFim><!-- Rosario/MA (IBGE) -->
+      <xMunFim>ROSARIO</xMunFim>
+      <UFFim>MA</UFFim>
+      <retira>0</retira>
+      <indIEToma>1</indIEToma>
+      <toma3><toma>3</toma></toma3><!-- Tomador = Destinatario (Agricola Ferrari, cond. 60 dias) -->
+    </ide>
+    <emit>
+      <CNPJ>63147064000130</CNPJ>
+      <IE>129273392</IE>
+      <xNome>VIDEL TRANSPORTE E LOGISTICA LTDA</xNome>
+      <enderEmit>
+        <xLgr>A_CONFIRMAR</xLgr>
+        <nro>SN</nro>
+        <xBairro>A_CONFIRMAR</xBairro>
+        <cMun>3523404</cMun>
+        <xMun>ITUPEVA</xMun>
+        <CEP>13295000</CEP>
+        <UF>SP</UF>
+      </enderEmit>
+    </emit>
+    <rem>
+      <CNPJ>63147064000130</CNPJ>
+      <IE>129273392</IE>
+      <xNome>VIDEL TRANSPORTE E LOGISTICA LTDA</xNome>
+      <fone>1194376026</fone>
+      <enderReme>
+        <xLgr>A_CONFIRMAR</xLgr>
+        <nro>SN</nro>
+        <xBairro>A_CONFIRMAR</xBairro>
+        <cMun>3523404</cMun>
+        <xMun>ITUPEVA</xMun>
+        <CEP>13295000</CEP>
+        <UF>SP</UF>
+        <cPais>1058</cPais>
+        <xPais>BRASIL</xPais>
+      </enderReme>
+    </rem>
+    <dest>
+      <CNPJ>91748483000162</CNPJ>
+      <IE>0910260222</IE>
+      <xNome>AGRICOLA FERRARI LTDA</xNome>
+      <fone>54991841267</fone>
+      <enderDest>
+        <xLgr>RODOVIA BR-285</xLgr>
+        <nro>SN</nro>
+        <xBairro>VALINHOS</xBairro>
+        <cMun>4314100</cMun><!-- Passo Fundo/RS (endereco fiscal do cadastro) -->
+        <xMun>PASSO FUNDO</xMun>
+        <CEP>99043800</CEP>
+        <UF>RS</UF>
+        <cPais>1058</cPais>
+        <xPais>BRASIL</xPais>
+      </enderDest>
+      <!-- ATENCAO: local de entrega da carga = ROSARIO/MA (cMunFim). Endereco fiscal do destinatario difere. -->
+    </dest>
+    <vPrest>
+      <vTPrest>10000.00</vTPrest>
+      <vRec>10000.00</vRec>
+      <Comp><xNome>FRETE PESO</xNome><vComp>10000.00</vComp></Comp>
+    </vPrest>
+    <imp>
+      <ICMS>
+        <ICMS00>
+          <CST>00</CST>
+          <vBC>10000.00</vBC>
+          <pICMS>7.00</pICMS><!-- Interestadual SP -> MA (Res. Senado 22/89) -->
+          <vICMS>700.00</vICMS>
+        </ICMS00>
+      </ICMS>
+    </imp>
+    <infCTeNorm>
+      <infCarga>
+        <vCarga>36914.91</vCarga>
+        <proPred>COSMETICOS TOK BOTHANICO</proPred>
+        <infQ><cUnid>01</cUnid><tpMed>PESO BRUTO</tpMed><qCarga>6167.3080</qCarga></infQ>
+        <infQ><cUnid>03</cUnid><tpMed>CAIXAS</tpMed><qCarga>665.0000</qCarga></infQ>
+      </infCarga>
+      <infDoc>
+        <infNFe>
+          <chave>32260627483260000383550010000022631708331391</chave><!-- NF-e 2263 serie 1 - GRAMTOK -->
+        </infNFe>
+      </infDoc>
+      <infModal versaoModal="4.00">
+        <rodo>
+          <RNTRC>A_PREENCHER</RNTRC>
+        </rodo>
+      </infModal>
+      <!-- Motorista: Adriano Alves da Silva | CPF 303.810.448-58 | CNH cat C (numero/validade pendentes) -->
+      <!-- Veiculo: FVQ0J00 | SCANIA R440 A6X2 | RENAVAM 01105212332 | 3 eixos | 23t -->
+    </infCTeNorm>
+  </infCte>
+</CTe>
