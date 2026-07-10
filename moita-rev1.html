@@ -199,31 +199,32 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 
   <!-- ========== PAINEL GERAL ========== -->
   <div id="painel">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button class="btn btn-p btn-sm" onclick="loginLive()">🔓 Entrar ao vivo (API Videl)</button></div>
     <!-- KPIs -->
     <div class="grid-4" style="margin-bottom:20px">
       <div class="card kpi" style="border-top:3px solid var(--accent)">
         <div class="kpi-icon">🚛</div>
-        <div class="kpi-v" style="color:var(--accent)">8</div>
-        <div class="kpi-l">Cotações Ativas</div>
-        <div class="kpi-d up">↑ 2 novas hoje</div>
+        <div class="kpi-v" style="color:var(--accent)" id="kpiCot">8</div>
+        <div class="kpi-l">Cotações</div>
+        <div class="kpi-d up" id="kpiCotD">↑ carregando…</div>
       </div>
       <div class="card kpi" style="border-top:3px solid var(--green)">
         <div class="kpi-icon">✅</div>
-        <div class="kpi-v" style="color:var(--green)">3</div>
+        <div class="kpi-v" style="color:var(--green)" id="kpiOps">3</div>
         <div class="kpi-l">Operações em Andamento</div>
-        <div class="kpi-d nt">2 aguardando doc</div>
+        <div class="kpi-d nt" id="kpiOpsD">—</div>
       </div>
       <div class="card kpi" style="border-top:3px solid var(--purple)">
         <div class="kpi-icon">📄</div>
-        <div class="kpi-v" style="color:var(--purple)">12</div>
-        <div class="kpi-l">Docs Emitidos (mês)</div>
-        <div class="kpi-d up">↑ 4 esta semana</div>
+        <div class="kpi-v" style="color:var(--purple)" id="kpiDocs">12</div>
+        <div class="kpi-l">Documentos Fiscais</div>
+        <div class="kpi-d up" id="kpiDocsD">—</div>
       </div>
       <div class="card kpi" style="border-top:3px solid var(--orange)">
         <div class="kpi-icon">⚠️</div>
-        <div class="kpi-v" style="color:var(--orange)">3</div>
+        <div class="kpi-v" style="color:var(--orange)" id="kpiAlt">3</div>
         <div class="kpi-l">Alertas Pendentes</div>
-        <div class="kpi-d dn">R$ 42.880 em risco</div>
+        <div class="kpi-d dn" id="kpiAltD">—</div>
       </div>
     </div>
 
@@ -232,7 +233,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       <div class="card">
         <div class="card-t">⚡ Atividade Recente</div>
         <div class="card-s">Últimas ações do Moita Rev1</div>
-        <div class="timeline">
+        <div class="timeline" id="tlReal">
           <div class="tl-item done"><div class="tl-time">08/07 09:15</div><div class="tl-text">CT-e #42891 emitido — SP → Curitiba (#FB-2601)</div></div>
           <div class="tl-item done"><div class="tl-time">08/07 08:42</div><div class="tl-text">Motorista João Silva confirmado para #FB-2590</div></div>
           <div class="tl-item pending"><div class="tl-time">08/07 08:30</div><div class="tl-text">Cotação #FB-2598 — 3 motoristas compatíveis encontrados</div></div>
@@ -247,7 +248,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       <div class="card">
         <div class="card-t">📋 Tarefas do Dia</div>
         <div class="card-s">Pendências priorizadas pelo Moita Rev1</div>
-        <ul class="op-list">
+        <ul class="op-list" id="tasksReal">
           <li class="op-item">
             <div class="op-icon alert">🔴</div>
             <div class="op-info">
@@ -435,7 +436,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       <div class="ts">
         <table class="tbl" id="tMotor">
           <thead><tr><th>Motorista</th><th>CPF</th><th>Veículo</th><th>Região/Cidade</th><th>WhatsApp</th><th>Disponível</th><th>Última Op.</th><th>Avaliação</th><th>Ação</th></tr></thead>
-          <tbody>
+          <tbody id="motReal">
             <tr><td><b>João Silva Santos</b></td><td>***.***.***-42</td><td>Carreta 7 eixos</td><td>📍 São Paulo SP</td><td>(11) 98765-XXXX</td><td><span class="op-status st-ok">Sim</span></td><td>05/07/2026</td><td>⭐ 4.8</td><td><button class="btn btn-p btn-xs" onclick="addChat('Contratar João Silva para próxima operação — enviar proposta via WhatsApp')">Contratar</button></td></tr>
             <tr><td><b>Carlos Eduardo Lima</b></td><td>***.***.***-18</td><td>Bitrem 9 eixos</td><td>📍 Cascavel PR</td><td>(41) 99876-XXXX</td><td><span class="op-status st-ok">Sim</span></td><td>02/07/2026</td><td>⭐ 4.6</td><td><button class="btn btn-p btn-xs" onclick="addChat('Contratar Carlos Eduardo para próxima operação — enviar proposta via WhatsApp')">Contratar</button></td></tr>
             <tr><td><b>Roberto Almeida</b></td><td>***.***.***-55</td><td>Rodotrem 11 eixos</td><td>📍 Contagem MG</td><td>(31) 97654-XXXX</td><td><span class="op-status st-pend">Em rota</span></td><td>07/07/2026</td><td>⭐ 4.9</td><td><button class="btn btn-o btn-xs" disabled>Ocupado</button></td></tr>
@@ -487,7 +488,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       <div class="ts">
         <table class="tbl" id="tCot2">
           <thead><tr><th>ID</th><th>Empresa</th><th>Rota</th><th>Veículo</th><th>Carga</th><th>Peso</th><th>R$/km</th><th>Mercado</th><th>Var.</th><th>Status</th><th>Motoristas</th><th>Ação</th></tr></thead>
-          <tbody>
+          <tbody id="cotReal">
             <tr><td><b>#FB-2601</b></td><td>Videl T&I</td><td style="color:var(--accent)">SP → Curitiba</td><td>Carreta 7 eixos</td><td>Autopeças</td><td>18.500 kg</td><td><b>R$10,50</b></td><td>R$9,80</td><td style="color:var(--orange)">+7.1%</td><td><span class="op-status st-ok">Ativo</span></td><td>5 match</td><td><button class="btn btn-g btn-xs">Cruzar</button></td></tr>
             <tr><td><b>#FB-2598</b></td><td>Agro Forte</td><td style="color:var(--accent)">Cascavel → Santos</td><td>Bitrem 9 eixos</td><td>Soja grão</td><td>27.000 kg</td><td><b>R$12,00</b></td><td>R$11,50</td><td style="color:var(--orange)">+4.3%</td><td><span class="op-status st-new">Novo</span></td><td>3 match</td><td><button class="btn btn-g btn-xs">Cruzar</button></td></tr>
             <tr><td><b>#FB-2590</b></td><td>Met. Horizonte</td><td style="color:var(--accent)">Contagem → SP</td><td>Rodotrem 11 eixos</td><td>Bobinas aço</td><td>24.800 kg</td><td><b>R$12,00</b></td><td>R$12,20</td><td style="color:var(--green)">-1.6%</td><td><span class="op-status st-ok">Ativo</span></td><td>2 match</td><td><button class="btn btn-g btn-xs">Cruzar</button></td></tr>
@@ -599,47 +600,8 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 
   <!-- ========== OPERAÇÕES ATIVAS ========== -->
   <div id="ops" class="sw">
-    <div class="card-t" style="font-size:18px;margin-bottom:16px">⚡ Operações Ativas</div>
-    <div class="grid-2">
-      <div class="card card-glow" style="border-left:3px solid var(--green)">
-        <div class="card-t">🟢 Op. #FB-2601 — Videl T&I</div>
-        <div class="card-s">SP → Curitiba PR · Carreta 7 eixos · Autopeças · 18.500 kg</div>
-        <ul class="op-list" style="font-size:12px">
-          <li class="op-item"><div class="op-icon" style="background:rgba(0,255,136,.15);width:28px;height:28px;font-size:12px">✅</div><div class="op-info"><div class="op-title">Cotação fechada</div></div></li>
-          <li class="op-item"><div class="op-icon" style="background:rgba(0,255,136,.15);width:28px;height:28px;font-size:12px">✅</div><div class="op-info"><div class="op-title">Motorista: João Silva Santos</div></div></li>
-          <li class="op-item"><div class="op-icon" style="background:rgba(0,255,136,.15);width:28px;height:28px;font-size:12px">✅</div><div class="op-info"><div class="op-title">CT-e #42891 emitido</div></div></li>
-          <li class="op-item"><div class="op-icon" style="background:rgba(255,159,67,.15);width:28px;height:28px;font-size:12px">⏳</div><div class="op-info"><div class="op-title">DACTE — Pendente impressão</div></div></li>
-          <li class="op-item"><div class="op-icon" style="background:rgba(255,159,67,.15);width:28px;height:28px;font-size:12px">⏳</div><div class="op-info"><div class="op-title">MDF-e — Pendente emissão</div></div></li>
-        </ul>
-        <div style="margin-top:10px"><button class="btn btn-g btn-sm" onclick="addChat('Avançar operação #FB-2601 — emitir DACTE e MDF-e')">Avançar Operação</button></div>
-      </div>
-
-      <div class="card" style="border-left:3px solid var(--accent)">
-        <div class="card-t">🔵 Op. #FB-2590 — Met. Horizonte</div>
-        <div class="card-s">Contagem MG → São Paulo SP · Rodotrem · Bobinas aço · 24.800 kg</div>
-        <ul class="op-list" style="font-size:12px">
-          <li class="op-item"><div class="op-icon" style="background:rgba(0,255,136,.15);width:28px;height:28px;font-size:12px">✅</div><div class="op-info"><div class="op-title">Cotação fechada</div></div></li>
-          <li class="op-item"><div class="op-icon" style="background:rgba(0,255,136,.15);width:28px;height:28px;font-size:12px">✅</div><div class="op-info"><div class="op-title">Motorista: Roberto Almeida (em rota)</div></div></li>
-          <li class="op-item"><div class="op-icon" style="background:rgba(0,255,136,.15);width:28px;height:28px;font-size:12px">✅</div><div class="op-info"><div class="op-title">CT-e #42890 emitido</div></div></li>
-          <li class="op-item"><div class="op-icon" style="background:rgba(0,255,136,.15);width:28px;height:28px;font-size:12px">✅</div><div class="op-info"><div class="op-title">DACTE #42890 impresso</div></div></li>
-          <li class="op-item"><div class="op-icon" style="background:rgba(255,159,67,.15);width:28px;height:28px;font-size:12px">⏳</div><div class="op-info"><div class="op-title">NFS-e — Falta dados fiscais</div></div></li>
-        </ul>
-        <div style="margin-top:10px"><button class="btn btn-p btn-sm" onclick="addChat('Buscar dados fiscais para NFS-e da operação #FB-2590')">Resolver Pendência</button></div>
-      </div>
-
-      <div class="card" style="border-left:3px solid var(--orange)">
-        <div class="card-t">🟠 Op. #FB-2585 — BRF Alimentos</div>
-        <div class="card-s">Chapecó SC → Guarulhos SP · Carreta Refrig. · Carne suína · 22.000 kg</div>
-        <ul class="op-list" style="font-size:12px">
-          <li class="op-item"><div class="op-icon" style="background:rgba(0,255,136,.15);width:28px;height:28px;font-size:12px">✅</div><div class="op-info"><div class="op-title">Cotação fechada</div></div></li>
-          <li class="op-item"><div class="op-icon" style="background:rgba(255,159,67,.15);width:28px;height:28px;font-size:12px">⏳</div><div class="op-info"><div class="op-title">Motorista: Buscando (1 match)</div></div></li>
-          <li class="op-item"><div class="op-icon" style="background:rgba(100,100,100,.15);width:28px;height:28px;font-size:12px">⬜</div><div class="op-info"><div class="op-title" style="color:var(--muted)">CT-e — Aguarda motorista</div></div></li>
-          <li class="op-item"><div class="op-icon" style="background:rgba(100,100,100,.15);width:28px;height:28px;font-size:12px">⬜</div><div class="op-info"><div class="op-title" style="color:var(--muted)">DACTE — Aguarda CT-e</div></div></li>
-          <li class="op-item"><div class="op-icon" style="background:rgba(100,100,100,.15);width:28px;height:28px;font-size:12px">⬜</div><div class="op-info"><div class="op-title" style="color:var(--muted)">MDF-e — Aguarda CT-e</div></div></li>
-        </ul>
-        <div style="margin-top:10px"><button class="btn btn-p btn-sm" onclick="addChat('Buscar motorista com carreta refrigerada para #FB-2585 SC→SP')">Buscar Motorista</button></div>
-      </div>
-    </div>
+    <div class="card-t" style="font-size:18px;margin-bottom:16px">⚡ Operações Ativas <span class="badge" id="opsCount" style="background:var(--green)"></span></div>
+    <div class="grid-2" id="opsReal"><div style="color:var(--muted)">Carregando operações…</div></div>
   </div>
 
   <!-- ========== ALERTAS ========== -->
@@ -649,8 +611,8 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       <div style="display:flex;align-items:center;gap:12px">
         <span style="font-size:32px">⚠️</span>
         <div>
-          <div style="font-size:16px;font-weight:800;color:var(--red)">R$ 42.880,00 em risco</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:2px">3 cotações sem resposta há mais de 24h — receita potencial em risco de perda</div>
+          <div style="font-size:16px;font-weight:800;color:var(--red)" id="alertaHdr">Alertas operacionais</div>
+          <div style="font-size:12px;color:var(--muted);margin-top:2px" id="alertaSub">Embarques sem motorista e travas de seguro</div>
         </div>
         <button class="btn btn-p btn-sm" style="margin-left:auto" onclick="addChat('Responder todas as cotações em risco urgentemente')">Resolver Tudo</button>
       </div>
@@ -658,8 +620,8 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
     <div class="tw">
       <div class="ts">
         <table class="tbl">
-          <thead><tr><th>Prioridade</th><th>ID</th><th>Empresa</th><th>Rota</th><th>Tempo sem Resposta</th><th>Perda Estimada</th><th>Recomendação Moita Rev1</th><th>Ação</th></tr></thead>
-          <tbody>
+          <thead><tr><th>Prioridade</th><th>Nº</th><th>Cliente</th><th>Rota</th><th>Motivo</th><th>Frete</th><th>Recomendação Moita Rev1</th><th>Ação</th></tr></thead>
+          <tbody id="alertasReal">
             <tr style="background:rgba(255,71,87,.04)"><td><span class="op-status st-err">CRÍTICO</span></td><td><b>#FB-2585</b></td><td>BRF Alimentos</td><td style="color:var(--accent)">SC → SP</td><td style="color:var(--red);font-weight:700">72h</td><td style="color:var(--red);font-weight:700">R$ 10.650</td><td style="font-size:12px">Contratar Marcos Pereira (Refrig. SC/RS/SP)</td><td><button class="btn btn-p btn-xs">Agir</button></td></tr>
             <tr style="background:rgba(255,159,67,.04)"><td><span class="op-status st-pend">ALTO</span></td><td><b>#FB-2568</b></td><td>Farma Nacional</td><td style="color:var(--accent)">SP → RS</td><td style="color:var(--orange);font-weight:700">48h</td><td style="color:var(--orange);font-weight:700">R$ 10.900</td><td style="font-size:12px">3 motoristas disponíveis na região SP</td><td><button class="btn btn-p btn-xs">Agir</button></td></tr>
             <tr style="background:rgba(255,159,67,.04)"><td><span class="op-status st-pend">ALTO</span></td><td><b>#FB-2560</b></td><td>Exporta Soja</td><td style="color:var(--accent)">MT → Santos</td><td style="color:var(--orange);font-weight:700">36h</td><td style="color:var(--orange);font-weight:700">R$ 21.330</td><td style="font-size:12px">Antônio Souza (Bitrem GO/MT) - verificar retorno</td><td><button class="btn btn-p btn-xs">Agir</button></td></tr>
@@ -673,21 +635,21 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
   <div id="relatorios" class="sw">
     <div class="card-t" style="font-size:18px;margin-bottom:16px">📈 Relatórios & Análises</div>
     <div class="grid-3" style="margin-bottom:20px">
-      <div class="card" style="cursor:pointer" onclick="addChat('Gerar relatório diário de operações de hoje')">
+      <div class="card" style="cursor:pointer" onclick="gerarRelatorio('diario')">
         <div style="text-align:center;padding:20px 0">
           <div style="font-size:36px;margin-bottom:10px">📊</div>
           <div style="font-size:14px;font-weight:700">Relatório Diário</div>
           <div style="font-size:12px;color:var(--muted);margin-top:4px">Resumo de operações, cotações e alertas do dia</div>
         </div>
       </div>
-      <div class="card" style="cursor:pointer" onclick="addChat('Gerar relatório semanal de performance logística')">
+      <div class="card" style="cursor:pointer" onclick="gerarRelatorio('semanal')">
         <div style="text-align:center;padding:20px 0">
           <div style="font-size:36px;margin-bottom:10px">📈</div>
           <div style="font-size:14px;font-weight:700">Relatório Semanal</div>
           <div style="font-size:12px;color:var(--muted);margin-top:4px">Performance, tendências e oportunidades da semana</div>
         </div>
       </div>
-      <div class="card" style="cursor:pointer" onclick="addChat('Análise de rentabilidade por rota e tipo de veículo')">
+      <div class="card" style="cursor:pointer" onclick="gerarRelatorio('rentabilidade')">
         <div style="text-align:center;padding:20px 0">
           <div style="font-size:36px;margin-bottom:10px">💰</div>
           <div style="font-size:14px;font-weight:700">Análise de Rentabilidade</div>
@@ -696,14 +658,14 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       </div>
     </div>
     <div class="grid-3">
-      <div class="card" style="cursor:pointer" onclick="addChat('Gerar relatório de motoristas: disponibilidade e avaliações')">
+      <div class="card" style="cursor:pointer" onclick="gerarRelatorio('motoristas')">
         <div style="text-align:center;padding:20px 0">
           <div style="font-size:36px;margin-bottom:10px">🚛</div>
           <div style="font-size:14px;font-weight:700">Relatório de Motoristas</div>
           <div style="font-size:12px;color:var(--muted);margin-top:4px">Disponibilidade, avaliações e histórico</div>
         </div>
       </div>
-      <div class="card" style="cursor:pointer" onclick="addChat('Gerar relatório de documentos emitidos e pendentes')">
+      <div class="card" style="cursor:pointer" onclick="gerarRelatorio('documentos')">
         <div style="text-align:center;padding:20px 0">
           <div style="font-size:36px;margin-bottom:10px">📄</div>
           <div style="font-size:14px;font-weight:700">Relatório de Documentos</div>
@@ -734,8 +696,8 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
       <div class="conn"><div class="conn-icon">🏦</div><div class="conn-name">Banco PJ</div><div class="conn-st on">● Conectado</div></div>
       <div class="conn"><div class="conn-icon">🎨</div><div class="conn-name">Miro</div><div class="conn-st on">● Conectado</div></div>
       <div class="conn"><div class="conn-icon">🚛</div><div class="conn-name">FreteBras</div><div class="conn-st" style="color:var(--orange)">● Manual</div></div>
-      <div class="conn" onclick="window.open('https://cte.bsoft.app','_blank')"><div class="conn-icon">📋</div><div class="conn-name">Bsoft CT-e</div><div class="conn-st" style="color:var(--accent)">● API REST</div></div>
-      <div class="conn"><div class="conn-icon">🌐</div><div class="conn-name">Videl Platform</div><div class="conn-st on">● Online</div></div>
+      <div class="conn" onclick="window.open('https://cte.bsoft.app','_blank')"><div class="conn-icon">📋</div><div class="conn-name">Bsoft CT-e</div><div class="conn-st" id="conn-bsoft" style="color:var(--orange)">● Aguarda credencial</div></div>
+      <div class="conn"><div class="conn-icon">🌐</div><div class="conn-name">Videl Platform</div><div class="conn-st on" id="conn-videl">● Snapshot</div></div>
     </div>
   </div>
 
@@ -909,6 +871,187 @@ function filterCot(){
   });
 }
 
-window.addEventListener('DOMContentLoaded',()=>{show('painel')});
+const SNAPSHOT = {"kpis": {"cotacoes": 73, "cotacoes_aprovadas": 65, "operacoes_andamento": 8, "docs": 259, "docs_cte": 54, "docs_nfe": 76, "docs_autorizados": 42, "docs_pendentes": 12, "alertas": 4, "faturamento": 576548.42, "embarques_total": 67, "entregues": 50, "transito": 5}, "embarques": [{"num": "EMB-2026-2545", "cliente": "CONSTRUTORA DAVI", "status": "entregue", "origem": "Muriaé", "destino": "Vespasiano", "uf_o": "MG", "uf_d": "MG", "frete": 5400.0, "nf": 700000.0, "peso": 18000.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-04-08", "entrega": "2026-04-09"}, {"num": "EMB-2026-00067", "cliente": "BOLD", "status": "programado", "origem": "ITAJAI", "destino": "JARAGUA DO SUL", "uf_o": "SC", "uf_d": "SC", "frete": 4000.0, "nf": 461962.0, "peso": 51652.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-07-11", "entrega": "2026-07-13"}, {"num": "EMB-2026-00066", "cliente": "AGRICOLA FERRARI LTDA", "status": "em_coleta", "origem": "Itupeva", "destino": "Rosário", "uf_o": "SP", "uf_d": "MA", "frete": 10000.0, "nf": 36914.91, "peso": 6167.31, "motorista": "Adriano Alves da Silva", "placa": "FVQ0J00", "cte": true, "coleta": "2026-07-10", "entrega": "2026-07-13"}, {"num": "EMB-2026-00065", "cliente": "Tok Bothanico", "status": "em_transito", "origem": "Aguai", "destino": "Cabedelo", "uf_o": "SP", "uf_d": "PB", "frete": 24911.44, "nf": 82533.0, "peso": 13000.0, "motorista": "RAFAEL DA SILVEIRA ALVES", "placa": "NZV8900", "cte": false, "coleta": "2026-07-09", "entrega": "2026-07-14"}, {"num": "EMB-2026-00064", "cliente": "Tok Bothanico", "status": "programado", "origem": "Aguaí/SP", "destino": "Feira de Santana", "uf_o": "SP", "uf_d": "BA", "frete": 22500.0, "nf": 170000.0, "peso": 31500.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-07-16", "entrega": "2026-07-20"}, {"num": "EMB-2026-00063", "cliente": "BOLD", "status": "entregue", "origem": "ITAJAI", "destino": "JARAGUÁ DO SUL ", "uf_o": "SC", "uf_d": "SC", "frete": 2000.0, "nf": 100000.0, "peso": 28000.0, "motorista": "Rodrigo De oliveira", "placa": "RXU5C23 ", "cte": false, "coleta": "2026-07-07", "entrega": "2026-07-08"}, {"num": "EMB-2026-00062", "cliente": "Carlos", "status": "entregue", "origem": "ITAJAI", "destino": "JARAGUÁ DO SUL", "uf_o": "SC", "uf_d": "SC", "frete": 2000.0, "nf": 100000.0, "peso": 6000.0, "motorista": "Gabriel SCHMITT", "placa": "IDI2C68", "cte": false, "coleta": "2026-07-07", "entrega": "2026-07-08"}, {"num": "EMB-2026-00061", "cliente": "Gabriel Expedição", "status": "entregue", "origem": "CASACAVEL", "destino": "BRASILANDIA DO SUL", "uf_o": "PR", "uf_d": "PR", "frete": 2200.0, "nf": 10000.0, "peso": 15400.0, "motorista": "Valmor Joao Constantino", "placa": "BWQ3F52", "cte": false, "coleta": "2026-07-08", "entrega": "2026-07-08"}, {"num": "EMB-2026-00060", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "NOVA ODESSA", "destino": "ITAQUIRAI ", "uf_o": "SP", "uf_d": "MS", "frete": 6000.0, "nf": 75000.0, "peso": 4350.0, "motorista": "Adeli De Santana Sousa", "placa": "HCC0G23", "cte": false, "coleta": "2026-07-08", "entrega": "2026-07-10"}, {"num": "EMB-2026-00059", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "TRÊS LAGOAS ", "destino": "JUSCIMEIRA", "uf_o": "MS", "uf_d": "MT", "frete": 5800.0, "nf": 87000.0, "peso": 4500.0, "motorista": "Elvio Rodrigues Correa", "placa": "BXJ3J51", "cte": false, "coleta": "2026-07-08", "entrega": "2026-07-09"}, {"num": "EMB-2026-00058", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "programado", "origem": "Nova Odessa", "destino": "São Paulo", "uf_o": "SP", "uf_d": "SP", "frete": 2500.0, "nf": 73000.0, "peso": 3500.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-07-13", "entrega": "2026-07-13"}, {"num": "EMB-2026-00057", "cliente": "AUTHOMATHIKA", "status": "cancelado", "origem": "Sertãozinho SP", "destino": "Montes Claros de Goias ", "uf_o": "SP", "uf_d": "GO", "frete": 6500.0, "nf": 50000.0, "peso": 3000.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-07-07", "entrega": "2026-07-08"}, {"num": "EMB-2026-00056", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "NOVA ODESSA", "destino": "CAMBUCI", "uf_o": "SP", "uf_d": "SP", "frete": 2000.0, "nf": 56000.0, "peso": 3000.0, "motorista": "Fernando Jesus Dos Santos", "placa": "CGO5D31", "cte": false, "coleta": "2026-07-06", "entrega": "2026-07-07"}, {"num": "EMB-2026-00055", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "TRES LAGOAS", "destino": "PONTA PORÃ", "uf_o": "MS", "uf_d": "MS", "frete": 9900.0, "nf": 285000.0, "peso": 13.3, "motorista": "Fabio Alves De Oliveira", "placa": "CYN6F63", "cte": false, "coleta": "2026-07-06", "entrega": "2026-07-07"}, {"num": "EMB-2026-00054", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "TRES LAGOAS", "destino": "DOURADOS", "uf_o": "MS", "uf_d": "MS", "frete": 5000.0, "nf": 128000.0, "peso": 6200.0, "motorista": "Elvio Rodrigues Correa", "placa": "BWN3C40", "cte": false, "coleta": "2026-07-06", "entrega": "2026-07-07"}, {"num": "EMB-2026-00053", "cliente": "AGRÍCOLA FERRARI LTDA", "status": "entregue", "origem": "CANARANA", "destino": "PARANAGUA", "uf_o": "MT", "uf_d": "PR", "frete": 19110.0, "nf": 240000.0, "peso": 40000.0, "motorista": "MAYKON  BERTOLDI LEDESMA", "placa": "RJS6E42", "cte": false, "coleta": "2026-07-02", "entrega": "2026-07-04"}, {"num": "EMB-2026-00052", "cliente": "AGRÍCOLA FERRARI LTDA", "status": "em_transito", "origem": "CANARANA", "destino": "PARANAGUA", "uf_o": "MT", "uf_d": "PR", "frete": 24010.0, "nf": 280000.0, "peso": 50000.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-07-01", "entrega": "2026-07-03"}, {"num": "EMB-2026-00051", "cliente": "AGRÍCOLA FERRARI LTDA", "status": "em_transito", "origem": "CANARANA", "destino": "PARANAGUA", "uf_o": "MT", "uf_d": "PR", "frete": 19600.0, "nf": 240000.0, "peso": 40000.0, "motorista": "Edson Taufmann", "placa": "PHL5A10", "cte": false, "coleta": "2026-06-30", "entrega": "2026-07-03"}, {"num": "EMB-2026-00050", "cliente": "AUTHOMATHIKA", "status": "entregue", "origem": "NARANDIBA", "destino": "SERTAOZINHO", "uf_o": "SP", "uf_d": "SP", "frete": 5000.0, "nf": 50000.0, "peso": 4000.0, "motorista": "Welligton Da Silva Rozaneli", "placa": "MCW8E94", "cte": false, "coleta": "2026-07-01", "entrega": "2026-07-02"}, {"num": "EMB-2026-00049", "cliente": "CONSTRUCRILL", "status": "entregue", "origem": "ITAPEVI", "destino": "VITORIA", "uf_o": "SP", "uf_d": "ES", "frete": 11500.0, "nf": 100000.0, "peso": 28000.0, "motorista": "Marcelo Freitas Louzada", "placa": "OVJ6F81", "cte": false, "coleta": "2026-07-01", "entrega": "2026-07-02"}, {"num": "EMB-2026-00048", "cliente": "Tok Bothanico", "status": "entregue", "origem": "Aguai ", "destino": "Franca", "uf_o": "SP", "uf_d": "SP", "frete": 4057.42, "nf": 123644.6, "peso": 20690.42, "motorista": "Leonardo Barbosa Vicente", "placa": "GSV9J01", "cte": false, "coleta": "2026-07-03", "entrega": "2026-07-04"}, {"num": "EMB-2026-00047", "cliente": "Tok Bothanico", "status": "entregue", "origem": "Aguaí", "destino": "Aparecida de Gôiania", "uf_o": "SP", "uf_d": "GO", "frete": 9726.17, "nf": 140542.47, "peso": 22737.26, "motorista": "CLEIDIOMAR RODRIGUES DE SOUZA", "placa": "TFN1I03", "cte": false, "coleta": "2026-07-01", "entrega": "2026-07-02"}, {"num": "EMB-2026-00046", "cliente": "Tok Bothanico", "status": "no_destino", "origem": "Aguaí", "destino": "Apararecida de Gôiania", "uf_o": "SP", "uf_d": "GO", "frete": 8431.85, "nf": 133655.0, "peso": 27713.0, "motorista": "Aurelio Cardoso De Oliveira", "placa": "NFW1I90", "cte": false, "coleta": "2026-07-01", "entrega": "2026-07-02"}, {"num": "EMB-2026-00045", "cliente": "Tok Bothanico", "status": "entregue", "origem": "Aguaí", "destino": "Dracena", "uf_o": "SP", "uf_d": "SP", "frete": 5019.0, "nf": 24446.62, "peso": 4000.0, "motorista": "Ivan Aparecido Pereira", "placa": "FDN7F05", "cte": false, "coleta": "2026-07-02", "entrega": "2026-07-02"}, {"num": "EMB-2026-00044", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "Três Lagoas ", "destino": "Aparecida de Goiânia ", "uf_o": "MS", "uf_d": "GO", "frete": 5500.0, "nf": 81096.4, "peso": 3800.0, "motorista": "Joao Claudio nersborski", "placa": "EPI0H23 ", "cte": false, "coleta": "2026-07-01", "entrega": "2026-07-02"}, {"num": "EMB-2026-00043", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "cancelado", "origem": "três lagoas", "destino": "ponta Porã", "uf_o": "MS", "uf_d": "MS", "frete": 4900.0, "nf": 150000.0, "peso": 8000.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-07-07", "entrega": "2026-07-08"}, {"num": "EMB-2026-00042", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "cancelado", "origem": "Três lagoas ", "destino": "Dourados", "uf_o": "MS", "uf_d": "MS", "frete": 5000.0, "nf": 133960.9, "peso": 5300.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-07-06", "entrega": "2026-07-07"}, {"num": "EMB-2026-00041", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "Nova Odessa", "destino": "barra do piraí", "uf_o": "SP", "uf_d": "RJ", "frete": 5500.0, "nf": 127880.0, "peso": 7.9, "motorista": "Rudson Luis Kopke Sarmento Dos Santos", "placa": "HXI9A36", "cte": false, "coleta": "2026-07-02", "entrega": "2026-07-03"}, {"num": "EMB-2026-00040", "cliente": "AGRÍCOLA FERRARI LTDA", "status": "entregue", "origem": "CANARANA", "destino": "PARANAGUA", "uf_o": "MT", "uf_d": "PR", "frete": 17820.0, "nf": 176400.0, "peso": 36000.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-06-26", "entrega": "2026-07-02"}, {"num": "EMB-2026-00039", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "TRÊS LAGOAS", "destino": "BARRA DO GARÇAS", "uf_o": "MS", "uf_d": "MT", "frete": 7000.0, "nf": 181790.0, "peso": 7500.0, "motorista": "Mauricio Pereira Dos Reis", "placa": "URM8G09", "cte": false, "coleta": "2026-06-29", "entrega": "2026-06-30"}, {"num": "EMB-2026-00038", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "TRÊS LAGOAS ", "destino": " MACAUBAL ", "uf_o": "MS", "uf_d": "SP", "frete": 3400.0, "nf": 118543.0, "peso": 6500.0, "motorista": "Reginaldo Ferreira Machado", "placa": "", "cte": false, "coleta": "2026-06-25", "entrega": "2026-06-26"}, {"num": "EMB-2026-00037", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "Nova Odessa ", "destino": "POUSO ALEGRE ", "uf_o": "SP", "uf_d": "MG", "frete": 3400.0, "nf": 93500.0, "peso": 4800.0, "motorista": "Everaldo Magno De Oliveira", "placa": "FVS4A01", "cte": false, "coleta": "2026-06-25", "entrega": "2026-06-26"}, {"num": "EMB-2026-00036", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "NOVA ODESSA", "destino": "CASCAVEL", "uf_o": "SP", "uf_d": "PR", "frete": 8200.0, "nf": 148000.0, "peso": 9000.0, "motorista": "Everton Graciano bernardinelli", "placa": "QHK5F24", "cte": false, "coleta": "2026-06-23", "entrega": "2026-06-24"}, {"num": "EMB-2026-00035", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "NOVA ODESSA", "destino": "GOVERNADOR VALADARES", "uf_o": "SP", "uf_d": "MG", "frete": 8880.0, "nf": 261500.0, "peso": 9000.0, "motorista": "Adelson Junior de Sousa", "placa": "BTO3G62", "cte": false, "coleta": "2026-06-24", "entrega": "2026-06-25"}, {"num": "EMB-2026-00034", "cliente": "Cliente Teste", "status": "entregue", "origem": "São Paulo", "destino": "João Pessoa", "uf_o": "SP", "uf_d": "PB", "frete": 14476.26, "nf": 200.0, "peso": 100.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-07-01", "entrega": "2026-07-09"}, {"num": "EMB-2026-00033", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "TRES LAGOAS", "destino": "DOURADOS", "uf_o": "MS", "uf_d": "MS", "frete": 5000.0, "nf": 104000.0, "peso": 7000.0, "motorista": "Romao Lazaro Domingues", "placa": "BWN3C40", "cte": false, "coleta": "2026-06-22", "entrega": "2026-06-23"}, {"num": "EMB-2026-00032", "cliente": "AUTHOMATHIKA", "status": "entregue", "origem": "GOIANIA", "destino": "MONTES CLAROS DE GOIAS", "uf_o": "GO", "uf_d": "GO", "frete": 4500.0, "nf": 133212.0, "peso": 6000.0, "motorista": "Andre Luis Narcizio Da Silva", "placa": "ICQ8H66", "cte": false, "coleta": "2026-06-02", "entrega": "2026-06-04"}, {"num": "EMB-2026-00031", "cliente": "AUTHOMATHIKA", "status": "entregue", "origem": "GOIANIA", "destino": "MONTES CLAROS", "uf_o": "GO", "uf_d": "GO", "frete": 3500.0, "nf": 35000.0, "peso": 40000.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-06-07", "entrega": "2026-06-09"}, {"num": "EMB-2026-00030", "cliente": "AGRÍCOLA FERRARI LTDA", "status": "programado", "origem": "CANARAMA", "destino": "PARANAGUA", "uf_o": "MT", "uf_d": "PR", "frete": 24750.0, "nf": 160000.0, "peso": 50000.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-06-18", "entrega": "2026-06-22"}, {"num": "EMB-2026-00029", "cliente": "AGRÍCOLA FERRARI LTDA", "status": "entregue", "origem": "CANARAMA", "destino": "PARANAGUA", "uf_o": "MT", "uf_d": "PR", "frete": 15840.0, "nf": 192000.0, "peso": 32000.0, "motorista": "Hueliton Kotters Camilo", "placa": "LYO1I03", "cte": false, "coleta": "2026-06-16", "entrega": "2026-06-20"}, {"num": "EMB-2026-00028", "cliente": "AUTHOMATHIKA", "status": "entregue", "origem": "SERTAOZINHO", "destino": "MONTES CLAROS DE GOIAS", "uf_o": "SP", "uf_d": "GO", "frete": 7000.0, "nf": 50000.0, "peso": 9000.0, "motorista": "Emerson Jose De Sousa", "placa": "TQA2I46", "cte": false, "coleta": "2026-06-17", "entrega": "2026-06-19"}, {"num": "EMB-2026-00027", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "NOVA ODESSA", "destino": "PENAPOLIS", "uf_o": "SP", "uf_d": "SP", "frete": 3550.0, "nf": 135500.0, "peso": 8000.0, "motorista": "Sergio De Morais", "placa": "AWF6C85", "cte": false, "coleta": "2026-06-22", "entrega": "2026-06-23"}, {"num": "EMB-2026-00026", "cliente": "Tok Bothanico", "status": "entregue", "origem": "Cotia", "destino": "Aguaí", "uf_o": "SP", "uf_d": "SP", "frete": 5818.0, "nf": 5818.0, "peso": 3219.0, "motorista": "ALEXANDRO DA SILVA ROCHA", "placa": "OGP9F25", "cte": false, "coleta": "2026-06-12", "entrega": "2026-06-12"}, {"num": "EMB-2026-00025", "cliente": "Tok Bothanico", "status": "entregue", "origem": "Itapevi", "destino": "Aguaí", "uf_o": "SP", "uf_d": "SP", "frete": 3800.0, "nf": 3800.0, "peso": 4360.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-05-22", "entrega": "0226-05-22"}, {"num": "EMB-2026-00024", "cliente": "Tok Bothanico", "status": "entregue", "origem": "São Paulo", "destino": "Aguaí", "uf_o": "SP", "uf_d": "SP", "frete": 2900.0, "nf": 2900.0, "peso": 894.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-05-21", "entrega": "2026-05-21"}, {"num": "EMB-2026-00023", "cliente": "Tok Bothanico", "status": "entregue", "origem": "Aguaí", "destino": "Fernandópolis", "uf_o": "SP", "uf_d": "SP", "frete": 5704.28, "nf": 101999.55, "peso": 19800.0, "motorista": "Adriano Alves da Silva", "placa": "LXB4H58", "cte": false, "coleta": "2026-05-25", "entrega": "2026-05-26"}, {"num": "EMB-2026-00022", "cliente": "Tok Bothanico", "status": "entregue", "origem": "Aguai", "destino": "Aparecida de Goiania", "uf_o": "SP", "uf_d": "GO", "frete": 7780.0, "nf": 108992.96, "peso": 17000.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-06-02", "entrega": "2026-06-04"}, {"num": "EMB-2026-00021", "cliente": "Grupo Gera", "status": "entregue", "origem": "Serra", "destino": "Cachoeiro de Itapemirim", "uf_o": "ES", "uf_d": "ES", "frete": 3200.0, "nf": 91094.0, "peso": 4000.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-06-09", "entrega": "2026-06-10"}, {"num": "EMB-2026-00020", "cliente": "Grupo Gera", "status": "entregue", "origem": "Paracambi", "destino": "Cravinhos", "uf_o": "RJ", "uf_d": "SP", "frete": 6900.0, "nf": 15000.0, "peso": 4000.0, "motorista": "", "placa": "", "cte": true, "coleta": "2026-06-01", "entrega": "2026-06-02"}, {"num": "EMB-2026-00019", "cliente": "AGRÍCOLA FERRARI LTDA", "status": "cancelado", "origem": "ARAGUACEMA", "destino": "CANARAMA", "uf_o": "TO", "uf_d": "MT", "frete": 17500.0, "nf": 200000.0, "peso": 50000.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-06-15", "entrega": "2026-06-17"}, {"num": "EMB-2026-00018", "cliente": "AGRÍCOLA FERRARI LTDA", "status": "cancelado", "origem": "ARAGUACEMA", "destino": "CNARAMA", "uf_o": "TO", "uf_d": "MT", "frete": 17500.0, "nf": 200.0, "peso": 50.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-06-15", "entrega": "2026-06-17"}, {"num": "EMB-2026-00017", "cliente": "INIMAR", "status": "cancelado", "origem": "UBA", "destino": "SANTANA DO PARAISO", "uf_o": "MG", "uf_d": "MG", "frete": 4000.0, "nf": 90000.0, "peso": 32000.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-06-11", "entrega": "2026-06-11"}, {"num": "EMB-2026-00016", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "TRES LAGOAS", "destino": "DOURADOS", "uf_o": "MS", "uf_d": "MS", "frete": 5400.0, "nf": 160000.0, "peso": 7000.0, "motorista": "Paulo Gustavo Marques Da Silva", "placa": "EOF3G88", "cte": false, "coleta": "2026-06-16", "entrega": "2026-06-17"}, {"num": "EMB-2026-00015", "cliente": "AGRÍCOLA FERRARI LTDA", "status": "entregue", "origem": "DOIS IRMÃOS DO TOCANTINS", "destino": "CAMPO LARGO", "uf_o": "TO", "uf_d": "PR", "frete": 13440.0, "nf": 100000.0, "peso": 32.0, "motorista": "Eduardo Ferreira de Freitas", "placa": "FVQ0J00", "cte": false, "coleta": "2026-06-11", "entrega": "2026-06-15"}, {"num": "EMB-2026-00014", "cliente": "DIEGO", "status": "entregue", "origem": "DOIS IRMÃOS DE TOCANTINS", "destino": "CAMPO LARGO", "uf_o": "TO", "uf_d": "PR", "frete": 27874.0, "nf": 126000.0, "peso": 50.68, "motorista": "Luciano De Novais", "placa": "AVR7B54", "cte": false, "coleta": "2026-06-11", "entrega": "2026-06-15"}, {"num": "EMB-2026-00013", "cliente": "AUTHOMATHIKA", "status": "entregue", "origem": "SERTAOZINHO", "destino": "MONTES CLAROS DE GOIÁS", "uf_o": "SP", "uf_d": "GO", "frete": 9000.0, "nf": 40000.0, "peso": 4000.0, "motorista": "Rogerio Peixoto Franco", "placa": "IFM6I61", "cte": false, "coleta": "2026-06-03", "entrega": "2026-06-05"}, {"num": "EMB-2026-00012", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "TRES LAGOAS", "destino": "CERRO AZUL", "uf_o": "MS", "uf_d": "PR", "frete": 7000.0, "nf": 108000.0, "peso": 4500.0, "motorista": "Ezildo Dos Santos", "placa": "AIP1G21", "cte": false, "coleta": "2026-06-08", "entrega": "2026-06-09"}, {"num": "EMB-2026-00011", "cliente": "Cliente teste", "status": "cancelado", "origem": "Indefinida", "destino": "Indefinida", "uf_o": "NA", "uf_d": "NA", "frete": 8000.0, "nf": 200000.0, "peso": 1000.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-06-08", "entrega": "2026-06-23"}, {"num": "EMB-2026-00010", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "NOVA ODESSA", "destino": "JARAGUÁ", "uf_o": "SP", "uf_d": "GO", "frete": 9500.0, "nf": 60.0, "peso": 6.52, "motorista": "LUIS ALBERTO VICENTE", "placa": "FSF5B41", "cte": false, "coleta": "2026-06-09", "entrega": "2026-06-10"}, {"num": "EMB-2026-00009", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "TRES LAGOAS", "destino": "DOURADOS", "uf_o": "MS", "uf_d": "MS", "frete": 5590.0, "nf": 228000.0, "peso": 11.0, "motorista": "RICARDO VIOTO", "placa": "", "cte": false, "coleta": "2026-06-02", "entrega": "2026-06-03"}, {"num": "EMB-2026-00008", "cliente": "Medeiros Galvão", "status": "entregue", "origem": "Parnaíba", "destino": "CAFARNAUM", "uf_o": "PI", "uf_d": "BA", "frete": 9800.0, "nf": 107514.14, "peso": 2000.0, "motorista": "Antonio Jorge Almeida Dos Anjos Filho", "placa": "AWA2E89", "cte": false, "coleta": "2026-06-01", "entrega": "2026-06-03"}, {"num": "EMB-2026-00007", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "entregue", "origem": "NOVA ODESSA", "destino": "PEDRANÒPOLIS", "uf_o": "SP", "uf_d": "SP", "frete": 4500.0, "nf": 112.36, "peso": 6.5, "motorista": "Antonio Carlos Alves", "placa": "CXC7913", "cte": false, "coleta": "2026-06-02", "entrega": "2026-06-03"}, {"num": "EMB-2026-00006", "cliente": "ANDERSON (LOGÍSTICA)", "status": "entregue", "origem": "Indefinida", "destino": "Indefinida", "uf_o": "NA", "uf_d": "NA", "frete": 3260.0, "nf": 140000.0, "peso": 4500.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-05-29", "entrega": "2026-05-29"}, {"num": "EMB-2026-00005", "cliente": "LEONARDO", "status": "entregue", "origem": "ITAPEVI", "destino": "VITORIA", "uf_o": "SP", "uf_d": "ES", "frete": 11000.0, "nf": 100000.0, "peso": 25000.0, "motorista": "Flaviano De sousa Miranda", "placa": "OYI5397", "cte": false, "coleta": "2026-05-22", "entrega": "2026-05-25"}, {"num": "EMB-2026-00004", "cliente": "ANDERSON (LOGÍSTICA)", "status": "entregue", "origem": "NOVA ODESSA ", "destino": "UMUARAMA", "uf_o": "SP", "uf_d": "PR", "frete": 5800.0, "nf": 89000.0, "peso": 6000.0, "motorista": "Ewerton Alves Hilario", "placa": "DPC9J95", "cte": false, "coleta": "2026-05-18", "entrega": "2026-05-20"}, {"num": "EMB-2026-00003", "cliente": "Edivania - Logistics Supervisor", "status": "entregue", "origem": "GENTIO DO OURO", "destino": "PARNAIBA", "uf_o": "BA", "uf_d": "PI", "frete": 10500.0, "nf": 107515.0, "peso": 1000.0, "motorista": "Enmerson Oliveira Do Nascimento", "placa": "STA8F72", "cte": false, "coleta": "2026-05-16", "entrega": "2026-05-19"}, {"num": "EMB-2026-00002", "cliente": "CONSTRUTORA DAVI THOMAZ", "status": "cancelado", "origem": "", "destino": "", "uf_o": "", "uf_d": "", "frete": 5400.0, "nf": 395.66, "peso": 7100.0, "motorista": "", "placa": "", "cte": false, "coleta": "2026-04-07", "entrega": "2026-04-09"}], "cotacoes": [{"num": "COT-2026-00073", "cliente": "BOLD", "status": "aprovada", "origem": "ITAJAI", "destino": "JARAGUA DO SUL", "uf_o": "SC", "uf_d": "SC", "tipo": "CONTAINER", "frete": 4000.0, "merc": 461962.0, "data": "2026-07-10"}, {"num": "COT-2026-00072", "cliente": "Tok Bothanico", "status": "aprovada", "origem": "Aguai", "destino": "Cabedelo", "uf_o": "SP", "uf_d": "PB", "tipo": "carga seca", "frete": 24911.0, "merc": 82533.0, "data": "2026-07-08"}, {"num": "COT-2026-00071", "cliente": "Tok Bothanico", "status": "aprovada", "origem": "Aguaí/SP", "destino": "Feira de Santana", "uf_o": "SP", "uf_d": "BA", "tipo": "Carga seca", "frete": 22500.0, "merc": 170000.0, "data": "2026-07-08"}, {"num": "COT-2026-00070", "cliente": "BOLD", "status": "aprovada", "origem": "ITAJAI", "destino": "JARAGUÁ DO SUL ", "uf_o": "SC", "uf_d": "SC", "tipo": "CONTAINER", "frete": 2000.0, "merc": 100000.0, "data": "2026-07-07"}, {"num": "COT-2026-00067", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "aprovada", "origem": "NOVA ODESSA", "destino": "ITAQUIRAI ", "uf_o": "SP", "uf_d": "MS", "tipo": "Kits Solares", "frete": 6000.0, "merc": 75000.0, "data": "2026-07-07"}, {"num": "COT-2026-00066", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "aprovada", "origem": "TRÊS LAGOAS ", "destino": "JUSCIMEIRA", "uf_o": "MS", "uf_d": "MT", "tipo": "Kits Solares", "frete": 5800.0, "merc": 87000.0, "data": "2026-07-07"}, {"num": "COT-2026-00065", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "aprovada", "origem": "Nova Odessa", "destino": "São Paulo", "uf_o": "SP", "uf_d": "SP", "tipo": "Kits Solares", "frete": 2500.0, "merc": 73000.0, "data": "2026-07-07"}, {"num": "COT-2026-00064", "cliente": "AUTHOMATHIKA", "status": "aprovada", "origem": "Sertãozinho SP", "destino": "Montes Claros de Goias ", "uf_o": "SP", "uf_d": "GO", "tipo": "Moveis", "frete": 6500.0, "merc": 50000.0, "data": "2026-07-06"}, {"num": "COT-2026-00063", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "aprovada", "origem": "NOVA ODESSA", "destino": "CAMBUCI", "uf_o": "SP", "uf_d": "SP", "tipo": "PARAFUSO", "frete": 2000.0, "merc": 56000.0, "data": "2026-07-03"}, {"num": "COT-2026-00062", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "aprovada", "origem": "TRES LAGOAS", "destino": "PONTA PORÃ", "uf_o": "MS", "uf_d": "MS", "tipo": "KITS SOLARES", "frete": 5000.0, "merc": 285000.0, "data": "2026-07-02"}, {"num": "COT-2026-00061", "cliente": "AVT DISTRIBUIDORA SOLAR", "status": "aprovada", "origem": "TRES LAGOAS", "destino": "DOURADOS", "uf_o": "MS", "uf_d": "MS", "tipo": "KITS SOLARES", "frete": 5000.0, "merc": 128000.0, "data": "2026-07-02"}, {"num": "COT-2026-00059", "cliente": "AGRÍCOLA FERRARI LTDA", "status": "aprovada", "origem": "CANARANA", "destino": "PARANAGUA", "uf_o": "MT", "uf_d": "PR", "tipo": "GERGELIM", "frete": 19600.0, "merc": 240000.0, "data": "2026-07-01"}, {"num": "COT-2026-00058", "cliente": "AGRÍCOLA FERRARI LTDA", "status": "aprovada", "origem": "CANARANA", "destino": "PARANAGUA", "uf_o": "MT", "uf_d": "PR", "tipo": "GERGELIM", "frete": 24500.0, "merc": 280000.0, "data": "2026-07-01"}, {"num": "COT-2026-00057", "cliente": "AGRÍCOLA FERRARI LTDA", "status": "aprovada", "origem": "CANARANA", "destino": "PARANAGUA", "uf_o": "MT", "uf_d": "PR", "tipo": "GERGELIM", "frete": 19600.0, "merc": 240000.0, "data": "2026-07-01"}, {"num": "COT-2026-00056", "cliente": "AUTHOMATHIKA", "status": "aprovada", "origem": "NARANDIBA", "destino": "SERTAOZINHO", "uf_o": "SP", "uf_d": "SP", "tipo": "MÓVEIS", "frete": 5000.0, "merc": 50000.0, "data": "2026-07-01"}], "veiculos": [{"placa": "NZV8900", "tipo": "Truck", "marca": "VOLVO", "modelo": "VM 260 6X2R", "ano": 2011, "eixos": 3, "cap": 14000.0, "motorista": "RAFAEL DA SILVEIRA ALVES", "status": "Em Viagem"}, {"placa": "IDI2C68", "tipo": "Carreta", "marca": "Mercedes", "modelo": "LS 1935", "ano": 1995, "eixos": 2, "cap": 5000.0, "motorista": "", "status": "Disponivel"}, {"placa": "RXU2H27", "tipo": "Carreta", "marca": "SR", "modelo": "/RANDON SR BS CO 03E", "ano": 2021, "eixos": 3, "cap": 19000.0, "motorista": "", "status": "Disponivel"}, {"placa": "RXU5C23 ", "tipo": "Carreta", "marca": "VW", "modelo": "/25.460 CTM 6X2", "ano": 2022, "eixos": 3, "cap": 23000.0, "motorista": "", "status": "Disponivel"}, {"placa": "CLJ3J47", "tipo": "Truck", "marca": "VW", "modelo": "/12.140 T", "ano": 1998, "eixos": 3, "cap": 14000.0, "motorista": "", "status": "Disponivel"}, {"placa": "HCC0G23", "tipo": "Truck", "marca": "M.BENZ", "modelo": "/L 1620", "ano": 2004, "eixos": 3, "cap": 15000.0, "motorista": "", "status": "Disponivel"}, {"placa": "BWQ3F52", "tipo": "Truck", "marca": "M.BENZ", "modelo": "/L 1618", "ano": 1993, "eixos": 3, "cap": 16000.0, "motorista": "", "status": "Disponivel"}, {"placa": "BXJ3J51", "tipo": "Truck", "marca": "M.BENZ", "modelo": "/L 113", "ano": 1972, "eixos": 2, "cap": 1000.0, "motorista": "", "status": "Disponivel"}, {"placa": "NCP3A55", "tipo": "Carreta", "marca": "REB", "modelo": "SCHIFFER SSC3E CA", "ano": 2014, "eixos": 4, "cap": 21000.0, "motorista": "", "status": "Disponivel"}, {"placa": "CYN6F63", "tipo": "Carreta", "marca": "M.BENZ", "modelo": "1938 S", "ano": 1999, "eixos": 3, "cap": 13000.0, "motorista": "", "status": "Disponivel"}, {"placa": "CGO5D31", "tipo": "Tres_Quartos", "marca": "Mercedes", "modelo": "L 608 E", "ano": 1986, "eixos": 2, "cap": 4000.0, "motorista": "", "status": "Disponivel"}, {"placa": "RJS6E42", "tipo": "Carreta_Ls", "marca": "VW", "modelo": "METEOR 6X2", "ano": 2022, "eixos": 3, "cap": 27000.0, "motorista": "", "status": "Disponivel"}, {"placa": "ELW6033", "tipo": "Tres_Quartos", "marca": "VW", "modelo": "/9.150 E DELIVERY", "ano": 2011, "eixos": 2, "cap": 5000.0, "motorista": "", "status": "Disponivel"}, {"placa": "NFW1I90", "tipo": "Carreta_Ls", "marca": "VOLVO", "modelo": "FH12", "ano": 2005, "eixos": 3, "cap": 27000.0, "motorista": "Aurelio Cardoso De Oliveira", "status": "Em Viagem"}, {"placa": "PHL5A10", "tipo": "Bitrem", "marca": "SCANIA", "modelo": "R 440 A6X2", "ano": 2016, "eixos": 3, "cap": 40000.0, "motorista": "Edson Taufmann", "status": "Em Viagem"}, {"placa": "TFN1I03", "tipo": "Carreta_Ls", "marca": "VW/28.480", "modelo": "MTM 6X2HD", "ano": 2025, "eixos": 3, "cap": 27000.0, "motorista": "", "status": "Disponivel"}, {"placa": "GSV9J01", "tipo": "Carreta", "marca": "SCANIA", "modelo": "/R124 GA4X2NZ", "ano": 2001, "eixos": 2, "cap": 18000.0, "motorista": "", "status": "Disponivel"}, {"placa": "HXI9A36", "tipo": "Truck", "marca": "VW", "modelo": "/24.250 CNC 6X2", "ano": 2007, "eixos": 3, "cap": 14000.0, "motorista": "", "status": "Disponivel"}, {"placa": "FDN7F05", "tipo": "Truck", "marca": "VW", "modelo": "/9.160 DRC 4X2", "ano": 2012, "eixos": 2, "cap": 5000.0, "motorista": "", "status": "Disponivel"}, {"placa": "SGH4A34", "tipo": "Carreta", "marca": "SR", "modelo": "/EQUIP NEXT 3E CFT", "ano": 2024, "eixos": 3, "cap": 18000.0, "motorista": "", "status": "Disponivel"}]};
+
+// ====== CAMADA DE DADOS REAIS + LIVE FETCH (Moita Rev1) ======
+let DATA = JSON.parse(JSON.stringify(SNAPSHOT));
+const API = 'https://www.videltel.com.br/api';
+const brl = v => 'R$ ' + (Number(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const brl0 = v => 'R$ ' + Math.round(Number(v)||0).toLocaleString('pt-BR');
+const dbr = s => s ? s.split('-').reverse().join('/') : '—';
+
+function statusPill(st){
+  const map={entregue:['st-ok','Entregue'],em_transito:['st-ok','Em trânsito'],em_coleta:['st-pend','Em coleta'],programado:['st-pend','Programado'],cancelado:['st-err','Cancelado'],aprovada:['st-ok','Aprovada'],rascunho:['st-pend','Rascunho'],enviada:['st-pend','Enviada'],minuta:['st-pend','Minuta']};
+  const [c,l]=map[st]||['st-pend',st||'—']; return '<span class="op-status '+c+'">'+l+'</span>';
+}
+
+function renderKPIs(){
+  const k=DATA.kpis;
+  const set=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+  set('kpiCot',k.cotacoes); set('kpiCotD','↑ '+k.cotacoes_aprovadas+' aprovadas');
+  set('kpiOps',k.operacoes_andamento); set('kpiOpsD',k.entregues+' entregues · '+k.transito+' em trânsito');
+  set('kpiDocs',k.docs); set('kpiDocsD',k.docs_cte+' CT-e · '+k.docs_nfe+' NF-e');
+  set('kpiAlt',k.alertas); set('kpiAltD',k.alertas+' embarque(s) s/ motorista');
+}
+
+function renderEmbarquesTimeline(){
+  const tl=document.getElementById('tlReal'); if(!tl)return;
+  const recent=DATA.embarques.slice(0,7);
+  tl.innerHTML=recent.map(e=>{
+    const cls=e.status==='entregue'?'done':(e.status==='cancelado'?'error':'pending');
+    const mot=e.motorista?('· '+e.motorista):'· sem motorista';
+    return '<div class="tl-item '+cls+'"><div class="tl-time">'+e.num+'</div><div class="tl-text">'+e.cliente+' — '+e.origem+' → '+e.destino+' '+mot+' ('+brl0(e.frete)+')</div></div>';
+  }).join('');
+}
+
+function renderTasks(){
+  const ul=document.getElementById('tasksReal'); if(!ul)return;
+  const semMot=DATA.embarques.filter(e=>!e.motorista && (e.status==='programado'||e.status==='em_coleta'));
+  const cteObrig=DATA.embarques.filter(e=>e.cte && e.status!=='entregue' && e.status!=='cancelado');
+  let items=[];
+  semMot.forEach(e=>items.push(['🔴','st-err','ALOCAR','Buscar motorista — '+e.num+' ('+e.cliente+')', e.origem+' → '+e.destino+' · '+brl0(e.frete),"searchGeoFor('"+e.origem+"')"]));
+  cteObrig.forEach(e=>items.push(['📄','st-pend','CT-e','Emitir CT-e — '+e.num+' ('+e.cliente+')', e.origem+' → '+e.destino+' · rascunho pronto',"show('docs')"]));
+  items.push(['📧','st-ok','ROTINA','Verificar e-mails de logística no Gmail','Rotina automática a cada 2h',"show('gmail')"]);
+  items.push(['📊','st-ok','ROTINA','Gerar relatório diário de operações','Baixa o resumo do dia',"gerarRelatorio('diario')"]);
+  ul.innerHTML=items.slice(0,6).map(([ic,sc,tag,t,d,act])=>
+    '<li class="op-item" style="cursor:pointer" onclick="'+act+'"><div class="op-icon alert">'+ic+'</div><div class="op-info"><div class="op-title">'+t+'</div><div class="op-desc">'+d+'</div></div><div class="op-meta"><span class="op-status '+sc+'">'+tag+'</span></div></li>'
+  ).join('');
+}
+
+function renderCotacoes(){
+  const tb=document.getElementById('cotReal'); if(!tb)return;
+  tb.innerHTML=DATA.cotacoes.map(q=>
+    '<tr><td><b>'+q.num+'</b></td><td>'+q.cliente+'</td><td>'+q.origem+'/'+q.uf_o+' → '+q.destino+'/'+q.uf_d+'</td><td>'+(q.tipo||'—')+'</td><td>'+brl0(q.merc)+'</td><td>'+brl0(q.frete)+'</td><td>'+dbr(q.data)+'</td><td>'+statusPill(q.status)+'</td></tr>'
+  ).join('');
+  const b=document.getElementById('cotBadge'); if(b)b.textContent=DATA.kpis.cotacoes;
+}
+
+function renderEmbarquesMotoristas(){
+  const tb=document.getElementById('motReal'); if(!tb)return;
+  // mostrar embarques com motorista alocado (dado real de contratações)
+  const comMot=DATA.embarques.filter(e=>e.motorista).slice(0,15);
+  tb.innerHTML=comMot.map(e=>
+    '<tr><td><b>'+e.motorista+'</b></td><td>'+(e.placa||'—')+'</td><td>'+e.num+'</td><td>📍 '+e.origem+'/'+e.uf_o+' → '+e.destino+'/'+e.uf_d+'</td><td>'+statusPill(e.status)+'</td><td>'+brl0(e.frete)+'</td><td><button class="btn btn-p btn-xs" onclick="addChat(&#39;Ver motorista &#39;+e.motorista+&#39; — &#39;+e.num)">Detalhes</button></td></tr>'
+  ).join('');
+}
+
+function renderOps(){
+  const box=document.getElementById('opsReal'); if(!box)return;
+  const ativas=DATA.embarques.filter(e=>['programado','em_coleta','em_transito'].includes(e.status));
+  document.getElementById('opsCount').textContent=ativas.length;
+  const cor={em_transito:'var(--green)',em_coleta:'var(--accent)',programado:'var(--orange)'};
+  box.innerHTML=ativas.map(e=>{
+    const steps=[
+      ['✅','Embarque criado',true],
+      [e.motorista?'✅':'⏳','Motorista: '+(e.motorista||'buscando'),!!e.motorista],
+      [e.cte?'⏳':'—','CT-e '+(e.cte?'obrigatório':'não requerido'),false],
+      [e.status==='em_transito'?'✅':'⬜','Em trânsito',e.status==='em_transito'],
+      [e.status==='entregue'?'✅':'⬜','Entrega prevista '+dbr(e.entrega),false]
+    ];
+    return '<div class="card" style="border-left:3px solid '+(cor[e.status]||'var(--muted)')+'"><div class="card-t">'+e.num+' — '+e.cliente+'</div><div class="card-s">'+e.origem+'/'+e.uf_o+' → '+e.destino+'/'+e.uf_d+' · '+(e.peso?e.peso.toLocaleString('pt-BR')+' kg':'')+' · '+brl0(e.frete)+'</div><ul class="op-list" style="font-size:12px">'+
+      steps.map(([ic,t,ok])=>'<li class="op-item"><div class="op-icon" style="background:rgba(0,255,136,.12);width:26px;height:26px;font-size:11px">'+ic+'</div><div class="op-info"><div class="op-title"'+(ok?'':' style="color:var(--muted)"')+'>'+t+'</div></div></li>').join('')+
+      '</ul><div style="margin-top:10px"><button class="btn btn-g btn-sm" onclick="addChat(&#39;Avançar operação &#39;+e.num)">Avançar</button></div></div>';
+  }).join('') || '<div style="color:var(--muted)">Nenhuma operação ativa no momento.</div>';
+}
+
+function renderAlertas(){
+  const tb=document.getElementById('alertasReal'); if(!tb)return;
+  const rows=[];
+  // trava de seguro: cotação Bold contêiner
+  const bold=DATA.cotacoes.find(q=>q.cliente&&q.cliente.toUpperCase().includes('BOLD')&&q.merc>300000);
+  if(bold) rows.push(['st-err','CRÍTICO',bold.num,bold.cliente,bold.origem+' → '+bold.destino,'Contêiner '+brl0(bold.merc)+' > limite seguro R$ 300k',brl0(bold.frete),'Revisar seguro antes de rodar']);
+  DATA.embarques.filter(e=>!e.motorista&&['programado','em_coleta'].includes(e.status)).forEach(e=>
+    rows.push(['st-pend','ALTO',e.num,e.cliente,e.origem+' → '+e.destino,'Sem motorista alocado',brl0(e.frete),'Buscar motorista na região de '+e.origem]));
+  tb.innerHTML=rows.map(([c,p,num,cli,rota,motivo,frete,rec])=>
+    '<tr><td><span class="op-status '+c+'">'+p+'</span></td><td><b>'+num+'</b></td><td>'+cli+'</td><td style="color:var(--accent)">'+rota+'</td><td style="font-size:12px">'+motivo+'</td><td style="font-weight:700">'+frete+'</td><td style="font-size:12px">'+rec+'</td><td><button class="btn btn-p btn-xs" onclick="addChat(&#39;Resolver alerta &#39;+num)">Agir</button></td></tr>'
+  ).join('') || '<tr><td colspan="8" style="color:var(--muted)">Sem alertas.</td></tr>';
+  const hdr=document.getElementById('alertaHdr'); if(hdr)hdr.textContent=rows.length+' alerta(s) operacional(is)';
+  const bd=document.querySelector('.sb-nav .badge'); // primeiro badge
+}
+
+// ====== RELATÓRIO REAL (gera + baixa) ======
+function gerarRelatorio(tipo){
+  const k=DATA.kpis, now=new Date();
+  const dt=String(now.getDate()).padStart(2,'0')+'/'+String(now.getMonth()+1).padStart(2,'0')+'/'+now.getFullYear();
+  const NL=String.fromCharCode(10);
+  const L=(a)=>a.join(NL);
+  let L1=[];
+  if(tipo==='diario'){
+    const semMot=DATA.embarques.filter(e=>!e.motorista&&['programado','em_coleta'].includes(e.status));
+    const ativas=DATA.embarques.filter(e=>['programado','em_coleta','em_transito'].includes(e.status));
+    L1=['MOITA REV1 - RELATORIO DIARIO DE OPERACOES','Videl T&I Transportes - '+dt,'',
+      'KPIs','----',
+      '- Embarques totais: '+k.embarques_total+' ('+k.entregues+' entregues, '+k.transito+' em transito)',
+      '- Faturamento fretes: '+brl(k.faturamento),
+      '- Cotacoes: '+k.cotacoes+' ('+k.cotacoes_aprovadas+' aprovadas)',
+      '- Documentos: '+k.docs+' ('+k.docs_cte+' CT-e, '+k.docs_nfe+' NF-e, '+k.docs_pendentes+' pendentes)','',
+      'OPERACOES ATIVAS ('+ativas.length+')','----'
+    ].concat(ativas.map(e=>'- '+e.num+' | '+e.cliente+' | '+e.origem+'>'+e.destino+' | '+brl0(e.frete)+' | '+(e.motorista||'SEM MOTORISTA')))
+     .concat(['','ALERTAS ('+semMot.length+' sem motorista)','----'])
+     .concat(semMot.map(e=>'! '+e.num+' ('+e.cliente+') - alocar motorista em '+e.origem));
+  } else if(tipo==='semanal'){
+    L1=['RELATORIO SEMANAL DE PERFORMANCE','Videl T&I - semana de '+dt,'',
+      'Faturamento fretes: '+brl(k.faturamento),'Embarques: '+k.embarques_total,'Cotacoes aprovadas: '+k.cotacoes_aprovadas,'','EMBARQUES']
+      .concat(DATA.embarques.slice(0,20).map(e=>'- '+e.num+' | '+e.cliente+' | '+statusText(e.status)+' | '+brl0(e.frete)));
+  } else if(tipo==='rentabilidade'){
+    const fat={}; DATA.embarques.forEach(e=>{fat[e.cliente]=(fat[e.cliente]||0)+e.frete});
+    L1=['ANALISE DE RENTABILIDADE POR CLIENTE','Videl T&I - '+dt,''].concat(Object.entries(fat).sort((a,b)=>b[1]-a[1]).map(([c,v])=>'- '+c+': '+brl(v)));
+  } else if(tipo==='motoristas'){
+    L1=['RELATORIO DE MOTORISTAS','Videl T&I - '+dt,'','Base: 1.425 motoristas | 76 veiculos','','MOTORISTAS EM OPERACAO']
+      .concat(DATA.embarques.filter(e=>e.motorista).map(e=>'- '+e.motorista+' | '+(e.placa||'')+' | '+e.num+' ('+e.cliente+') | '+statusText(e.status)));
+  } else if(tipo==='documentos'){
+    L1=['RELATORIO DE DOCUMENTOS FISCAIS','Videl T&I - '+dt,'','- Total: '+k.docs,'- CT-e: '+k.docs_cte,'- NF-e: '+k.docs_nfe,'- Autorizados: '+k.docs_autorizados,'- Pendentes: '+k.docs_pendentes];
+  }
+  const txt=L(L1);
+  const blob=new Blob([txt],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='moita_relatorio_'+tipo+'_'+now.toISOString().slice(0,10)+'.txt';
+  a.click(); URL.revokeObjectURL(a.href);
+  document.getElementById('chatIn').value=''; show('painel');
+  const msgs=document.getElementById('chatMsgs');
+  msgs.innerHTML+='<div class="chat-msg agent animate"><div class="cm-avatar">🤖</div><div class="cm-body"><div class="cm-name">MOITA REV1</div><div class="cm-text">✅ Relatório <b>'+tipo+'</b> gerado e baixado ('+dt+').</div></div></div>';
+  msgs.scrollTop=msgs.scrollHeight;
+}
+function statusText(s){return ({entregue:'Entregue',em_transito:'Em trânsito',em_coleta:'Em coleta',programado:'Programado',cancelado:'Cancelado'})[s]||s}
+
+function searchGeoFor(cidade){ show('motoristas'); const c=document.getElementById('geoCity'); if(c){c.value=cidade; setTimeout(searchGeo,150);} }
+
+// ====== LIVE FETCH (mesma origem / autorizado) ======
+async function loginLive(){
+  const email=prompt('E-mail Videl:'); if(!email)return;
+  const senha=prompt('Senha Videl:'); if(!senha)return;
+  try{
+    const r=await fetch(API+'/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:senha})});
+    if(!r.ok)throw new Error('login '+r.status);
+    const j=await r.json(); const tk=j.token; sessionStorage.setItem('videl_tk',tk);
+    await carregarLive(tk); setConn('videl',true,'● Ao vivo');
+    alert('Conectado ao vivo! Dados atualizados.');
+  }catch(e){ alert('Falha no login ao vivo: '+e.message+String.fromCharCode(10)+'(A API pode bloquear CORS fora do dominio videltel.com.br - use o painel dentro da plataforma.)'); }
+}
+async function carregarLive(tk){
+  const h={'Authorization':'Bearer '+tk};
+  const [sh,qt]=await Promise.all([
+    fetch(API+'/shipments?page=1&limit=100',{headers:h}).then(r=>r.json()),
+    fetch(API+'/quotes?page=1&limit=100',{headers:h}).then(r=>r.json())
+  ]);
+  // remapear para DATA (mesmo formato do snapshot)
+  DATA.embarques=(sh.data||[]).map(s=>({num:s.numero,cliente:s.cliente_nome,status:s.status,origem:s.origem?.cidade||'',destino:s.destino?.cidade||'',uf_o:s.origem?.uf||'',uf_d:s.destino?.uf||'',frete:+s.valor_frete||0,nf:+s.valor_nf||0,peso:+s.peso||0,motorista:s.motorista_nome||'',placa:s.veiculo_placa||'',cte:!!s.cte_obrigatorio,coleta:(s.data_coleta||'').slice(0,10),entrega:(s.data_entrega_prevista||'').slice(0,10)}));
+  if(sh.summary){DATA.kpis.entregues=sh.summary.entregues;DATA.kpis.transito=sh.summary.emTransito;DATA.kpis.embarques_total=sh.summary.total;DATA.kpis.faturamento=sh.summary.valorFreteTotal;}
+  if(qt.summary){DATA.kpis.cotacoes=qt.summary.total;DATA.kpis.cotacoes_aprovadas=qt.summary.aprovadas;}
+  DATA.kpis.operacoes_andamento=DATA.embarques.filter(e=>['em_transito','em_coleta','programado'].includes(e.status)).length;
+  DATA.kpis.alertas=DATA.embarques.filter(e=>!e.motorista&&['programado','em_coleta'].includes(e.status)).length;
+  renderAll();
+}
+function setConn(id,on,txt){ const e=document.getElementById('conn-'+id); if(e){e.className='conn-st '+(on?'on':'');e.style.color=on?'':'var(--orange)';e.textContent=txt;} }
+
+function renderAll(){ renderKPIs();renderEmbarquesTimeline();renderTasks();renderCotacoes();renderEmbarquesMotoristas();renderOps();renderAlertas(); }
+
+window.addEventListener('DOMContentLoaded',()=>{
+  show('painel'); renderAll();
+  const tk=sessionStorage.getItem('videl_tk');
+  if(tk){ carregarLive(tk).catch(()=>{}); }
+});
+
 </script>
 </body></html>
