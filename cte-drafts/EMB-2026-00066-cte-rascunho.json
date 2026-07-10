@@ -18,19 +18,19 @@
   },
 
   "emitente": {
-    "razao_social": "VIDEL T&I TRANSPORTES",
+    "razao_social": "VIDEL TRANSPORTE E LOGISTICA LTDA",
     "cnpj": "63.147.064/0001-30",
-    "ie": "A CONSULTAR",
+    "ie": "129273392",
     "endereco": "Itupeva/SP (base operacional)",
     "cidade": "Itupeva",
     "uf": "SP",
-    "nota": "Emitente e remetente é a própria Videl T&I em Itupeva/SP"
+    "nota": "IE extraída do CT-e #161 emitido via Hivecloud em 09/07/2026"
   },
 
   "remetente": {
-    "razao_social": "VIDEL T&I TRANSPORTES",
+    "razao_social": "VIDEL TRANSPORTE E LOGISTICA LTDA",
     "cnpj": "63.147.064/0001-30",
-    "ie": "A CONSULTAR",
+    "ie": "129273392",
     "cidade": "Itupeva",
     "uf": "SP",
     "nota": "Remetente é a própria Videl em Itupeva (confirmado pelo usuário)"
@@ -184,7 +184,9 @@
     "Dados do remetente: Videl T&I em Itupeva/SP (confirmado)",
     "Tomador: preenchido na plataforma (confirmado)",
     "ICMS calculado: 7% (SP→MA) = R$ 700,00",
-    "Dados da NF-e extraídos completos (emitente, destinatário, valores, produtos)"
+    "Dados da NF-e extraídos completos (emitente, destinatário, valores, produtos)",
+    "IE Videl: 129273392 (extraída do CT-e #161 autorizado em 09/07/2026 via Hivecloud)",
+    "Razão social correta: VIDEL TRANSPORTE E LOGISTICA LTDA"
   ],
 
   "pendencias_restantes": [
@@ -193,7 +195,7 @@
     "3. CONFIRMAR endereço de entrega (Rosário/MA vs Passo Fundo/RS)",
     "4. PREENCHER CNH do motorista (número e validade não cadastrados)",
     "5. PREENCHER RNTRC do veículo",
-    "6. PREENCHER IE e endereço completo da Videl T&I (emitente)",
+    "6. [RESOLVIDO] IE Videl: 129273392 — extraída do e-mail Hivecloud CT-e #161",
     "7. CALCULAR pedágio (rota SP→MA)",
     "8. REALIZAR averbação do seguro antes do embarque"
   ]
