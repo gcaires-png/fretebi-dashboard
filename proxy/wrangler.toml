@@ -1,0 +1,12 @@
+name = "moita-videl-proxy"
+main = "worker.js"
+compatibility_date = "2026-07-01"
+
+# Origens autorizadas a chamar o proxy (o painel).
+# Ajuste para a URL onde o moita-rev1.html está publicado.
+[vars]
+ALLOWED_ORIGINS = "https://gcaires-png.github.io,http://localhost:8080,http://127.0.0.1:5500"
+
+# Segredos (NÃO colocar aqui). Configure com:
+#   npx wrangler secret put VIDEL_EMAIL
+#   npx wrangler secret put VIDEL_PASSWORD

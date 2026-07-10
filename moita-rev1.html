@@ -875,7 +875,9 @@ const SNAPSHOT = {"kpis": {"cotacoes": 73, "cotacoes_aprovadas": 65, "operacoes_
 
 // ====== CAMADA DE DADOS REAIS + LIVE FETCH (Moita Rev1) ======
 let DATA = JSON.parse(JSON.stringify(SNAPSHOT));
-const API = 'https://www.videltel.com.br/api';
+const PROXY = (typeof localStorage!=='undefined' && localStorage.getItem('MOITA_PROXY'))||'';
+const API = PROXY || 'https://www.videltel.com.br/api';
+const USE_PROXY = !!PROXY;
 const brl = v => 'R$ ' + (Number(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const brl0 = v => 'R$ ' + Math.round(Number(v)||0).toLocaleString('pt-BR');
 const dbr = s => s ? s.split('-').reverse().join('/') : '—';
@@ -1019,6 +1021,7 @@ function searchGeoFor(cidade){ show('motoristas'); const c=document.getElementBy
 
 // ====== LIVE FETCH (mesma origem / autorizado) ======
 async function loginLive(){
+  if(USE_PROXY){ try{ await carregarLive(null); setConn('videl',true,'● Ao vivo (proxy)'); alert('Conectado ao vivo via proxy! Dados atualizados.'); }catch(e){ alert('Proxy configurado mas falhou: '+e.message); } return; }
   const email=prompt('E-mail Videl:'); if(!email)return;
   const senha=prompt('Senha Videl:'); if(!senha)return;
   try{
@@ -1030,7 +1033,7 @@ async function loginLive(){
   }catch(e){ alert('Falha no login ao vivo: '+e.message+String.fromCharCode(10)+'(A API pode bloquear CORS fora do dominio videltel.com.br - use o painel dentro da plataforma.)'); }
 }
 async function carregarLive(tk){
-  const h={'Authorization':'Bearer '+tk};
+  const h = USE_PROXY ? {} : {'Authorization':'Bearer '+(tk||'')};
   const [sh,qt]=await Promise.all([
     fetch(API+'/shipments?page=1&limit=100',{headers:h}).then(r=>r.json()),
     fetch(API+'/quotes?page=1&limit=100',{headers:h}).then(r=>r.json())
@@ -1049,8 +1052,13 @@ function renderAll(){ renderKPIs();renderEmbarquesTimeline();renderTasks();rende
 
 window.addEventListener('DOMContentLoaded',()=>{
   show('painel'); renderAll();
-  const tk=sessionStorage.getItem('videl_tk');
-  if(tk){ carregarLive(tk).catch(()=>{}); }
+  if(USE_PROXY){
+    setConn('videl',true,'● Ao vivo (proxy)');
+    carregarLive(null).then(()=>console.log('Moita: dados ao vivo via proxy')).catch(e=>{console.warn('proxy falhou, usando snapshot',e);setConn('videl',true,'● Snapshot');});
+  } else {
+    const tk=sessionStorage.getItem('videl_tk');
+    if(tk){ carregarLive(tk).catch(()=>{}); }
+  }
 });
 
 </script>
