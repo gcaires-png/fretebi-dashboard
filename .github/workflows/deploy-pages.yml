@@ -3,7 +3,6 @@ name: Deploy FreteBI + Moita Rev1 to GitHub Pages
 on:
   push:
     branches:
-      - claude/logistics-analyst-moita-rev1-7ejr53
       - main
   workflow_dispatch:
 
