@@ -1,76 +1,45 @@
-# Conectar o Painel de Gestão às planilhas (tempo real)
+# Conectar o Controle de Atividades à planilha (tempo real)
 
-Guia para ligar o **Painel de Gestão & KPIs** (`painel-gestao.html`) direto às
-planilhas do Google Sheets da Videl, sem programar nada. Depois de configurado,
-o painel se atualiza sozinho a cada **60 segundos**.
-
-Visão geral do fluxo:
+O **Controle de Atividades** (`painel-gestao.html`) lê uma planilha do Google
+Sheets onde os **funcionários preenchem as atividades**; o **Moita analisa**
+sozinho (atrasadas, sem responsável, gargalos, produtividade) e o HTML mostra
+tudo em tempo real, atualizando a cada **60 segundos**.
 
 ```
-Google Sheets (dados)  →  Apps Script (moita-sheets.gs, publicado como Web App)  →  Painel (engrenagem ⚙️)
+Funcionário preenche o Sheets  →  Apps Script (moita-sheets.gs, Web App)  →  Painel analisa e mostra ao vivo
 ```
 
 ---
 
-## Passo 1 — Montar a planilha
+## Passo 1 — A planilha (você já tem)
 
-Crie uma Planilha Google (ex.: **"Moita — Base do Painel"**) com as abas abaixo.
-A **primeira linha de cada aba é o cabeçalho** (os nomes das colunas). A ordem
-das colunas não importa; acentos e maiúsculas também não.
+O painel lê a planilha **`00 - Controle de Demandas Videl — MASTER`** (a mesma
+que você já usa). O script busca automaticamente a aba de demandas e entende
+estas colunas (nomes flexíveis — acento/maiúscula/ordem não importam):
 
-### Aba `Areas`
-| id | nome | icon | owner | pasta | drive_url | health |
-|----|------|------|-------|-------|-----------|--------|
-| comercial | Comercial | 💼 | Equipe Comercial · 4 pessoas | 01 · Comercial | https://drive.google.com/... | 82 |
-| logistica | Logística | 🚛 | Moita Rev1 + Operações | 02 · Logística/Operações | https://drive.google.com/... | 74 |
-| financeiro | Financeiro | 💰 | Financeiro · 3 pessoas | 03 · Financeiro | https://drive.google.com/... | 88 |
-| fiscal | Fiscal / Documentos | 📄 | Analista Fiscal | 04 · Fiscal | https://drive.google.com/... | 79 |
-| frota | Frota / Motoristas | 🧭 | Gestão de Frota | 05 · Frota | https://drive.google.com/... | 71 |
-| rh | RH & Pessoas | 👥 | RH · 2 pessoas | 06 · RH | https://drive.google.com/... | 85 |
+| ID | Área | Subárea | Demanda / Tarefa | Responsável (executa) | Gestor | Prioridade | Abertura | Prazo | Status | % Concluído | Próxima ação / Observação |
+|----|------|---------|------------------|-----------------------|--------|------------|----------|-------|--------|-------------|---------------------------|
+| ADM-01 | Administrativo | Adm | Enviar contrato de aluguel | Karolay | José Adailton | ALTA | 13/07/2026 | 15/07/2026 | Em andamento | 50 | Contabilidade aguardando |
 
-> `id` é a chave que liga as outras abas. `health` = índice de saúde 0–100.
-> `drive_url` é o link da pasta no Drive (opcional). A **cor** de cada área é
-> automática pelo `id` (comercial, logistica, financeiro, fiscal, frota, rh).
+Como o painel interpreta:
 
-### Aba `Planilhas`
-| area_id | nome | linhas | sync |
-|---------|------|--------|------|
-| comercial | Cotações Ativas | 128 | ok |
-| comercial | Funil de Vendas | 342 | ok |
-| financeiro | Conciliação Bancária | 88 | err |
+- **Área / Subárea** → define a cor e o ícone (Administrativo, RH, Financeiro,
+  Logística, Comercial, Marketing, TI/DEV). Usa a Subárea quando ela é mais
+  específica (ex.: RH dentro de Administrativo).
+- **Prioridade** → `ALTA`, `MÉDIA`, `BAIXA`.
+- **Prazo** → o Moita marca **ATRASADA** sozinho quando a data já passou e a
+  demanda não está concluída (regra do seu doc de instruções).
+- **Status** → encaixado nas colunas do quadro:
+  - **A fazer** ← `a fazer`, `pendente`, `atrasado`
+  - **Em andamento** ← `em andamento`, `fazendo`, `execução`
+  - **Bloqueado** ← `bloqueado`, `travado`, `impedido`
+  - **Concluído** ← `concluído`, `feito`, `entregue`, `ok`
+- **% Concluído** → mostra a barra de progresso e entra no cálculo do placar.
+- **Responsável / Gestor** → alimentam os filtros e o **Placar de performance**.
 
-> `sync` aceita: **ok** (verde), **wait** (amarelo/aguardando), **err** (vermelho).
-> A coluna `linhas` pode ser preenchida com `=CONTAR.VALORES(...)` apontando
-> para a planilha real, para refletir o volume automaticamente.
-
-### Aba `KPIs`
-| area_id | papel | icon | valor | label | delta | direcao | tag | barra |
-|---------|-------|------|-------|-------|-------|---------|-----|-------|
-| comercial | gestor | 💵 | R$ 486k | Receita fechada (mês) | +12,4% vs. mês ant. | up | Meta 92% | 92 |
-| comercial | func | 📂 | 11 | Minhas cotações abertas | 3 vencem hoje | nt | | |
-| logistica | gestor | 🎯 | 61,4% | Custo de frete médio | dentro da meta 60–62% | up | | 61 |
-
-> `papel` = **gestor** ou **func** (funcionário). `direcao` = **up** (verde ▲),
-> **dn** (vermelho ▼) ou **nt** (neutro •). `tag` e `barra` (0–100) são opcionais.
-> `valor` pode ser texto (`R$ 486k`, `61,4%`) ou número — vem como está.
-
-### Aba `Projetos`
-| nome | area_id | responsavel | progresso | prazo | status |
-|------|---------|-------------|-----------|-------|--------|
-| Integração Bsoft (CT-e automático) | fiscal | Moita Rev1 | 72 | 30/08/2026 | and |
-| Onboarding digital de motoristas | rh | RH | 100 | 01/07/2026 | done |
-
-> `status`: **and** (em andamento), **risk** (em risco), **late** (atrasado),
-> **done** (concluído), **plan** (planejado). `progresso` = 0–100.
-
-### Abas opcionais `TopKPIs` e `Alertas`
-Controlam os 4 cards do topo da Visão Geral e os 4 cards de Alertas.
-Mesmas colunas do `KPIs` (com `cor` opcional em vez de `area_id`). Se você
-**não criar** essas abas, o painel usa os cards padrão.
-
-| papel | icon | valor | label | delta | direcao | cor | barra |
-|-------|------|-------|-------|-------|---------|-----|-------|
-| gestor | 💵 | R$ 512k | Faturamento consolidado (mês) | +9,8% vs. ant. | up | var(--a-financeiro) | 88 |
+> Cada área continua preenchendo o **seu** controle; o MASTER consolida (como já
+> é hoje). O painel lê o MASTER. Se preferir, dá para o script ler as 7 planilhas
+> por área diretamente — me avise que eu configuro.
 
 ---
 
@@ -78,42 +47,63 @@ Mesmas colunas do `KPIs` (com `cor` opcional em vez de `area_id`). Se você
 
 1. Na planilha: **Extensões ▸ Apps Script**.
 2. Apague o conteúdo padrão e **cole o arquivo [`moita-sheets.gs`](./moita-sheets.gs)**.
-3. (Opcional) Se o script não estiver dentro da própria planilha, cole o ID
-   dela em `SPREADSHEET_ID` no topo do arquivo.
-4. **Implantar ▸ Nova implantação**.
-5. Engrenagem ▸ **Tipo: App da Web**.
-6. Configure:
+3. **Implantar ▸ Nova implantação**.
+4. Engrenagem ▸ **Tipo: App da Web**.
+5. Configure:
    - **Executar como:** Eu (sua conta).
    - **Quem pode acessar:** **Qualquer pessoa**.
-7. **Implantar** e autorize o acesso quando pedir.
-8. Copie a **URL do app da Web** (termina em `/exec`).
-
-> A URL `/exec` é a que o painel vai consumir. Guarde-a.
+6. **Implantar** e autorize quando pedir.
+7. Copie a **URL do app da Web** (termina em `/exec`).
 
 ---
 
 ## Passo 3 — Conectar no painel
 
-1. Abra o painel: `https://gcaires-png.github.io/fretebi-dashboard/painel-gestao.html`
-2. Clique na **engrenagem ⚙️** (canto superior direito).
-3. Cole a URL `/exec` no campo e clique em **Testar & Salvar**.
-4. O selo muda de **◐ Demo** para **● Ao vivo** e os dados passam a vir da planilha.
+Você tem **duas formas**:
 
-Pronto. A configuração fica salva no navegador (localStorage). Cada gestor que
-abrir o link e colar a URL uma vez passa a ver os dados ao vivo. Para distribuir
-a URL a todos automaticamente, dá para embutir uma URL padrão no código — me
-avise se quiser essa versão "já conectada".
+### A) Rápida (por navegador)
+1. Abra o painel: `https://gcaires-png.github.io/fretebi-dashboard/painel-gestao.html`
+2. Clique na **engrenagem ⚙️** ▸ cole a URL `/exec` ▸ **Testar & Salvar**.
+3. O selo vira **● Ao vivo**. Fica salvo naquele navegador.
+
+### B) "Já conectado" para todos (recomendada para distribuir)
+Para que **todo mundo** abra o link já ao vivo, sem configurar nada:
+
+1. Abra `painel-gestao.html` e encontre no topo do `<script>`:
+   ```js
+   const DEFAULT_ENDPOINT = '';   // <<< cole aqui a URL /exec do Google Apps Script
+   ```
+2. Cole sua URL `/exec` entre as aspas, salve e publique.
+3. Pronto — qualquer link enviado aos gestores/funcionários já abre conectado.
+
+> Me mande a URL `/exec` depois de publicar o Web App que eu já deixo o
+> `DEFAULT_ENDPOINT` preenchido e no ar para você.
+
+---
+
+## Como o Moita analisa (automático)
+
+A cada leitura, o Moita calcula e mostra no topo:
+
+- **Atrasadas** (prazo vencido e não concluído) e quais são as prioritárias;
+- **Sem responsável** (atividades que precisam de dono);
+- **Alta prioridade em aberto**;
+- **Gargalo** — a área com mais pendências;
+- **Produtividade** — quem mais concluiu;
+- **Recomendação** do que atacar primeiro.
+
+Além do quadro (Kanban) por status, há visão de **Tabela**, filtros por área,
+responsável e prioridade, e alternância **Gestor / Funcionário**.
 
 ---
 
 ## Dúvidas comuns
 
-- **Mudei a planilha e o painel não atualizou.** Ele sincroniza a cada 60s;
-  recarregue a página para ver na hora.
-- **Erro de sincronização.** Confirme que a implantação está como **"Qualquer
-  pessoa"** e que a URL termina em `/exec` (não `/dev`).
-- **Alterei o código do script.** Toda alteração precisa de uma **nova
-  implantação** (ou "Gerenciar implantações ▸ editar ▸ Nova versão").
-- **Segurança.** O Web App só expõe leitura (GET) dos dados que você colocou
-  nas abas. Não exponha dados sensíveis que não devam ser públicos, já que o
-  acesso é "Qualquer pessoa com o link".
+- **Mudei a planilha e não atualizou.** Sincroniza a cada 60s; recarregue para
+  ver na hora.
+- **Erro de sincronização.** Confirme implantação como **"Qualquer pessoa"** e
+  URL terminando em `/exec` (não `/dev`).
+- **Alterei o script.** Toda alteração exige **nova implantação** (Gerenciar
+  implantações ▸ editar ▸ Nova versão).
+- **Segurança.** O Web App expõe (só leitura) o que estiver nas abas, com acesso
+  "Qualquer pessoa com o link". Não coloque ali dados que não possam ser vistos.
