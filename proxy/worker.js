@@ -25,6 +25,8 @@ const VIDEL_BASE = 'https://www.videltel.com.br/api';
 // rotas de leitura liberadas (prefixos)
 const ALLOWED_PATHS = [
   'shipments', 'quotes', 'clients', 'drivers', 'vehicles', 'documents',
+  // financeiro / contas a pagar (nomes candidatos — a API usa um destes)
+  'payables', 'accounts-payable', 'bills', 'finance', 'expenses', 'contas-a-pagar',
 ];
 
 // token em memória (persiste enquanto o isolate estiver quente)

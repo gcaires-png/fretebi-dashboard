@@ -50,6 +50,20 @@ body{background:var(--surface);color:var(--ink);font-family:'Inter',ui-sans-seri
 
 .wrap{max-width:1360px;margin:0 auto;padding:26px 24px 40px}
 
+/* Abas */
+.tabbar{display:flex;gap:2px;padding:0 20px;border-bottom:1px solid var(--border);background:var(--surface);position:sticky;top:52px;z-index:55}
+.tab{background:transparent;border:none;border-bottom:2px solid transparent;color:var(--muted);font-family:inherit;font-size:13.5px;font-weight:600;padding:11px 12px;cursor:pointer;margin-bottom:-1px;transition:.12s}
+.tab:hover{color:var(--ink)}
+.tab.active{color:var(--ink);border-bottom-color:var(--ink)}
+
+/* Seções da aba Videl */
+.vsec{margin-bottom:24px}
+.vsec-h{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:700;color:var(--ink);margin-bottom:10px}
+.vsec-c{color:var(--muted);font-weight:600;font-size:12.5px}
+.vsec-link{margin-left:auto;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none}
+.vsec-link:hover{text-decoration:underline}
+.vmoney{font-variant-numeric:tabular-nums;font-weight:600}
+
 /* Moita — callout Notion */
 .moita{background:var(--callout);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:22px}
 .moita-head{display:flex;align-items:center;gap:11px;margin-bottom:13px}
@@ -187,7 +201,12 @@ select.flt:focus{border-color:var(--accent)}
   </div>
 </div>
 
-<div class="wrap">
+<div class="tabbar">
+  <button id="tabBtn-demandas" class="tab active" onclick="switchTab('demandas')">📋 Controle de Demandas</button>
+  <button id="tabBtn-videl" class="tab" onclick="switchTab('videl')">🚚 Plataforma Videl</button>
+</div>
+
+<div class="wrap" id="tab-demandas">
 
   <!-- Análise do Moita -->
   <div class="moita">
@@ -234,12 +253,54 @@ select.flt:focus{border-color:var(--accent)}
 
 </div>
 
+<!-- ===================== ABA 2 · PLATAFORMA VIDEL ===================== -->
+<div class="wrap hide" id="tab-videl">
+  <div class="moita" style="display:flex;align-items:center;gap:12px">
+    <div class="moita-av">🚚</div>
+    <div class="moita-who">Plataforma Videl <small id="videlConn">Embarques · Leads · Contas a Pagar — conecte a plataforma para dados ao vivo</small></div>
+    <div style="margin-left:auto;display:flex;gap:6px">
+      <span class="chip" id="videlMode">◐ Demo</span>
+      <button class="btn btn-ico" onclick="videlSync(true)" title="Atualizar">🔄</button>
+      <button class="btn" onclick="openCfg()">🔌 Conectar</button>
+    </div>
+  </div>
+
+  <div class="kpis" id="videlKpis"></div>
+
+  <div class="vsec">
+    <div class="vsec-h">🚚 Embarques <span class="vsec-c" id="embCount"></span>
+      <a class="vsec-link" href="https://www.videltel.com.br/dashboard" target="_blank">abrir na plataforma ↗</a></div>
+    <div class="tw ts">
+      <table class="tbl"><thead><tr><th>Nº</th><th>Cliente</th><th>Rota</th><th>Motorista</th><th>Frete</th><th>Coleta</th><th>Entrega</th><th>Status</th></tr></thead>
+      <tbody id="embRows"></tbody></table>
+    </div>
+  </div>
+
+  <div class="vsec">
+    <div class="vsec-h">🎯 Leads / Cotações <span class="vsec-c" id="leadCount"></span></div>
+    <div class="tw ts">
+      <table class="tbl"><thead><tr><th>Cliente</th><th>Rota</th><th>Carga</th><th>Valor</th><th>Aberto</th><th>Status</th></tr></thead>
+      <tbody id="leadRows"></tbody></table>
+    </div>
+  </div>
+
+  <div class="vsec">
+    <div class="vsec-h">💸 Contas a Pagar <span class="vsec-c" id="apCount"></span></div>
+    <div class="tw ts">
+      <table class="tbl"><thead><tr><th>Fornecedor</th><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Status</th></tr></thead>
+      <tbody id="apRows"></tbody></table>
+    </div>
+  </div>
+</div>
+
 <!-- Modal conexão -->
 <div class="modal-bg" id="cfgBg" onclick="if(event.target===this)closeCfg()">
   <div class="modal">
     <div class="modal-t">🔌 Conectar planilha (tempo real)</div>
     <p class="modal-s">Cole a URL do Web App do Google Apps Script (termina em <code>/exec</code>). Cada área preenche a sua planilha; este painel lê a MASTER + as 7 planilhas e o Moita analisa, atualizando a cada 30s.</p>
     <input type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec" spellcheck="false">
+    <p class="modal-s" style="margin:14px 0 6px">🚚 <b>Plataforma Videl</b> (aba Embarques/Leads/Contas a Pagar) — URL do proxy Cloudflare (opcional):</p>
+    <input type="text" id="cfgProxy" placeholder="https://moita-videl-proxy.SEU-SUBDOMINIO.workers.dev" spellcheck="false">
     <div id="cfgMsg" class="modal-msg"></div>
     <div class="modal-actions">
       <button class="btn" onclick="clearCfg()">Desconectar (Demo)</button>
@@ -320,9 +381,12 @@ function initials(name){
 function parseDate(s){
   if(!s)return null;
   if(Object.prototype.toString.call(s)==='[object Date]')return isNaN(s)?null:s;
-  const m=String(s).match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
-  if(m){let[_,d,mo,y]=m;y=+y<100?2000+ +y:+y;return new Date(y,mo-1,d);}
-  const d=new Date(s); return isNaN(d)?null:d;   // fallback: datas em formato longo do Google
+  s=String(s).trim();
+  let m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);          // ISO aaaa-mm-dd
+  if(m)return new Date(+m[1],+m[2]-1,+m[3]);
+  m=s.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);   // dd/mm/aaaa
+  if(m){let y=+m[3];y=y<100?2000+y:y;return new Date(y,+m[2]-1,+m[1]);}
+  const d=new Date(s); return isNaN(d)?null:d;            // fallback: formato longo do Google
 }
 // Formata qualquer data para dd/mm/aaaa (mantém texto que não é data).
 function fmtBR(s){
@@ -615,18 +679,128 @@ async function sync(manual){
 }
 
 /* ---------------- Config ---------------- */
-function openCfg(){document.getElementById('cfgUrl').value=localStorage.getItem('MOITA_SHEETS')||DEFAULT_ENDPOINT||'';document.getElementById('cfgMsg').textContent='';document.getElementById('cfgBg').classList.add('show');}
+function openCfg(){document.getElementById('cfgUrl').value=localStorage.getItem('MOITA_SHEETS')||DEFAULT_ENDPOINT||'';document.getElementById('cfgProxy').value=localStorage.getItem('MOITA_PROXY')||DEFAULT_PROXY||'';document.getElementById('cfgMsg').textContent='';document.getElementById('cfgBg').classList.add('show');}
 function closeCfg(){document.getElementById('cfgBg').classList.remove('show');}
 function cfgMsg(t,cls){const m=document.getElementById('cfgMsg');m.textContent=t;m.className='modal-msg '+(cls||'');}
 async function saveCfg(){
   const url=document.getElementById('cfgUrl').value.trim();
-  if(!url){cfgMsg('Cole a URL do Web App (/exec).','err');return;}
+  const proxy=document.getElementById('cfgProxy').value.trim();
+  if(proxy)localStorage.setItem('MOITA_PROXY',proxy); else localStorage.removeItem('MOITA_PROXY');
+  if(!url){
+    if(proxy){cfgMsg('Testando plataforma Videl…','wait');try{await videlSync(true);cfgMsg('✓ Plataforma Videl conectada!','ok');setTimeout(closeCfg,900);}catch(e){cfgMsg('✗ Videl falhou: '+e.message,'err');}return;}
+    cfgMsg('Cole a URL do Web App (/exec) e/ou o proxy da Videl.','err');return;
+  }
   cfgMsg('Testando conexão…','wait');
   try{ const data=await fetchData(url); localStorage.setItem('MOITA_SHEETS',url); applyData(data); setMode(true); stamp();
-    cfgMsg('✓ Conectado! Atividades ao vivo carregadas.','ok'); setTimeout(closeCfg,900);
+    if(proxy){try{await videlSync();}catch(e){}}
+    cfgMsg('✓ Conectado! Dados ao vivo carregados.','ok'); setTimeout(closeCfg,900);
   }catch(e){ cfgMsg('✗ Falhou: '+e.message+'. Confira se a implantação está como "Qualquer pessoa".','err'); }
 }
-function clearCfg(){localStorage.removeItem('MOITA_SHEETS');cfgMsg('Desconectado — modo Demo.','wait');setTimeout(()=>location.reload(),500);}
+function clearCfg(){localStorage.removeItem('MOITA_SHEETS');localStorage.removeItem('MOITA_PROXY');cfgMsg('Desconectado — modo Demo.','wait');setTimeout(()=>location.reload(),500);}
+
+/* ==================== ABA · PLATAFORMA VIDEL ==================== */
+const DEFAULT_PROXY = '';  // <<< cole aqui a URL do proxy Cloudflare da Videl p/ abrir já ao vivo
+let VTAB='demandas';
+function switchTab(t){
+  VTAB=t;
+  document.getElementById('tab-demandas').classList.toggle('hide',t!=='demandas');
+  document.getElementById('tab-videl').classList.toggle('hide',t!=='videl');
+  document.getElementById('tabBtn-demandas').classList.toggle('active',t==='demandas');
+  document.getElementById('tabBtn-videl').classList.toggle('active',t==='videl');
+  if(t==='videl'){renderVidel();videlSync();}
+  window.scrollTo(0,0);
+}
+
+/* Demo = espelho de operações reais da Videl (substituído ao conectar o proxy) */
+let EMBARQUES=[
+  {num:'EMB-69',cliente:'Bold S.A.',origem:'Itajaí',uf_o:'SC',destino:'Jaraguá do Sul',uf_d:'SC',status:'programado',motorista:'',frete:4200,coleta:'2026-07-15',entrega:'2026-07-16'},
+  {num:'EMB-70',cliente:'Bold S.A.',origem:'Itajaí',uf_o:'SC',destino:'Joinville',uf_d:'SC',status:'programado',motorista:'',frete:3800,coleta:'2026-07-15',entrega:'2026-07-16'},
+  {num:'EMB-71',cliente:'Movecta',origem:'Itajaí',uf_o:'SC',destino:'Curitiba',uf_d:'PR',status:'em_coleta',motorista:'Bruno Lima',frete:5200,coleta:'2026-07-15',entrega:'2026-07-17'},
+  {num:'EMB-72',cliente:'Movecta',origem:'Navegantes',uf_o:'SC',destino:'São Paulo',uf_d:'SP',status:'em_transito',motorista:'Carlos Souza',frete:7800,coleta:'2026-07-14',entrega:'2026-07-16'},
+  {num:'EMB-68',cliente:'Transbold',origem:'Jaraguá do Sul',uf_o:'SC',destino:'Porto Alegre',uf_d:'RS',status:'em_transito',motorista:'José Martins',frete:6400,coleta:'2026-07-13',entrega:'2026-07-15'},
+  {num:'EMB-67',cliente:'Energis8',origem:'Blumenau',uf_o:'SC',destino:'Campinas',uf_d:'SP',status:'entregue',motorista:'Pedro Alves',frete:8100,coleta:'2026-07-11',entrega:'2026-07-13'}
+];
+let LEADS=[
+  {cliente:'Energis8',rota:'Blumenau/SC → Campinas/SP',carga:'Agroquímica',valor:8600,aberto:'2026-07-13',status:'em_negociacao'},
+  {cliente:'DCA',rota:'Joinville/SC → Guarulhos/SP',carga:'Peças',valor:5400,aberto:'2026-07-13',status:'novo'},
+  {cliente:'J Faria',rota:'Itajaí/SC → Ribeirão Preto/SP',carga:'Bebidas',valor:9200,aberto:'2026-07-12',status:'em_negociacao'},
+  {cliente:'Sylvamo',rota:'Três Barras/SC → Suzano/SP',carga:'Papel',valor:11800,aberto:'2026-07-12',status:'novo'},
+  {cliente:'Transbold',rota:'Jaraguá do Sul/SC → Porto Alegre/RS',carga:'Máquinas',valor:6400,aberto:'2026-07-10',status:'aprovado'}
+];
+let CONTAS=[
+  {fornecedor:'Fretebras',descricao:'Fatura mensal — plano',valor:1890,venc:'2026-07-25',status:'a_pagar'},
+  {fornecedor:'Construcril',descricao:'Título em aberto',valor:9800,venc:'2026-07-14',status:'a_pagar'},
+  {fornecedor:'Medeiros Transportes',descricao:'Título em aberto',valor:11200,venc:'2026-07-12',status:'a_pagar'},
+  {fornecedor:'Const. Davi',descricao:'Título em aberto',valor:6113,venc:'2026-07-16',status:'a_pagar'},
+  {fornecedor:'Posto Ipiranga',descricao:'Abastecimento frota',valor:4300,venc:'2026-07-20',status:'agendado'},
+  {fornecedor:'Contjet Contabilidade',descricao:'Honorários julho',valor:2200,venc:'2026-07-10',status:'pago'}
+];
+const EMB_ST={programado:{n:'Programado',c:'var(--s-afazer)'},em_coleta:{n:'Em coleta',c:'var(--p-media)'},em_transito:{n:'Em trânsito',c:'var(--s-andamento)'},entregue:{n:'Entregue',c:'var(--s-concluido)'}};
+const LEAD_ST={novo:{n:'Novo',c:'var(--s-afazer)'},em_negociacao:{n:'Em negociação',c:'var(--s-andamento)'},aprovado:{n:'Aprovado',c:'var(--s-concluido)'},perdido:{n:'Perdido',c:'var(--s-atrasado)'}};
+const AP_ST={a_pagar:{n:'A pagar',c:'var(--p-media)'},agendado:{n:'Agendado',c:'var(--s-andamento)'},pago:{n:'Pago',c:'var(--s-concluido)'},vencido:{n:'Vencido',c:'var(--s-atrasado)'}};
+
+function brl(n){return 'R$ '+(+n||0).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});}
+function vpill(m){return `<span class="stpill" style="color:${m.c};background:color-mix(in srgb,${m.c} 12%,#fff)"><span class="sd" style="background:${m.c}"></span>${m.n}</span>`;}
+function isVenc(d){const x=parseDate(d);if(!x)return false;const t=new Date();t.setHours(0,0,0,0);return x<t;}
+function vEmpty(n){return `<tr><td colspan="${n}" style="text-align:center;color:var(--muted);padding:20px">Nenhum registro.</td></tr>`;}
+
+function renderVidel(){
+  const transito=EMBARQUES.filter(e=>e.status==='em_transito'||e.status==='em_coleta').length;
+  const entregues=EMBARQUES.filter(e=>e.status==='entregue').length;
+  const frete=EMBARQUES.reduce((s,e)=>s+(+e.frete||0),0);
+  const leadsAb=LEADS.filter(l=>l.status!=='aprovado'&&l.status!=='perdido').length;
+  const apTotal=CONTAS.filter(c=>c.status!=='pago').reduce((s,c)=>s+(+c.valor||0),0);
+  const apVenc=CONTAS.filter(c=>c.status!=='pago'&&isVenc(c.venc)).length;
+  document.getElementById('videlKpis').innerHTML=[
+    {v:transito,l:'Em trânsito',sub:'incl. em coleta',c:'var(--s-andamento)'},
+    {v:entregues,l:'Entregues',sub:'no período',c:'var(--s-concluido)'},
+    {v:brl(frete),l:'Frete total',sub:'embarques ativos',c:'var(--ink)'},
+    {v:leadsAb,l:'Leads abertos',sub:'em negociação',c:'var(--a-comercial)'},
+    {v:brl(apTotal),l:'Contas a pagar',sub:'em aberto',c:'var(--p-media)'},
+    {v:apVenc,l:'Vencidas',sub:apVenc?'ação necessária':'em dia',c:'var(--s-atrasado)'}
+  ].map(k=>`<div class="kpi" style="--kc:${k.c}"><div class="kpi-v">${k.v}</div><div class="kpi-l">${k.l}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
+
+  document.getElementById('embCount').textContent=EMBARQUES.length;
+  document.getElementById('embRows').innerHTML=EMBARQUES.map(e=>`<tr>
+    <td style="font-weight:700">${e.num}</td><td>${e.cliente}</td>
+    <td>${e.origem}/${e.uf_o} → ${e.destino}/${e.uf_d}</td>
+    <td>${e.motorista?`<span class="who"><span class="av">${initials(e.motorista)}</span>${e.motorista}</span>`:'<span style="color:var(--s-atrasado);font-weight:600">sem motorista</span>'}</td>
+    <td class="vmoney">${brl(e.frete)}</td><td>${fmtBR(e.coleta)}</td><td>${fmtBR(e.entrega)}</td>
+    <td>${vpill(EMB_ST[e.status]||{n:e.status,c:'var(--muted)'})}</td></tr>`).join('')||vEmpty(8);
+
+  document.getElementById('leadCount').textContent=LEADS.length;
+  document.getElementById('leadRows').innerHTML=LEADS.map(l=>`<tr>
+    <td style="font-weight:700">${l.cliente}</td><td>${l.rota||'—'}</td><td>${l.carga||'—'}</td>
+    <td class="vmoney">${brl(l.valor)}</td><td>${fmtBR(l.aberto)}</td>
+    <td>${vpill(LEAD_ST[l.status]||{n:l.status,c:'var(--muted)'})}</td></tr>`).join('')||vEmpty(6);
+
+  document.getElementById('apCount').textContent=CONTAS.length;
+  document.getElementById('apRows').innerHTML=CONTAS.map(c=>{const venc=c.status!=='pago'&&isVenc(c.venc);
+    return `<tr><td style="font-weight:700">${c.fornecedor}</td><td>${c.descricao||'—'}</td>
+    <td class="vmoney">${brl(c.valor)}</td>
+    <td style="${venc?'color:var(--s-atrasado);font-weight:700':''}">${fmtBR(c.venc)}${venc?' ⚠':''}</td>
+    <td>${vpill(venc?AP_ST.vencido:(AP_ST[c.status]||{n:c.status,c:'var(--muted)'}))}</td></tr>`;}).join('')||vEmpty(5);
+}
+function mapLead(s){s=(s||'').toLowerCase();if(/aprov|ganho|fech/.test(s))return'aprovado';if(/perd|cancel/.test(s))return'perdido';if(/negoci|andam/.test(s))return'em_negociacao';return'novo';}
+function mapAP(s){s=(s||'').toLowerCase();if(/pago|quit|baix/.test(s))return'pago';if(/agend/.test(s))return'agendado';if(/venc|atras/.test(s))return'vencido';return'a_pagar';}
+async function videlSync(manual){
+  const proxy=localStorage.getItem('MOITA_PROXY')||DEFAULT_PROXY;
+  const chip=document.getElementById('videlMode'), conn=document.getElementById('videlConn');
+  if(!proxy){ chip.className='chip demo';chip.textContent='◐ Demo'; if(manual)toast('◐ Aba Videl em Demo — conecte o proxy da plataforma em 🔌.'); renderVidel(); return; }
+  try{
+    const [sh,qt,ap]=await Promise.all([
+      fetch(proxy.replace(/\/$/,'')+'/shipments?page=1&limit=100').then(r=>r.json()).catch(()=>({})),
+      fetch(proxy.replace(/\/$/,'')+'/quotes?page=1&limit=100').then(r=>r.json()).catch(()=>({})),
+      fetch(proxy.replace(/\/$/,'')+'/payables?page=1&limit=100').then(r=>r.json()).catch(()=>({}))
+    ]);
+    if(Array.isArray(sh.data))EMBARQUES=sh.data.map(s=>({num:s.numero,cliente:s.cliente_nome,origem:s.origem&&s.origem.cidade||'',uf_o:s.origem&&s.origem.uf||'',destino:s.destino&&s.destino.cidade||'',uf_d:s.destino&&s.destino.uf||'',status:s.status,motorista:s.motorista_nome||'',frete:+s.valor_frete||0,coleta:(s.data_coleta||'').slice(0,10),entrega:(s.data_entrega_prevista||'').slice(0,10)}));
+    if(Array.isArray(qt.data))LEADS=qt.data.map(q=>({cliente:q.cliente_nome||q.cliente,rota:((q.origem&&q.origem.cidade)||'')+' → '+((q.destino&&q.destino.cidade)||''),carga:q.carga||q.tipo_carga||'',valor:+q.valor||+q.valor_frete||0,aberto:(q.created_at||q.data||'').slice(0,10),status:mapLead(q.status)}));
+    if(Array.isArray(ap.data))CONTAS=ap.data.map(c=>({fornecedor:c.fornecedor||c.favorecido||c.nome,descricao:c.descricao||'',valor:+c.valor||0,venc:(c.vencimento||c.due_date||'').slice(0,10),status:mapAP(c.status)}));
+    chip.className='chip live';chip.innerHTML='<span class="dot"></span> Ao vivo';
+    conn.textContent='Embarques · Leads · Contas a Pagar — ao vivo da plataforma Videl';
+    renderVidel(); if(manual)toast('✓ Plataforma Videl atualizada!');
+  }catch(e){ chip.className='chip demo';chip.textContent='⚠ falhou'; if(manual)toast('⚠ Videl: '+e.message); }
+}
 
 /* ---------------- Init ---------------- */
 popFilters();
@@ -635,8 +809,10 @@ setRole(ROLE);
 setMode(!!(localStorage.getItem('MOITA_SHEETS')||DEFAULT_ENDPOINT));
 render();
 sync();
-setInterval(sync,30000);                                   // auto-atualiza a cada 30s
-document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync();}); // e ao voltar pra aba
+renderVidel();
+setInterval(sync,30000);                                   // demandas: auto-atualiza a cada 30s
+setInterval(()=>{if(VTAB==='videl')videlSync();},30000);   // videl: só quando a aba está aberta
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){sync();if(VTAB==='videl')videlSync();}});
 </script>
 </body>
 </html>
