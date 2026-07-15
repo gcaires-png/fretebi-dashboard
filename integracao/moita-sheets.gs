@@ -123,8 +123,8 @@ function toAtiv(r, i, forced) {
     gestor: pick(r, ['gestor']) || (forced ? forced.gestor : '') || '',
     area: forced ? forced.area : mapArea(areaTxt || 'geral'),
     prioridade: mapPrio(pick(r, ['prioridade', 'prio'])),
-    abertura: fmtData(pick(r, ['abertura', 'inicio'])),
-    prazo: fmtData(pick(r, ['prazo'])),
+    abertura: fmtData(pickRaw(r, ['abertura', 'inicio'])),
+    prazo: fmtData(pickRaw(r, ['prazo'])),
     status: mapStatus(pick(r, ['status'])),
     pct: pctNum(pick(r, ['%_concluido', 'concluido', 'percentual', 'pct'])),
     obs: pick(r, ['proxima_acao', 'observacao', 'observacoes', 'obs', 'proxima_acao_/_observacao']) || ''
@@ -152,6 +152,20 @@ function demandRows(ss) {
     if (rr.length) return rr;
   }
   return [];
+}
+
+// Como pick(), mas preserva o valor bruto (ex.: Date) — usado para datas.
+function pickRaw(obj, tokens) {
+  var keys = Object.keys(obj);
+  for (var t = 0; t < tokens.length; t++) {
+    for (var k = 0; k < keys.length; k++) {
+      if (keys[k].indexOf(tokens[t]) !== -1) {
+        var v = obj[keys[k]];
+        if (v !== '' && v !== null && v !== undefined) return v;
+      }
+    }
+  }
+  return '';
 }
 
 // Pega o 1º valor cujo cabeçalho CONTÉM um dos tokens (após normalização).
