@@ -37,9 +37,16 @@ Como o painel interpreta:
 - **% Concluído** → mostra a barra de progresso e entra no cálculo do placar.
 - **Responsável / Gestor** → alimentam os filtros e o **Placar de performance**.
 
-> Cada área continua preenchendo o **seu** controle; o MASTER consolida (como já
-> é hoje). O painel lê o MASTER. Se preferir, dá para o script ler as 7 planilhas
-> por área diretamente — me avise que eu configuro.
+> **Tudo amarrado (já configurado):** o script consolida a **MASTER + as 7
+> planilhas por área** automaticamente (união por ID; a MASTER tem prioridade
+> quando o mesmo ID existe nos dois lugares). Cada área preenche a **sua**
+> planilha e o resultado aparece no painel — sem precisar copiar nada.
+>
+> **Preencher a MASTER a partir das áreas (opcional):** ao abrir a planilha
+> MASTER aparece o menu **"Moita Rev1 ▸ Consolidar áreas na MASTER"**, que
+> acrescenta na MASTER as demandas novas das áreas (só adiciona IDs que ainda
+> não existem — nunca apaga). Dá para deixar automático em **Extensões ▸ Apps
+> Script ▸ Acionadores ▸ consolidarMASTER ▸ baseado em tempo** (ex.: a cada hora).
 
 ---
 
