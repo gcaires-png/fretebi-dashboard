@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - claude/logistics-analyst-moita-rev1-7ejr53
-      - claude/investnews-kpi-dashboard-lydmvt
       - main
   workflow_dispatch:
 
