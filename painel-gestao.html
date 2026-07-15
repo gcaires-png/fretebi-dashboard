@@ -184,6 +184,27 @@ body{background:
 
 /* Toast */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);border:1px solid var(--border);color:var(--text);padding:11px 18px;border-radius:12px;font-size:13px;font-weight:600;box-shadow:0 12px 40px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:all .3s;z-index:200}
+
+/* Mode chip */
+#modeChip{cursor:default}
+#modeChip.demo{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.35);color:var(--amber)}
+#modeChip.live{background:rgba(52,211,153,.12);border-color:rgba(52,211,153,.35);color:var(--green)}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(6,4,18,.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:300;padding:20px}
+.modal-bg.show{display:flex}
+.modal{width:100%;max-width:520px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.6);animation:slideIn .25s ease}
+.modal-t{font-size:16px;font-weight:900;margin-bottom:6px}
+.modal-s{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:14px}
+.modal-s code{background:var(--card2);padding:1px 5px;border-radius:5px;font-size:11px;color:var(--accent)}
+.modal input{width:100%;background:var(--card2);border:1px solid var(--border);color:var(--text);padding:11px 13px;border-radius:10px;font-family:inherit;font-size:13px;outline:none}
+.modal input:focus{border-color:var(--accent)}
+.modal-msg{font-size:12px;font-weight:600;margin-top:10px;min-height:16px}
+.modal-msg.ok{color:var(--green)}.modal-msg.err{color:var(--red)}.modal-msg.wait{color:var(--amber)}
+.modal-actions{display:flex;align-items:center;gap:8px;margin-top:16px;flex-wrap:wrap}
+.btn-primary{background:linear-gradient(135deg,#e23b42,#c12026);color:#fff}
+.btn-primary:hover{box-shadow:0 0 16px rgba(226,59,66,.4)}
+.modal-help{font-size:11px;color:var(--muted);margin-top:14px;border-top:1px solid var(--border);padding-top:12px}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 .hide{display:none!important}
@@ -241,8 +262,26 @@ body{background:
         <button id="btnGestor" class="active" onclick="setRole('gestor')">👔 Gestor</button>
         <button id="btnFunc" class="func" onclick="setRole('func')">👤 Funcionário</button>
       </div>
-      <span class="chip chip-live"><span class="dot"></span> Ao vivo</span>
+      <span class="chip" id="modeChip" title="Origem dos dados">◐ Demo</span>
       <span class="chip chip-info" id="syncChip" onclick="copyLink()" title="Copiar link desta visão">⟳ Sinc. —</span>
+      <button class="btn btn-o" onclick="openCfg()" title="Conectar planilhas ao vivo">⚙️</button>
+    </div>
+  </div>
+
+  <!-- Modal de configuração (conectar planilhas) -->
+  <div class="modal-bg" id="cfgBg" onclick="if(event.target===this)closeCfg()">
+    <div class="modal">
+      <div class="modal-t">🔌 Conectar planilhas (tempo real)</div>
+      <p class="modal-s">Cole a URL do Web App do Google Apps Script (termina em <code>/exec</code>). O painel passa a puxar os dados das suas planilhas e sincroniza a cada 60s.</p>
+      <input type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec" spellcheck="false">
+      <div id="cfgMsg" class="modal-msg"></div>
+      <div class="modal-actions">
+        <button class="btn btn-o" onclick="clearCfg()">Desconectar (Demo)</button>
+        <div style="flex:1"></div>
+        <button class="btn btn-o" onclick="closeCfg()">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveCfg()">Testar &amp; Salvar</button>
+      </div>
+      <p class="modal-help">Não tem o endpoint ainda? Siga o guia <strong>integracao/CONECTAR-PLANILHAS.md</strong> no repositório.</p>
     </div>
   </div>
 
@@ -641,28 +680,72 @@ function toast(msg){
 }
 
 /* ============================ REAL-TIME ============================ */
+const CORES={comercial:'var(--a-comercial)',logistica:'var(--a-logistica)',financeiro:'var(--a-financeiro)',fiscal:'var(--a-fiscal)',frota:'var(--a-frota)',rh:'var(--a-rh)'};
 function stamp(){
   const d=new Date();
   const t=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   document.getElementById('syncChip').textContent='⟳ Sinc. '+t;
 }
+function setMode(live){
+  const c=document.getElementById('modeChip');
+  c.className='chip '+(live?'live':'demo');
+  c.textContent=live?'● Ao vivo':'◐ Demo';
+  c.title=live?'Dados vindos das planilhas (Google Sheets)':'Dados de exemplo — conecte suas planilhas na ⚙️';
+}
+function applyData(data){
+  if(data.areas&&data.areas.length){ data.areas.forEach(a=>{if(!a.cor)a.cor=CORES[a.id]||'var(--accent)';}); AREAS.length=0; AREAS.push(...data.areas); }
+  if(data.kpis){ for(const k in KPIS)delete KPIS[k]; Object.assign(KPIS,data.kpis); }
+  if(data.projetos){ PROJETOS.length=0; PROJETOS.push(...data.projetos); }
+  if(data.top_kpis){ Object.assign(TOP_KPIS,data.top_kpis); }
+  if(data.alerts){ Object.assign(ALERTS,data.alerts); }
+  renderAll(); renderLegend(); renderAreaNav();
+}
+async function fetchData(ep){
+  const r=await fetch(ep,{cache:'no-store'});
+  const data=await r.json();
+  if(data && data.ok===false) throw new Error(data.erro||'endpoint retornou erro');
+  return data;
+}
 async function syncLive(){
   const ep = localStorage.getItem('MOITA_SHEETS');
-  if(!ep){ stamp(); return; }
+  if(!ep){ setMode(false); stamp(); return; }
   try{
-    const r = await fetch(ep,{cache:'no-store'});
-    const data = await r.json();
-    if(data.areas){ AREAS.length=0; AREAS.push(...data.areas); }
-    if(data.kpis){ Object.assign(KPIS,data.kpis); }
-    if(data.projetos){ PROJETOS.length=0; PROJETOS.push(...data.projetos); }
-    renderAll(); renderLegend(); renderAreaNav(); stamp();
+    applyData(await fetchData(ep)); setMode(true); stamp();
   }catch(e){ document.getElementById('syncChip').textContent='⚠ Sinc. falhou'; }
+}
+
+/* ============================ CONFIG (conectar planilhas) ============================ */
+function openCfg(){
+  document.getElementById('cfgUrl').value=localStorage.getItem('MOITA_SHEETS')||'';
+  document.getElementById('cfgMsg').textContent='';
+  document.getElementById('cfgBg').classList.add('show');
+}
+function closeCfg(){ document.getElementById('cfgBg').classList.remove('show'); }
+function cfgMsg(t,cls){ const m=document.getElementById('cfgMsg'); m.textContent=t; m.className='modal-msg '+(cls||''); }
+async function saveCfg(){
+  const url=document.getElementById('cfgUrl').value.trim();
+  if(!url){ cfgMsg('Cole a URL do Web App (/exec).','err'); return; }
+  if(!/^https:\/\/script\.google\.com\/.*\/exec/.test(url)) cfgMsg('Testando… (a URL não parece um /exec padrão, mas vou tentar)','wait');
+  else cfgMsg('Testando conexão…','wait');
+  try{
+    const data=await fetchData(url);
+    localStorage.setItem('MOITA_SHEETS',url);
+    applyData(data); setMode(true); stamp();
+    cfgMsg('✓ Conectado! Dados ao vivo carregados.','ok');
+    setTimeout(closeCfg,900);
+  }catch(e){ cfgMsg('✗ Falhou: '+e.message+'. Confira se a implantação está como "Qualquer pessoa".','err'); }
+}
+function clearCfg(){
+  localStorage.removeItem('MOITA_SHEETS');
+  setMode(false); cfgMsg('Desconectado — voltando ao modo Demo.','wait');
+  location.reload();
 }
 
 /* ============================ INIT (com deep-link) ============================ */
 document.getElementById('btnGestor').classList.toggle('active',ROLE==='gestor');
 document.getElementById('btnFunc').classList.toggle('active',ROLE==='func');
 renderAll(); renderLegend(); renderAreaNav(); stamp();
+setMode(!!localStorage.getItem('MOITA_SHEETS'));
 
 const qArea = params.get('area');
 const qView = params.get('view');
