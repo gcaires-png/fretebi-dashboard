@@ -265,7 +265,7 @@ select.flt:focus{border-color:var(--accent)}
    Cole a URL /exec do seu Web App aqui para que TODOS abram o link já ao vivo,
    sem precisar configurar nada. (Deixe '' para começar em modo Demo.)
    ========================================================================= */
-const DEFAULT_ENDPOINT = '';   // <<< cole aqui a URL /exec do Google Apps Script
+const DEFAULT_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzjJSb5dCGvJLCT_6xiEOqdwe2b2_OH6eESKbvTTiCKAhqB4yRcUVS8Q1wW4YMxSsFN/exec';
 
 /* ---- Metadados de área (nome/cor/ícone) ---- */
 const AREA_META = {
@@ -321,10 +321,16 @@ function initials(name){
 }
 function parseDate(s){
   if(!s)return null;
+  if(Object.prototype.toString.call(s)==='[object Date]')return isNaN(s)?null:s;
   const m=String(s).match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);
-  if(!m)return null;
-  let[_,d,mo,y]=m; y=+y<100?2000+ +y:+y;
-  return new Date(y,mo-1,d);
+  if(m){let[_,d,mo,y]=m;y=+y<100?2000+ +y:+y;return new Date(y,mo-1,d);}
+  const d=new Date(s); return isNaN(d)?null:d;   // fallback: datas em formato longo do Google
+}
+// Formata qualquer data para dd/mm/aaaa (mantém texto que não é data).
+function fmtBR(s){
+  const d=parseDate(s); if(!d)return s||'—';
+  const p=n=>String(n).padStart(2,'0');
+  return p(d.getDate())+'/'+p(d.getMonth()+1)+'/'+d.getFullYear();
 }
 function isLate(a){
   if(a.status==='concluido')return false;
@@ -592,7 +598,7 @@ function applyData(data){
     ATIVIDADES=data.atividades.map((a,i)=>({
       id:a.id||('A'+(i+1)),titulo:a.titulo||a.atividade||'',resp:a.resp||a.responsavel||'',
       gestor:a.gestor||'',area:(a.area||'geral'),prioridade:(a.prioridade||'media'),
-      abertura:a.abertura||'',prazo:a.prazo||'',status:(a.status||'afazer'),
+      abertura:fmtBR(a.abertura),prazo:fmtBR(a.prazo),status:(a.status||'afazer'),
       pct:(typeof a.pct==='number'?a.pct:null),obs:a.obs||''
     }));
   }
