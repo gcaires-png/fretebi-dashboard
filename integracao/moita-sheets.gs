@@ -20,6 +20,20 @@
 // planilha vinculada ao script, ou cole o ID (trecho entre /d/ e /edit na URL).
 var SPREADSHEET_ID = '1JWfMV8uMDDg5NrE0FxpA1j6tYsDMpJllYE6g5t_STqk';
 
+// "Tudo amarrado": o painel consolida a MASTER + as 7 planilhas por área.
+// Cada área preenche a SUA planilha; o script junta tudo (união por ID — a
+// MASTER tem prioridade quando o mesmo ID existe nos dois lugares).
+var AGGREGATE_AREA_SHEETS = true;
+var AREA_SHEETS = [
+  { id: '1wGNS4OCxKnKLSAQexiZsm8jjBy4rebExfnXHGaGUwcY', area: 'adm',        gestor: 'José Adailton' },
+  { id: '1qG7Y9ePYYIN2NqdcWN1d7UGT_jIStnF0qVoucCJZgl4', area: 'rh',         gestor: 'Karolay' },
+  { id: '1zGSwGvLi7fCambcEdet-kk0MJUfl4rjM5hfTDV16Q0c', area: 'financeiro', gestor: 'Karolay (report)' },
+  { id: '1lp2GptVdemAbsZuOk0zdG9TSoZI9L_7pI5-0c06wG0E', area: 'logistica',  gestor: 'José Adailton' },
+  { id: '1PfBDA-ifWu2AjTpBsfOw30Fm4ctNP1IGueBnUgfgnn0', area: 'comercial',  gestor: 'José Adailton' },
+  { id: '1_fhpDilvQ24SEUo_iG1PQHBf1C5Vqs6PDDOtpD161bM', area: 'marketing',  gestor: 'José Adailton' },
+  { id: '1cTKs2_QtHVeO6fPGW1WBL289_iO4ffFOHYQn2PTfWDY', area: 'ti',         gestor: 'Gearlison' }
+];
+
 function doGet(e) {
   try {
     var ss = SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID)
@@ -85,24 +99,44 @@ function num(v, def) {
 //   ID | Área | Subárea | Demanda/Tarefa | Responsável (executa) | Gestor |
 //   Prioridade | Abertura | Prazo | Status | % Concluído | Próxima ação / Observação
 function buildAtividades(ss) {
-  var rows = demandRows(ss);
-  return rows.map(function (r, i) {
-    var area = norm(pick(r, ['subarea', 'sub_area']) || pick(r, ['area']) || 'geral');
-    return {
-      id: pick(r, ['id']) || ('A' + (i + 1)),
-      titulo: pick(r, ['demanda', 'tarefa', 'atividade', 'titulo']) || '',
-      resp: pick(r, ['responsavel', 'executa', 'resp']) || '',
-      gestor: pick(r, ['gestor']) || '',
-      area: mapArea(area),
-      areaNome: pick(r, ['area']) || '',
-      prioridade: mapPrio(pick(r, ['prioridade', 'prio'])),
-      abertura: fmtData(pick(r, ['abertura', 'inicio'])),
-      prazo: fmtData(pick(r, ['prazo'])),
-      status: mapStatus(pick(r, ['status'])),
-      pct: pctNum(pick(r, ['%_concluido', 'concluido', 'percentual', 'pct'])),
-      obs: pick(r, ['proxima_acao', 'observacao', 'observacoes', 'obs', 'proxima_acao_/_observacao']) || ''
-    };
-  });
+  var out = [], seen = {};
+  // 1) MASTER (linhas com Área/Gestor/Subárea próprios)
+  demandRows(ss).forEach(function (r, i) { pushAtiv(out, seen, toAtiv(r, i, null)); });
+  // 2) Planilhas por área (cada uma preenche a sua)
+  if (AGGREGATE_AREA_SHEETS) {
+    AREA_SHEETS.forEach(function (cfg) {
+      var sh; try { sh = SpreadsheetApp.openById(cfg.id); } catch (e) { return; }
+      demandRows(sh).forEach(function (r, i) { pushAtiv(out, seen, toAtiv(r, i, cfg)); });
+    });
+  }
+  return out;
+}
+
+// Converte uma linha em atividade. forced = {area,gestor} quando vem de uma
+// planilha de área (que não tem colunas Área/Gestor).
+function toAtiv(r, i, forced) {
+  var areaTxt = pick(r, ['subarea', 'sub_area']) || pick(r, ['area']) || '';
+  return {
+    id: pick(r, ['id']) || ((forced ? forced.area.toUpperCase() + '-' : 'A') + (i + 1)),
+    titulo: pick(r, ['demanda', 'tarefa', 'atividade', 'titulo']) || '',
+    resp: pick(r, ['responsavel', 'executa', 'resp']) || '',
+    gestor: pick(r, ['gestor']) || (forced ? forced.gestor : '') || '',
+    area: forced ? forced.area : mapArea(areaTxt || 'geral'),
+    prioridade: mapPrio(pick(r, ['prioridade', 'prio'])),
+    abertura: fmtData(pick(r, ['abertura', 'inicio'])),
+    prazo: fmtData(pick(r, ['prazo'])),
+    status: mapStatus(pick(r, ['status'])),
+    pct: pctNum(pick(r, ['%_concluido', 'concluido', 'percentual', 'pct'])),
+    obs: pick(r, ['proxima_acao', 'observacao', 'observacoes', 'obs', 'proxima_acao_/_observacao']) || ''
+  };
+}
+
+// Adiciona ignorando linhas de template vazias; MASTER vence em IDs repetidos.
+function pushAtiv(out, seen, a) {
+  if (!a.titulo) return;
+  var key = norm(a.id) || norm(a.titulo);
+  if (seen[key] != null) return;
+  seen[key] = out.length; out.push(a);
 }
 
 // Encontra a aba de demandas: tenta nomes conhecidos, senão usa a 1ª com dados.
@@ -271,6 +305,65 @@ function buildAlerts(ss) {
     out[papel].push(kpiObj(r));
   });
   return out;
+}
+
+/* ============ PREENCHER A MASTER a partir das planilhas de área ============
+   Menu "Moita Rev1 ▸ Consolidar áreas na MASTER" (aparece ao abrir a planilha).
+   Também pode virar automático: Acionadores ▸ adicionar ▸ consolidarMASTER ▸
+   baseado em tempo (ex.: a cada hora). É seguro: só ACRESCENTA IDs novos. */
+function onOpen() {
+  SpreadsheetApp.getUi().createMenu('Moita Rev1')
+    .addItem('Consolidar áreas na MASTER', 'menuConsolidar')
+    .addToUi();
+}
+function menuConsolidar() {
+  var n = consolidarMASTER();
+  SpreadsheetApp.getUi().alert('Moita Rev1', n + ' demanda(s) nova(s) adicionada(s) à MASTER.', SpreadsheetApp.getUi().ButtonSet.OK);
+}
+
+function consolidarMASTER() {
+  var ss = SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
+  var sh = demandSheet(ss);
+  var values = sh.getDataRange().getValues();
+  var headers = values[0].map(norm), width = headers.length;
+  var col = {
+    id: hIdx(headers, ['id']), area: hIdx(headers, ['area']), demanda: hIdx(headers, ['demanda', 'tarefa']),
+    resp: hIdx(headers, ['responsavel', 'executa']), gestor: hIdx(headers, ['gestor']),
+    prio: hIdx(headers, ['prioridade']), abertura: hIdx(headers, ['abertura']), prazo: hIdx(headers, ['prazo']),
+    status: hIdx(headers, ['status']), pct: hIdx(headers, ['concluido', 'percentual', 'pct']),
+    obs: hIdx(headers, ['proxima_acao', 'observacao', 'obs'])
+  };
+  var existing = {};
+  for (var i = 1; i < values.length; i++) { var id = norm(values[i][col.id]); if (id) existing[id] = true; }
+  var added = 0;
+  AREA_SHEETS.forEach(function (cfg) {
+    var s2; try { s2 = SpreadsheetApp.openById(cfg.id); } catch (e) { return; }
+    demandRows(s2).forEach(function (r, i) {
+      var a = toAtiv(r, i, cfg);
+      var key = norm(a.id);
+      if (!a.titulo || existing[key]) return;
+      existing[key] = true;
+      var row = new Array(width).fill('');
+      set(row, col.id, a.id); set(row, col.area, AREA_NOME[a.area] || a.area); set(row, col.demanda, a.titulo);
+      set(row, col.resp, a.resp); set(row, col.gestor, a.gestor); set(row, col.prio, a.prioridade);
+      set(row, col.abertura, a.abertura); set(row, col.prazo, a.prazo); set(row, col.status, STATUS_LABEL[a.status] || a.status);
+      set(row, col.pct, a.pct != null ? a.pct + '%' : ''); set(row, col.obs, a.obs);
+      sh.appendRow(row); added++;
+    });
+  });
+  return added;
+}
+
+var AREA_NOME = { adm: 'Administrativo', rh: 'RH', financeiro: 'Financeiro', logistica: 'Logística', comercial: 'Comercial', marketing: 'Marketing', ti: 'TI/DEV', geral: 'Geral' };
+var STATUS_LABEL = { afazer: 'A fazer', andamento: 'Em andamento', bloqueado: 'Bloqueado', concluido: 'Concluído' };
+function hIdx(headers, tokens) { for (var t = 0; t < tokens.length; t++) for (var k = 0; k < headers.length; k++) if (headers[k].indexOf(tokens[t]) !== -1) return k; return -1; }
+function set(row, idx, val) { if (idx >= 0) row[idx] = val; }
+function demandSheet(ss) {
+  var names = ['Atividades', 'MASTER', 'Master', 'Demandas', 'Controle'];
+  for (var i = 0; i < names.length; i++) { var sh = ss.getSheetByName(names[i]); if (sh && sh.getLastRow() > 1) return sh; }
+  var sheets = ss.getSheets();
+  for (var j = 0; j < sheets.length; j++) if (sheets[j].getLastRow() > 1) return sheets[j];
+  return ss.getSheets()[0];
 }
 
 /* ------------------------------ Resposta -------------------------------- */
