@@ -184,6 +184,7 @@ select.flt:focus{border-color:var(--accent)}
     </div>
     <span class="chip" id="modeChip">◐ Demo</span>
     <span class="chip chip-btn" id="syncChip" onclick="copyLink()" title="Copiar link">⟳ —</span>
+    <button class="btn btn-ico" onclick="sync(true)" title="Atualizar agora">🔄</button>
     <button class="btn btn-ico" onclick="openCfg()" title="Conectar planilha ao vivo">⚙️</button>
   </div>
 </div>
@@ -239,7 +240,7 @@ select.flt:focus{border-color:var(--accent)}
 <div class="modal-bg" id="cfgBg" onclick="if(event.target===this)closeCfg()">
   <div class="modal">
     <div class="modal-t">🔌 Conectar planilha (tempo real)</div>
-    <p class="modal-s">Cole a URL do Web App do Google Apps Script (termina em <code>/exec</code>). O funcionário preenche a aba <b>Atividades</b>; este painel lê e o Moita analisa a cada 60s.</p>
+    <p class="modal-s">Cole a URL do Web App do Google Apps Script (termina em <code>/exec</code>). Cada área preenche a sua planilha; este painel lê a MASTER + as 7 planilhas e o Moita analisa, atualizando a cada 30s.</p>
     <input type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec" spellcheck="false">
     <div id="cfgMsg" class="modal-msg"></div>
     <div class="modal-actions">
@@ -597,11 +598,16 @@ function applyData(data){
   }
   popFilters(); render();
 }
-async function sync(){
+async function sync(manual){
   const ep=localStorage.getItem('MOITA_SHEETS')||DEFAULT_ENDPOINT;
-  if(!ep){setMode(false);stamp();return;}
-  try{ applyData(await fetchData(ep)); setMode(true); stamp(); }
-  catch(e){ document.getElementById('syncChip').textContent='⚠ falhou'; }
+  if(!ep){
+    setMode(false);stamp();
+    if(manual)toast('◐ Em modo Demo — conecte a planilha na ⚙️ para atualizar ao vivo.');
+    return;
+  }
+  if(manual)document.getElementById('syncChip').textContent='⟳ atualizando…';
+  try{ applyData(await fetchData(ep)); setMode(true); stamp(); if(manual)toast('✓ Atualizado da planilha!'); }
+  catch(e){ document.getElementById('syncChip').textContent='⚠ falhou'; if(manual)toast('⚠ Falha ao ler a planilha: '+e.message); }
 }
 
 /* ---------------- Config ---------------- */
@@ -625,7 +631,8 @@ setRole(ROLE);
 setMode(!!(localStorage.getItem('MOITA_SHEETS')||DEFAULT_ENDPOINT));
 render();
 sync();
-setInterval(sync,60000);
+setInterval(sync,30000);                                   // auto-atualiza a cada 30s
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)sync();}); // e ao voltar pra aba
 </script>
 </body>
 </html>
