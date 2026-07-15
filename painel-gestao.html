@@ -552,11 +552,20 @@ function setView(v){
   render();
 }
 
+/* ---------------- Deep-link: aplica filtros vindos da URL ---------------- */
+function applyUrlFilters(){
+  const p=new URLSearchParams(location.search);
+  [['area','fArea'],['resp','fResp'],['gestor','fGestor'],['prio','fPrio']].forEach(([q,id])=>{
+    const v=p.get(q), el=document.getElementById(id);
+    if(v&&el&&[...el.options].some(o=>o.value===v))el.value=v;
+  });
+}
 /* ---------------- Link / toast ---------------- */
 function copyLink(){
   const u=new URL(location.href.split('?')[0]);
   u.searchParams.set('role',ROLE);
-  const fr=document.getElementById('fResp').value; if(fr)u.searchParams.set('resp',fr);
+  const g=(id,q)=>{const v=document.getElementById(id).value;if(v)u.searchParams.set(q,v);};
+  g('fArea','area');g('fResp','resp');g('fGestor','gestor');g('fPrio','prio');
   const link=u.toString();
   (navigator.clipboard?navigator.clipboard.writeText(link):Promise.reject())
     .then(()=>toast('🔗 Link copiado!')).catch(()=>toast(link));
@@ -611,6 +620,7 @@ function clearCfg(){localStorage.removeItem('MOITA_SHEETS');cfgMsg('Desconectado
 
 /* ---------------- Init ---------------- */
 popFilters();
+applyUrlFilters();
 setRole(ROLE);
 setMode(!!(localStorage.getItem('MOITA_SHEETS')||DEFAULT_ENDPOINT));
 render();
