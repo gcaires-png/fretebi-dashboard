@@ -1,0 +1,51 @@
+#,Empresa,Categoria (tipo),Potencial frete Videl,Contato Compras/Suprimentos,Cargo,E-mail
+1,ISA Energia Brasil (CTEEP),Concessionária pura,Indireto,Natalia Azzolin,Purchasing Manager (Gerente de Compras),nazzolin@isacteep.com.br
+2,Taesa,Concessionária pura,Indireto,— sem cobertura no Lusha (grátis),,
+3,Eletrobras (Chesf/Furnas/Eletronorte/CGT Eletrosul),Concessionária pura (estatal),Indireto,Alessandra Ramos,Gerente Executiva - Suprimentos e Serviços,alessandra.ramos@eletrobras.com
+4,State Grid Brazil Holding,Concessionária pura,Indireto,— sem cobertura no Lusha (grátis),,
+5,Equatorial Transmissão,Concessionária pura,Indireto,— sem cobertura no Lusha (grátis),,
+6,ENGIE Brasil (Novo Estado Transmissora),Concessionária pura,Indireto,Alexandrina Palmari,Head of Supply Chain,alexandrina.palmari@engie.com
+7,Alupar,Concessionária pura (integrada),Médio,Alcides Fonseca,Analista de Compras Pleno,acfonseca@alupar.com.br
+8,Neoenergia (Iberdrola),Concessionária pura,Indireto,Pollymark Aquino,Diretor de Compras / Seguros / Serviços Gerais,polly.aquino@neoenergia.com
+9,Cemig GT / Transmissão,Concessionária pura (estatal),Indireto,Osias Galantine,Diretor de Compras e Logística,osias.galantine@cemig.com.br
+10,Copel GeT / Transmissão,Concessionária pura (estatal),Indireto,— sem e-mail no Lusha,,
+11,Enel GT / Transmissão,Concessionária pura,Indireto,Margot Cohn,Head of Supply Chain Brasil,margot.cohn@enel.com
+12,Brookfield / Atlas,Concessionária pura (fundo),Indireto,— sem cobertura no Lusha (grátis),,
+13,Evoltz (Grupo Actis),Concessionária pura,Indireto,Kelly Cordeiro,Gerente de Suprimentos e Administrativo,kelly.cordeiro@evoltz.com.br
+14,Cymi (Control y Montajes Industriales),EPCista principal / concessões,Alto,— sem cobertura no Lusha (grátis),,
+15,Sterlite Power Brasil,EPC / concessionária,Alto,— sem cobertura no Lusha (grátis),,
+16,MEZ Energia,Concessionária (SPE),Indireto,— sem cobertura no Lusha (grátis),,
+17,Axia Energia,Concessionária,Indireto,— sem cobertura no Lusha (grátis),,
+18,Vinci Energia / Transmissão,Concessionária (veículo de investimento),Indireto,— sem cobertura no Lusha (grátis),,
+19,Cobra / Grupo Vinci,EPCista principal / concessões,Alto,— sem cobertura no Lusha (grátis),,
+20,Elecnor do Brasil,EPCista principal / concessões,Alto,— sem cobertura no Lusha (grátis),,
+21,Quatro A (QEA/QAT),EPCista / montadora,Alto,— sem cobertura no Lusha (grátis),,
+22,Zopone Engenharia,EPCista / montadora,Alto,Rodrigo Souza,Gerente de Logística e Supply Chain,rodrigo.souza@zopone.com.br
+23,Entec Empreendimentos,EPCista,Alto,— sem cobertura no Lusha (grátis),,
+24,Techint Engenharia e Construção,EPCista principal,Alto,— sem cobertura no Lusha (grátis),,
+25,Andrade Gutierrez Energia,EPCista principal,Alto,Rodrigo Barros (só telefone no Lusha),Director of Procurement,— e-mail não disponível
+26,Kapsch / Siemens Energy,Integradora de SEs/sistemas,Alto,(ver Siemens Energy — linha 27),,
+27,Siemens Energy Brasil,Integradora SE/HVDC + fabricante,Alto,Natália Lima,Head of Procurement,natalia.lima@siemens-energy.com
+28,GE Vernova Grid Solutions,Integradora SE/HVDC + fabricante,Alto,Yan Mathilde,Diretor de Supply Chain e Logística (Serviços),yan.mathilde@gevernova.com
+29,Hitachi Energy Brasil (ABB),Integradora SE/HVDC + fabricante,Alto,Livia Koyama,Head of Supply Chain Management,livia.koyama@hitachienergy.com
+30,TSEA Energia,Fabricante de equip. + EPC de SE,Alto,Josie Pfeilsticker,Head of Supply Chain,josie.almeida@tseaenergia.com.br
+31,Matricial Engenharia,EPCista,Alto,— sem cobertura no Lusha (grátis),,
+32,Tecnicargo / Engecampo,Montadora eletromecânica,Alto,— sem cobertura no Lusha (grátis),,
+33,Omega Energia / Ørigo,Gerador (participação indireta em LT),Indireto,— sem cobertura no Lusha (grátis),,
+34,Jusmens / Engeform Energia,EPCista,Alto,— sem cobertura no Lusha (grátis),,
+35,Steag / consórcios,Gerador / participações,Indireto,— sem cobertura no Lusha (grátis),,
+36,IE Madeira (Interligação Elétrica do Madeira),Concessionária / SPE (HVDC),Indireto,— sem cobertura no Lusha (grátis),,
+37,IE Belo Monte / Transmissora,Concessionária / SPE (HVDC),Indireto,— sem cobertura no Lusha (grátis),,
+38,Consórcio Xingu-Rio / Transmissora,Concessionária / SPE (HVDC),Indireto,— sem cobertura no Lusha (grátis),,
+39,Jupiter Energia / Transmissão,Concessionária (veículo p/ leilões),Indireto,— sem cobertura no Lusha (grátis),,
+40,Quantum Engenharia,EPCista / montadora,Alto,— sem cobertura no Lusha (grátis),,
+41,Grupo Energia,EPCista turn-key,Alto,Loren Cavinato,Gerente de Suprimentos (Supply Chain),loren.cavinato@grupoenergia.com.br
+42,GEL Engenharia,EPCista,Alto,— sem cobertura no Lusha (grátis),,
+43,Brametal,Fabricante de estruturas,Alto,Marcelo Gomes,Head of Procurement (Compras e Logística Interna),marcelo.gomes@brametal.com.br
+44,Tesc / Terabyte Eng. de Sistemas de Energia,Montadora / EPC,Alto,— sem cobertura no Lusha (grátis),,
+45,Engemon / Engemon Power,Montadora,Alto,— sem cobertura no Lusha (grátis),,
+46,FGC Construções / FGC Energia,Montadora,Alto,— sem cobertura no Lusha (grátis),,
+47,EBE – Empresa Brasileira de Engenharia,EPCista / montadora,Alto,— sem cobertura no Lusha (grátis),,
+48,Montago / Montejo Engenharia,Montadora de torres e cabos,Alto,— sem cobertura no Lusha (grátis),,
+49,Sotreq Energia / consórcios,Fornecedor de equip. / apoio EPC,Médio,— sem cobertura no Lusha (grátis),,
+50,WEG T&D,Fabricante de equip. + integração SE,Alto,Davi Arbegaus,Head of Global Procurement,davim@weg.net
