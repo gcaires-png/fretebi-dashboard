@@ -88,6 +88,28 @@ Para que **todo mundo** abra o link já ao vivo, sem configurar nada:
 
 ---
 
+## Acesso por área (cada um vê só o que pode) 🔒
+
+O corte de acesso é **no servidor** (Apps Script): cada área recebe um link com
+uma **chave** (`?key=...`) e o endpoint devolve **somente** os dados daquela área.
+Assim, dados sensíveis (Financeiro / Contas a Pagar) **nem chegam** no navegador
+de quem não tem permissão — não adianta abrir o DevTools.
+
+1. No `moita-sheets.gs`, edite o mapa `ACESSOS` e **troque as chaves** por valores
+   secretos (funcionam como senha). Cada entrada define:
+   - `escopo`: áreas visíveis (`['*']` = todas);
+   - `fin`: se pode ver Financeiro / Contas a Pagar.
+2. Mantenha `EXIGIR_CHAVE = true` (sem chave válida, não devolve dados).
+3. **Reimplante** (Gerenciar implantações ▸ editar ▸ Nova versão).
+4. Rode a função **`gerarLinks`** (menu Executar) e veja no **Log** os links
+   prontos de cada área, ex.:
+   `Comercial: …/painel-gestao.html?key=SUA-CHAVE-COM&area=comercial`
+5. Envie a cada área **o link dela**. Quem abrir sem chave vê a **tela de acesso**.
+
+> As chaves são como senhas: não publique. O link do gestor/diretoria
+> (`escopo:['*'], fin:true`) enxerga tudo. Para trocar de acesso, clique no
+> nome (🔒) no topo do painel.
+
 ## Como o Moita analisa (automático)
 
 A cada leitura, o Moita calcula e mostra no topo:

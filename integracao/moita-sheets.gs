@@ -34,24 +34,71 @@ var AREA_SHEETS = [
   { id: '1cTKs2_QtHVeO6fPGW1WBL289_iO4ffFOHYQn2PTfWDY', area: 'ti',         gestor: 'Gearlison' }
 ];
 
+/* =========================== CONTROLE DE ACESSO ===========================
+   Cada área recebe um LINK com sua CHAVE (?key=...). O servidor devolve SOMENTE
+   os dados que aquela chave pode ver — então o Financeiro/Contas a Pagar nem
+   chega no navegador de quem não tem permissão.
+
+   ►► TROQUE as chaves abaixo por valores SECRETOS (funcionam como senha).
+      NÃO deixe as chaves de exemplo em produção. Gere links em gerarLinks().
+   - escopo: áreas visíveis. ['*'] = todas.  fin: pode ver Financeiro/Contas a Pagar.
+   ========================================================================= */
+var ACESSOS = {
+  'videl-geral-TROQUE':  { nome: 'Diretoria',      escopo: ['*'],            fin: true  },
+  'adm-TROQUE':          { nome: 'Administrativo', escopo: ['adm'],          fin: false },
+  'rh-TROQUE':           { nome: 'RH',             escopo: ['rh'],           fin: false },
+  'fin-TROQUE':          { nome: 'Financeiro',     escopo: ['financeiro'],   fin: true  },
+  'log-TROQUE':          { nome: 'Logística',      escopo: ['logistica'],    fin: false },
+  'com-TROQUE':          { nome: 'Comercial',      escopo: ['comercial'],    fin: false },
+  'mkt-TROQUE':          { nome: 'Marketing',      escopo: ['marketing'],    fin: false },
+  'ti-TROQUE':           { nome: 'TI / DEV',       escopo: ['ti'],           fin: false }
+};
+// Se true, sem chave válida NÃO devolve dados. Se false, sem chave devolve tudo
+// (modo aberto — use só enquanto testa).
+var EXIGIR_CHAVE = true;
+
+function resolveAcesso(key) {
+  var a = key && ACESSOS[key];
+  if (a) return { ok: true, nome: a.nome, escopo: a.escopo, fin: !!a.fin };
+  if (!EXIGIR_CHAVE) return { ok: true, nome: 'Aberto', escopo: ['*'], fin: true };
+  return { ok: false, nome: '', escopo: [], fin: false };
+}
+
 function doGet(e) {
   try {
     var ss = SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID)
                             : SpreadsheetApp.getActiveSpreadsheet();
-    var payload = {
+    var key = (e && e.parameter && e.parameter.key) || '';
+    var acc = resolveAcesso(key);
+    if (!acc.ok) {
+      return json({ ok: true, acesso: { ok: false }, atividades: [] });
+    }
+    var ativ = buildAtividades(ss);
+    if (acc.escopo.indexOf('*') < 0) {
+      ativ = ativ.filter(function (a) { return acc.escopo.indexOf(a.area) >= 0; });
+    }
+    return json({
       ok: true,
       atualizado_em: new Date().toISOString(),
-      atividades: buildAtividades(ss),   // <- aba principal: Controle de Atividades
-      areas:     buildAreas(ss),
-      kpis:      buildKpis(ss),
-      projetos:  buildProjetos(ss),
-      top_kpis:  buildTopKpis(ss),
-      alerts:    buildAlerts(ss)
-    };
-    return json(payload);
+      acesso: acc,
+      atividades: ativ
+    });
   } catch (err) {
     return json({ ok: false, erro: String(err) });
   }
+}
+
+// Rode uma vez (menu Executar) para ver os links prontos de cada área no log.
+function gerarLinks() {
+  var base = 'https://gcaires-png.github.io/fretebi-dashboard/painel-gestao.html';
+  var out = [];
+  for (var k in ACESSOS) {
+    var a = ACESSOS[k];
+    var area = a.escopo[0] === '*' ? '' : '&area=' + a.escopo[0];
+    out.push(a.nome + ': ' + base + '?key=' + encodeURIComponent(k) + area);
+  }
+  Logger.log(out.join('\n'));
+  return out;
 }
 
 /* ----------------------- Leitura genérica de abas ----------------------- */

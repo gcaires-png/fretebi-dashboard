@@ -63,6 +63,20 @@ body{background:var(--surface);color:var(--ink);font-family:'Inter',ui-sans-seri
 .vsec-link{margin-left:auto;font-size:12px;font-weight:600;color:var(--accent);text-decoration:none}
 .vsec-link:hover{text-decoration:underline}
 .vmoney{font-variant-numeric:tabular-nums;font-weight:600}
+.lockbox{border:1px dashed var(--border2);border-radius:var(--radius);padding:22px;text-align:center;color:var(--muted);font-size:13px;background:var(--surface2)}
+#idChip{background:#eef4ff;border-color:transparent;color:#2c5aa0;font-weight:700}
+
+/* Login */
+.login-bg{position:fixed;inset:0;background:var(--surface);display:none;align-items:center;justify-content:center;z-index:500;padding:20px}
+.login-bg.show{display:flex}
+.login{width:100%;max-width:380px;text-align:center}
+.login-logo img{height:54px;width:auto;margin:0 auto 18px;display:block}
+.login-t{font-size:19px;font-weight:800;color:var(--ink)}
+.login-s{font-size:13px;color:var(--ink2);line-height:1.55;margin:8px 0 18px}
+.login input{width:100%;padding:11px 13px;border:1px solid var(--border2);border-radius:var(--radius);font-family:inherit;font-size:14px;outline:none;text-align:center;letter-spacing:1px}
+.login input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(35,131,226,.16)}
+.login-msg{font-size:12.5px;font-weight:600;color:var(--s-atrasado);min-height:18px;margin:10px 0}
+.login-help{font-size:11.5px;color:var(--muted);margin-top:16px}
 
 /* Moita — callout Notion */
 .moita{background:var(--callout);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin-bottom:22px}
@@ -194,6 +208,7 @@ select.flt:focus{border-color:var(--accent)}
       <button id="btnGestor" class="active" onclick="setRole('gestor')">👔 Gestor</button>
       <button id="btnFunc" class="func" onclick="setRole('func')">👤 Funcionário</button>
     </div>
+    <span class="chip chip-btn" id="idChip" onclick="logout()" title="Sair / trocar acesso" style="display:none"></span>
     <span class="chip" id="modeChip">◐ Demo</span>
     <span class="chip chip-btn" id="syncChip" onclick="copyLink()" title="Copiar link">⟳ —</span>
     <button class="btn btn-ico" onclick="sync(true)" title="Atualizar agora">🔄</button>
@@ -284,12 +299,16 @@ select.flt:focus{border-color:var(--accent)}
     </div>
   </div>
 
-  <div class="vsec">
+  <div class="vsec" id="apSection">
     <div class="vsec-h">💸 Contas a Pagar <span class="vsec-c" id="apCount"></span></div>
     <div class="tw ts">
       <table class="tbl"><thead><tr><th>Fornecedor</th><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Status</th></tr></thead>
       <tbody id="apRows"></tbody></table>
     </div>
+  </div>
+  <div class="vsec aplock" id="apLock" style="display:none">
+    <div class="vsec-h">🔒 Contas a Pagar</div>
+    <div class="lockbox">Área financeira restrita. Este acesso não tem permissão para ver Contas a Pagar.</div>
   </div>
 </div>
 
@@ -309,6 +328,19 @@ select.flt:focus{border-color:var(--accent)}
       <button class="btn btn-primary" onclick="saveCfg()">Testar &amp; Salvar</button>
     </div>
     <p class="modal-help">Guia completo com o modelo da planilha: <b>integracao/CONECTAR-PLANILHAS.md</b> no repositório.</p>
+  </div>
+</div>
+
+<!-- Tela de acesso -->
+<div class="login-bg" id="loginBg">
+  <div class="login">
+    <div class="login-logo"><img id="loginLogo" alt="Videl"></div>
+    <div class="login-t">Controle de Demandas · Videl</div>
+    <div class="login-s">Digite o <b>código de acesso</b> da sua área para continuar. Cada área vê apenas os próprios dados.</div>
+    <input type="password" id="loginKey" placeholder="código de acesso" onkeydown="if(event.key==='Enter')doLogin()" autocomplete="off">
+    <div class="login-msg" id="loginMsg"></div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:10px" onclick="doLogin()">Entrar</button>
+    <div class="login-help">Não tem o código? Peça ao gestor responsável (Karolay / José Adailton).</div>
   </div>
 </div>
 
@@ -655,8 +687,18 @@ async function fetchData(ep){
   if(data&&data.ok===false)throw new Error(data.erro||'endpoint retornou erro');
   return data;
 }
+let ACCESS=null;
+function epWithKey(ep){
+  const k=localStorage.getItem('MOITA_KEY')||'';
+  return k?ep+(ep.indexOf('?')>=0?'&':'?')+'key='+encodeURIComponent(k):ep;
+}
 function applyData(data){
-  if(Array.isArray(data.atividades)&&data.atividades.length){
+  if(data.acesso!==undefined){          // endpoint com controle de acesso
+    ACCESS=data.acesso;
+    if(!ACCESS.ok){ ATIVIDADES=[]; EMBARQUES=[]; LEADS=[]; CONTAS=[]; render(); renderVidel(); showLogin(true); return; }
+    hideLogin();
+  }
+  if(Array.isArray(data.atividades) && (data.atividades.length || (ACCESS&&ACCESS.ok))){
     ATIVIDADES=data.atividades.map((a,i)=>({
       id:a.id||('A'+(i+1)),titulo:a.titulo||a.atividade||'',resp:a.resp||a.responsavel||'',
       gestor:a.gestor||'',area:(a.area||'geral'),prioridade:(a.prioridade||'media'),
@@ -664,7 +706,7 @@ function applyData(data){
       pct:(typeof a.pct==='number'?a.pct:null),obs:a.obs||''
     }));
   }
-  popFilters(); render();
+  applyAccess(); popFilters(); render();
 }
 async function sync(manual){
   const ep=localStorage.getItem('MOITA_SHEETS')||DEFAULT_ENDPOINT;
@@ -674,9 +716,41 @@ async function sync(manual){
     return;
   }
   if(manual)document.getElementById('syncChip').textContent='⟳ atualizando…';
-  try{ applyData(await fetchData(ep)); setMode(true); stamp(); if(manual)toast('✓ Atualizado da planilha!'); }
+  try{ applyData(await fetchData(epWithKey(ep))); setMode(true); stamp(); if(manual)toast('✓ Atualizado da planilha!'); }
   catch(e){ document.getElementById('syncChip').textContent='⚠ falhou'; if(manual)toast('⚠ Falha ao ler a planilha: '+e.message); }
 }
+
+/* ---------------- Controle de acesso ---------------- */
+function applyAccess(){
+  if(!ACCESS){ document.getElementById('idChip').style.display='none'; gateVidel(); return; }
+  const idc=document.getElementById('idChip');
+  idc.style.display=''; idc.textContent='🔒 '+(ACCESS.nome||'Acesso');
+  const single=ACCESS.escopo && ACCESS.escopo.indexOf('*')<0;
+  const fa=document.getElementById('fArea');
+  if(single && ACCESS.escopo.length){ fa.value=ACCESS.escopo[0]; fa.disabled=true; }
+  else { fa.disabled=false; }
+  gateVidel();
+}
+function videlFin(){ return !ACCESS || ACCESS.fin; }
+function gateVidel(){
+  const fin=videlFin();
+  const s=document.getElementById('apSection'), l=document.getElementById('apLock');
+  if(s)s.style.display=fin?'':'none';
+  if(l)l.style.display=fin?'none':'';
+}
+function showLogin(bad){
+  document.getElementById('loginBg').classList.add('show');
+  if(bad&&localStorage.getItem('MOITA_KEY'))document.getElementById('loginMsg').textContent='Código inválido ou sem permissão.';
+}
+function hideLogin(){ document.getElementById('loginBg').classList.remove('show'); }
+function doLogin(){
+  const v=document.getElementById('loginKey').value.trim();
+  if(!v){document.getElementById('loginMsg').textContent='Informe o código.';return;}
+  localStorage.setItem('MOITA_KEY',v);
+  document.getElementById('loginMsg').textContent='Verificando…';
+  sync();
+}
+function logout(){ localStorage.removeItem('MOITA_KEY'); location.reload(); }
 
 /* ---------------- Config ---------------- */
 function openCfg(){document.getElementById('cfgUrl').value=localStorage.getItem('MOITA_SHEETS')||DEFAULT_ENDPOINT||'';document.getElementById('cfgProxy').value=localStorage.getItem('MOITA_PROXY')||DEFAULT_PROXY||'';document.getElementById('cfgMsg').textContent='';document.getElementById('cfgBg').classList.add('show');}
@@ -751,14 +825,17 @@ function renderVidel(){
   const leadsAb=LEADS.filter(l=>l.status!=='aprovado'&&l.status!=='perdido').length;
   const apTotal=CONTAS.filter(c=>c.status!=='pago').reduce((s,c)=>s+(+c.valor||0),0);
   const apVenc=CONTAS.filter(c=>c.status!=='pago'&&isVenc(c.venc)).length;
-  document.getElementById('videlKpis').innerHTML=[
+  const fin=videlFin();
+  const kpiArr=[
     {v:transito,l:'Em trânsito',sub:'incl. em coleta',c:'var(--s-andamento)'},
     {v:entregues,l:'Entregues',sub:'no período',c:'var(--s-concluido)'},
     {v:brl(frete),l:'Frete total',sub:'embarques ativos',c:'var(--ink)'},
-    {v:leadsAb,l:'Leads abertos',sub:'em negociação',c:'var(--a-comercial)'},
+    {v:leadsAb,l:'Leads abertos',sub:'em negociação',c:'var(--a-comercial)'}
+  ];
+  if(fin)kpiArr.push(
     {v:brl(apTotal),l:'Contas a pagar',sub:'em aberto',c:'var(--p-media)'},
-    {v:apVenc,l:'Vencidas',sub:apVenc?'ação necessária':'em dia',c:'var(--s-atrasado)'}
-  ].map(k=>`<div class="kpi" style="--kc:${k.c}"><div class="kpi-v">${k.v}</div><div class="kpi-l">${k.l}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
+    {v:apVenc,l:'Vencidas',sub:apVenc?'ação necessária':'em dia',c:'var(--s-atrasado)'});
+  document.getElementById('videlKpis').innerHTML=kpiArr.map(k=>`<div class="kpi" style="--kc:${k.c}"><div class="kpi-v">${k.v}</div><div class="kpi-l">${k.l}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
 
   document.getElementById('embCount').textContent=EMBARQUES.length;
   document.getElementById('embRows').innerHTML=EMBARQUES.map(e=>`<tr>
@@ -774,12 +851,18 @@ function renderVidel(){
     <td class="vmoney">${brl(l.valor)}</td><td>${fmtBR(l.aberto)}</td>
     <td>${vpill(LEAD_ST[l.status]||{n:l.status,c:'var(--muted)'})}</td></tr>`).join('')||vEmpty(6);
 
-  document.getElementById('apCount').textContent=CONTAS.length;
-  document.getElementById('apRows').innerHTML=CONTAS.map(c=>{const venc=c.status!=='pago'&&isVenc(c.venc);
-    return `<tr><td style="font-weight:700">${c.fornecedor}</td><td>${c.descricao||'—'}</td>
-    <td class="vmoney">${brl(c.valor)}</td>
-    <td style="${venc?'color:var(--s-atrasado);font-weight:700':''}">${fmtBR(c.venc)}${venc?' ⚠':''}</td>
-    <td>${vpill(venc?AP_ST.vencido:(AP_ST[c.status]||{n:c.status,c:'var(--muted)'}))}</td></tr>`;}).join('')||vEmpty(5);
+  // Contas a Pagar: só renderiza (no DOM) se este acesso puder ver — senão nem chega no navegador
+  gateVidel();
+  if(fin){
+    document.getElementById('apCount').textContent=CONTAS.length;
+    document.getElementById('apRows').innerHTML=CONTAS.map(c=>{const venc=c.status!=='pago'&&isVenc(c.venc);
+      return `<tr><td style="font-weight:700">${c.fornecedor}</td><td>${c.descricao||'—'}</td>
+      <td class="vmoney">${brl(c.valor)}</td>
+      <td style="${venc?'color:var(--s-atrasado);font-weight:700':''}">${fmtBR(c.venc)}${venc?' ⚠':''}</td>
+      <td>${vpill(venc?AP_ST.vencido:(AP_ST[c.status]||{n:c.status,c:'var(--muted)'}))}</td></tr>`;}).join('')||vEmpty(5);
+  } else {
+    document.getElementById('apRows').innerHTML=''; document.getElementById('apCount').textContent='';
+  }
 }
 function mapLead(s){s=(s||'').toLowerCase();if(/aprov|ganho|fech/.test(s))return'aprovado';if(/perd|cancel/.test(s))return'perdido';if(/negoci|andam/.test(s))return'em_negociacao';return'novo';}
 function mapAP(s){s=(s||'').toLowerCase();if(/pago|quit|baix/.test(s))return'pago';if(/agend/.test(s))return'agendado';if(/venc|atras/.test(s))return'vencido';return'a_pagar';}
@@ -803,6 +886,9 @@ async function videlSync(manual){
 }
 
 /* ---------------- Init ---------------- */
+// captura a chave de acesso vinda do link (?key=) e persiste
+(function(){const uk=new URLSearchParams(location.search).get('key');if(uk)localStorage.setItem('MOITA_KEY',uk);
+  const tl=document.querySelector('.tb-logo img'),ll=document.getElementById('loginLogo');if(tl&&ll)ll.src=tl.src;})();
 popFilters();
 applyUrlFilters();
 setRole(ROLE);
