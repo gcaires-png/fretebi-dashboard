@@ -1,0 +1,51 @@
+#,Empresa,Categoria (tipo),Papel na cadeia de LT,Potencial frete Videl,Abordagem comercial (logística)
+1,ISA Energia Brasil (CTEEP),Concessionária pura,Maior transmissora independente; opera e expande concessões,Indireto (via EPCs),Conta estratégica; mapear EPCs contratados p/ frete de estruturas e equipamentos
+2,Taesa,Concessionária pura,Grande transmissora independente,Indireto,Relacionamento estratégico; frete via EPCs/fornecedores das obras
+3,Eletrobras (Chesf/Furnas/Eletronorte/CGT Eletrosul),Concessionária pura (estatal),Maior grupo de transmissão do país,Indireto,Grandes corredores; oportunidades via consórcios/EPCs contratados
+4,State Grid Brazil Holding,Concessionária pura,Concessões + HVDC (Belo Monte),Indireto,HVDC = cargas especiais; acessar EPCs e fornecedores de conversoras
+5,Equatorial Transmissão,Concessionária pura,Concessões em expansão,Indireto,Obras novas; prospectar EPCs/montadoras vinculadas
+6,ENGIE Brasil (Novo Estado Transmissora),Concessionária pura,Transmissão + geração,Indireto,Frete via construtoras das LTs
+7,Alupar,Concessionária pura (integrada),Concessões + braço de construção próprio,Médio,Tem execução própria — abordar diretamente logística de obra
+8,Neoenergia (Iberdrola),Concessionária pura,Transmissão + distribuição,Indireto,Carteira de LTs; via EPCs
+9,Cemig GT / Transmissão,Concessionária pura (estatal),Transmissão MG,Indireto,Relacionamento regional MG
+10,Copel GeT / Transmissão,Concessionária pura (estatal),Transmissão PR/Sul,Indireto,Relacionamento regional Sul
+11,Enel GT / Transmissão,Concessionária pura,Transmissão,Indireto,Via EPCs
+12,Brookfield / Atlas,Concessionária pura (fundo),Ativos de transmissão via controladas,Indireto,Portfólio; mapear SPEs em obra
+13,Evoltz (Grupo Actis),Concessionária pura,Carteira de SPEs de transmissão,Indireto,SPEs em O&M/expansão
+14,Cymi (Control y Montajes Industriales),EPCista principal / concessões,EPC e concessões de LT,Alto,EPC executa obra — cliente direto de frete de estruturas/equip.
+15,Sterlite Power Brasil,EPC / concessionária,Desenvolve + constrói LTs,Alto,Constrói próprio — prospectar logística de obra
+16,MEZ Energia,Concessionária (SPE),LTs no RS e outros,Indireto,Regional RS
+17,Axia Energia,Concessionária,Desenvolvedora de transmissão,Indireto,Novos leilões
+18,Vinci Energia / Transmissão,Concessionária (veículo de investimento),Veículos p/ ativos de LT,Indireto,Via EPCs
+19,Cobra / Grupo Vinci,EPCista principal / concessões,EPC e concessões,Alto,Cliente direto de frete de obra
+20,Elecnor do Brasil,EPCista principal / concessões,EPC de LT + concessões (Celeo),Alto,EPC ativo — alta demanda de frete de torres/cabos
+21,Quatro A (QEA/QAT),EPCista / montadora,EPC e montagem de LTs/SEs,Alto,Montagem eletromecânica — frete recorrente
+22,Zopone Engenharia,EPCista / montadora,LTs e SEs,Alto,Cliente direto de frete de estruturas/equip.
+23,Entec Empreendimentos,EPCista,EPC em transmissão,Alto,Obras de LT — frete de projeto
+24,Techint Engenharia e Construção,EPCista principal,Grandes EPCs,Alto,Grandes obras — logística de projeto (superloads)
+25,Andrade Gutierrez Energia,EPCista principal,EPC e grandes obras,Alto,Grandes corredores — frete de projeto
+26,Kapsch / Siemens Energy,Integradora de SEs/sistemas,Subestações e sistemas,Alto,Equipamentos pesados de SE — cargas especiais
+27,Siemens Energy Brasil,Integradora SE/HVDC + fabricante,Subestações / transformadores / HVDC,Alto,Transformadores/reatores — transporte superpesado
+28,GE Vernova Grid Solutions,Integradora SE/HVDC + fabricante,Equipamentos HV / subestações,Alto,Equip. HV — cargas especiais
+29,Hitachi Energy Brasil (ABB),Integradora SE/HVDC + fabricante,Subestações / HVDC,Alto,HVDC/transformadores — superloads
+30,TSEA Energia,Fabricante de equip. + EPC de SE,Transformadores e EPC SE/LT,Alto,Fabricante — frete de transformadores
+31,Matricial Engenharia,EPCista,EPC de LTs e SEs,Alto,Obras de LT — frete de projeto
+32,Tecnicargo / Engecampo,Montadora eletromecânica,Montagem de LTs,Alto,Montagem — frete de torres/cabos p/ canteiro
+33,Omega Energia / Ørigo,Gerador (participação indireta em LT),LT via consórcios de escoamento,Indireto,Escoamento renovável — via consórcios
+34,Jusmens / Engeform Energia,EPCista,EPC em LTs/SEs,Alto,Obras — frete de projeto
+35,Steag / consórcios,Gerador / participações,Participações em transmissão,Indireto,Via consórcios
+36,IE Madeira (Interligação Elétrica do Madeira),Concessionária / SPE (HVDC),Consórcio de LT HVDC,Indireto,Grande corredor HVDC — via EPCs
+37,IE Belo Monte / Transmissora,Concessionária / SPE (HVDC),Consórcio de LT HVDC,Indireto,Corredor HVDC — via EPCs
+38,Consórcio Xingu-Rio / Transmissora,Concessionária / SPE (HVDC),LT HVDC,Indireto,Corredor HVDC — via EPCs
+39,Jupiter Energia / Transmissão,Concessionária (veículo p/ leilões),Veículos p/ leilões,Indireto,Novos leilões
+40,Quantum Engenharia,EPCista / montadora,Projeto / fornecimento e montagem de LTs/SEs,Alto,Fornece e monta — frete recorrente
+41,Grupo Energia,EPCista turn-key,EPC/turn-key de LTs,Alto,Turn-key — logística de obra completa
+42,GEL Engenharia,EPCista,Construção de LTs (escoamento eólico),Alto,Escoamento eólico — frete de estruturas
+43,Brametal,Fabricante de estruturas,Maior fabricante de torres metálicas da América Latina,Alto,CLIENTE-CHAVE — milhares de t de torres p/ canteiros; frete de aço/estruturas
+44,Tesc / Terabyte Eng. de Sistemas de Energia,Montadora / EPC,Montagem de SEs/LTs,Alto,Montagem — frete de equipamentos/estruturas
+45,Engemon / Engemon Power,Montadora,Obras de transmissão e SEs,Alto,Montagem — frete de projeto
+46,FGC Construções / FGC Energia,Montadora,Montagem de LTs,Alto,Montagem — frete de torres/cabos
+47,EBE – Empresa Brasileira de Engenharia,EPCista / montadora,EPC e montagem em LTs,Alto,Obras — frete de projeto
+48,Montago / Montejo Engenharia,Montadora de torres e cabos,Montagem de torres e cabos,Alto,Frete de torres/bobinas de cabo p/ canteiro
+49,Sotreq Energia / consórcios,Fornecedor de equip. / apoio EPC,Equipamentos e apoio a EPCs,Médio,Equipamentos (grupos, máquinas) — frete de apoio a obra
+50,WEG T&D,Fabricante de equip. + integração SE,Transformadores / integração de SEs,Alto,Fabricante — frete de transformadores/painéis
