@@ -725,9 +725,12 @@ function applyAccess(){
   if(!ACCESS){ document.getElementById('idChip').style.display='none'; gateVidel(); return; }
   const idc=document.getElementById('idChip');
   idc.style.display=''; idc.textContent='🔒 '+(ACCESS.nome||'Acesso');
-  const single=ACCESS.escopo && ACCESS.escopo.indexOf('*')<0;
+  // 1 área → trava nela; várias áreas → deixa escolher só entre as permitidas
+  // (o servidor já devolve apenas as áreas do escopo, então o filtro só mostra essas);
+  // '*' → acesso total.
+  const esc=ACCESS.escopo||[];
   const fa=document.getElementById('fArea');
-  if(single && ACCESS.escopo.length){ fa.value=ACCESS.escopo[0]; fa.disabled=true; }
+  if(esc.indexOf('*')<0 && esc.length===1){ fa.value=esc[0]; fa.disabled=true; }
   else { fa.disabled=false; }
   gateVidel();
 }
