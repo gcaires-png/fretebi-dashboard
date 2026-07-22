@@ -96,7 +96,7 @@ body{background:var(--surface);color:var(--ink);font-family:'Inter',ui-sans-seri
 .insight.good{background:#eaf3ec}
 
 /* KPIs */
-.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:22px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:22px}
 .kpi{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px}
 .kpi-v{font-size:24px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;color:var(--kc,var(--ink))}
 .kpi-l{font-size:12px;color:var(--ink);margin-top:7px;font-weight:600}
@@ -434,6 +434,29 @@ function isLate(a){
 }
 function areaMeta(id){return AREA_META[id]||{n:id||'—',c:'var(--accent)',i:'📌'};}
 
+/* ---------------- Tempo de resposta ---------------- */
+function diasEntre(d1,d2){const a=parseDate(d1),b=parseDate(d2);if(!a||!b)return null;return Math.round((b-a)/86400000);}
+// Concluída: dias entre Abertura e Conclusão (real). Sem data de conclusão, usa o prazo como aproximação.
+function respostaDias(a){
+  if(a.status!=='concluido')return null;
+  let d=diasEntre(a.abertura,a.conclusao);
+  if(d==null)d=diasEntre(a.abertura,a.prazo);      // aproximação até preencherem a data de resolução
+  return (d!=null&&d>=0)?d:null;
+}
+// Aberta: dias parada desde a Abertura (quanto tempo sem resolver).
+function agingDias(a){
+  if(a.status==='concluido')return null;
+  const t=new Date();t.setHours(0,0,0,0);
+  const d=diasEntre(a.abertura,t);
+  return (d!=null&&d>=0)?d:null;
+}
+function noPrazoConcluida(a){ // concluída dentro do prazo? (só com data de conclusão real)
+  if(a.status!=='concluido')return null;
+  const c=parseDate(a.conclusao), p=parseDate(a.prazo);
+  if(!c||!p)return null; return c<=p;
+}
+function media(arr){const v=arr.filter(x=>x!=null);return v.length?Math.round(v.reduce((s,x)=>s+x,0)/v.length):null;}
+
 /* ---------------- Filtro (papel + controles) ---------------- */
 function filtered(){
   const q=(document.getElementById('q').value||'').toLowerCase();
@@ -468,7 +491,14 @@ function analisar(list){
   // produtividade (concluídas por pessoa)
   const done={};list.filter(a=>a.status==='concluido'&&a.resp).forEach(a=>done[a.resp]=(done[a.resp]||0)+1);
   const topPessoa=Object.entries(done).sort((x,y)=>y[1]-x[1])[0];
-  return {total,concl,and,bloq,fazer,abertas,atrasadas,bloqueadas,semResp,altaAberta,taxa,gargalo,topPessoa,placar:placarPorResp(list)};
+  // tempo de resposta
+  const tempoResp=media(list.map(respostaDias));                 // média dias p/ concluir
+  const tempoAberto=media(list.map(agingDias));                  // média dias em aberto (aging)
+  const prazoArr=list.map(noPrazoConcluida).filter(x=>x!=null);
+  const noPrazoPct=prazoArr.length?Math.round(prazoArr.filter(Boolean).length/prazoArr.length*100):null;
+  const temConclusao=list.some(a=>a.status==='concluido'&&parseDate(a.conclusao));
+  return {total,concl,and,bloq,fazer,abertas,atrasadas,bloqueadas,semResp,altaAberta,taxa,gargalo,topPessoa,
+    tempoResp,tempoAberto,noPrazoPct,temConclusao,placar:placarPorResp(list)};
 }
 
 // Placar por responsável (avaliação de performance — regra do doc de instruções):
@@ -477,19 +507,23 @@ function placarPorResp(list){
   const map={};
   list.forEach(a=>{
     const r=a.resp||'— sem responsável';
-    if(!map[r])map[r]={resp:r,total:0,concl:0,abertas:0,atras:0,noPrazo:0,pctSum:0,pctN:0};
+    if(!map[r])map[r]={resp:r,total:0,concl:0,abertas:0,atras:0,noPrazo:0,pctSum:0,pctN:0,respSum:0,respN:0,agSum:0,agN:0};
     const m=map[r]; m.total++;
     if(a.status==='concluido')m.concl++; else m.abertas++;
     if(isLate(a))m.atras++; else if(a.status!=='concluido')m.noPrazo++;
     if(typeof a.pct==='number'){m.pctSum+=a.pct;m.pctN++;}
+    const rd=respostaDias(a); if(rd!=null){m.respSum+=rd;m.respN++;}
+    const ag=agingDias(a); if(ag!=null){m.agSum+=ag;m.agN++;}
   });
   return Object.values(map).map(m=>{
     const taxa=m.total?Math.round(m.concl/m.total*100):0;
     const pctMed=m.pctN?Math.round(m.pctSum/m.pctN):taxa;
-    // score 0-100: conclusão (60%) + progresso médio (40%) − 12 por atraso (limitado)
-    let score=Math.round(taxa*0.6+pctMed*0.4-Math.min(m.atras*12,40));
+    const tempoResp=m.respN?Math.round(m.respSum/m.respN):null;   // dias médios p/ concluir
+    const tempoAberto=m.agN?Math.round(m.agSum/m.agN):null;       // dias médios em aberto
+    // score 0-100: conclusão (55%) + progresso (35%) − 10/atraso − penalidade tempo aberto
+    let score=Math.round(taxa*0.55+pctMed*0.35-Math.min(m.atras*10,35)-Math.min((tempoAberto||0)*1.5,20));
     score=Math.max(0,Math.min(100,score));
-    return {...m,taxa,pctMed,score};
+    return {...m,taxa,pctMed,tempoResp,tempoAberto,score};
   }).sort((x,y)=>y.score-x.score||y.concl-x.concl);
 }
 
@@ -537,6 +571,8 @@ function renderKpis(m){
   const kpis=[
     {v:m.total,l:'Demandas',sub:'total no período',c:'var(--indigo)'},
     {v:m.concl,l:'Concluídas',sub:m.taxa+'% do total',c:'var(--s-concluido)'},
+    {v:m.tempoResp!=null?m.tempoResp+'d':'—',l:'⏱️ Tempo de resposta',sub:m.temConclusao?'abertura → conclusão':'aprox. (sem data resol.)',c:'var(--a-comercial)'},
+    {v:m.noPrazoPct!=null?m.noPrazoPct+'%':'—',l:'No prazo',sub:'concluídas dentro do prazo',c:'var(--s-concluido)'},
     {v:m.and,l:'Em andamento',sub:'em execução',c:'var(--s-andamento)'},
     {v:m.fazer,l:'A fazer',sub:'na fila',c:'var(--s-afazer)'},
     {v:m.atrasadas.length,l:'Atrasadas',sub:m.atrasadas.length?'ação necessária':'tudo no prazo',c:'var(--s-atrasado)'},
@@ -578,15 +614,19 @@ function renderPlacar(placar){
   const box=document.getElementById('placar');
   if(!placar.length){box.innerHTML='';return;}
   const medal=i=>['🥇','🥈','🥉'][i]||`${i+1}º`;
-  box.innerHTML=`<div class="plc-head">🏁 Placar por responsável <small>avaliação de performance — no prazo × atrasadas × % concluído</small></div>
+  box.innerHTML=`<div class="plc-head">🏁 Placar por responsável <small>performance — tempo de resposta × no prazo × atrasadas × % concluído</small></div>
    <div class="ts"><table class="tbl"><thead><tr>
-     <th>#</th><th>Responsável</th><th>Demandas</th><th>Concluídas</th><th>No prazo</th><th>Atrasadas</th><th>% médio</th><th>Score</th>
+     <th>#</th><th>Responsável</th><th>Demandas</th><th>Concluídas</th><th title="Dias médios entre abertura e conclusão">⏱️ Tempo méd.</th><th title="Dias médios em aberto">Em aberto</th><th>No prazo</th><th>Atrasadas</th><th>% médio</th><th>Score</th>
    </tr></thead><tbody>${placar.map((p,i)=>{
      const sc=p.score>=70?'var(--s-concluido)':p.score>=45?'var(--s-andamento)':'var(--s-atrasado)';
+     const tr=p.tempoResp!=null?p.tempoResp+'d':'—';
+     const ta=p.tempoAberto!=null?`<span style="color:${p.tempoAberto>7?'var(--s-atrasado)':p.tempoAberto>3?'var(--s-andamento)':'var(--muted)'};font-weight:700">${p.tempoAberto}d</span>`:'—';
      return `<tr>
        <td style="font-weight:800">${medal(i)}</td>
        <td><span class="who"><span class="av ${p.resp.startsWith('—')?'none':''}">${p.resp.startsWith('—')?'—':initials(p.resp)}</span>${p.resp}</span></td>
        <td>${p.total}</td><td>${p.concl}</td>
+       <td style="font-weight:700">${tr}</td>
+       <td>${ta}</td>
        <td style="color:var(--s-concluido);font-weight:700">${p.noPrazo}</td>
        <td style="color:${p.atras?'var(--s-atrasado)':'var(--muted)'};font-weight:700">${p.atras}</td>
        <td>${p.pctMed}%</td>
@@ -702,7 +742,7 @@ function applyData(data){
     ATIVIDADES=data.atividades.map((a,i)=>({
       id:a.id||('A'+(i+1)),titulo:a.titulo||a.atividade||'',resp:a.resp||a.responsavel||'',
       gestor:a.gestor||'',area:(a.area||'geral'),prioridade:(a.prioridade||'media'),
-      abertura:fmtBR(a.abertura),prazo:fmtBR(a.prazo),status:(a.status||'afazer'),
+      abertura:fmtBR(a.abertura),prazo:fmtBR(a.prazo),conclusao:fmtBR(a.conclusao),status:(a.status||'afazer'),
       pct:(typeof a.pct==='number'?a.pct:null),obs:a.obs||''
     }));
   }

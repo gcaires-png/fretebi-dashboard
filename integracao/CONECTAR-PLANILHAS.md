@@ -128,6 +128,27 @@ pode ter mais ou menos pessoas** — você controla isso na aba **`Acessos`**.
 > As chaves são senhas: não publique. Quem abrir sem chave vê a **tela de
 > acesso**. Para sair/trocar, clique no nome (🔒) no topo do painel.
 
+## Tempo de resposta + feedback semanal aos gestores ⏱️
+
+O painel mede o **tempo de resposta** de cada demanda e monta um **placar por
+pessoa** (tempo médio, em aberto, atrasadas, % no prazo). Para ficar **exato**,
+adicione na sua planilha uma coluna de **conclusão**:
+
+- Coluna aceita qualquer um destes nomes: `Conclusão`, `Data de Resolução`,
+  `Data Conclusão`, `Concluído em`, `Fechamento`.
+- Preencha a data quando a demanda for concluída. O tempo de resposta passa a ser
+  **dias entre Abertura e Conclusão**. Sem essa coluna, o painel usa o **prazo**
+  como aproximação (marcado como "aprox.").
+
+### Feedback semanal automático (e-mail aos gestores)
+No `moita-sheets.gs`:
+1. Preencha os e-mails em **`GESTOR_EMAIL`** (José Adailton, Karolay, Gearlison).
+   Quem não tiver e-mail, o relatório vai para `FALLBACK_EMAIL`.
+2. Menu **Moita Rev1 ▸ "Ativar feedback automático (seg 8h)"** → agenda o envio
+   toda segunda às 8h. Cada gestor recebe o resumo da **sua equipe**
+   (demandas, concluídas, atrasadas, tempo de resposta, detalhe por pessoa).
+3. Para testar na hora: **Moita Rev1 ▸ "Enviar feedback semanal AGORA"**.
+
 ## Como o Moita analisa (automático)
 
 A cada leitura, o Moita calcula e mostra no topo:
