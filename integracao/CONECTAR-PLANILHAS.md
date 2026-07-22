@@ -88,27 +88,45 @@ Para que **todo mundo** abra o link já ao vivo, sem configurar nada:
 
 ---
 
-## Acesso por área (cada um vê só o que pode) 🔒
+## Acesso por PESSOA (só quem é da equipe) 🔒
 
-O corte de acesso é **no servidor** (Apps Script): cada área recebe um link com
-uma **chave** (`?key=...`) e o endpoint devolve **somente** os dados daquela área.
-Assim, dados sensíveis (Financeiro / Contas a Pagar) **nem chegam** no navegador
-de quem não tem permissão — não adianta abrir o DevTools.
+O corte de acesso é **no servidor** (Apps Script): cada **pessoa** recebe um link
+com a **sua chave** (`?key=...`) e o endpoint devolve **somente** o que ela pode
+ver. Assim, dados sensíveis (Financeiro / Contas a Pagar) **nem chegam** no
+navegador de quem não é da equipe — não adianta abrir o DevTools. **Cada área
+pode ter mais ou menos pessoas** — você controla isso na aba **`Acessos`**.
 
-1. No `moita-sheets.gs`, edite o mapa `ACESSOS` e **troque as chaves** por valores
-   secretos (funcionam como senha). Cada entrada define:
-   - `escopo`: áreas visíveis (`['*']` = todas);
-   - `fin`: se pode ver Financeiro / Contas a Pagar.
+### Aba `Acessos` (quem vê o quê)
+| Pessoa | Chave | Áreas | Financeiro |
+|--------|-------|-------|------------|
+| Diretoria (Gearlison) | dir-1a90 | * | sim |
+| José Adailton | jad-7c22 | * | sim |
+| Karolay | kar-7d21 | adm, rh, financeiro | sim |
+| Jhennifer | jhe-9f3k | rh | não |
+| Giovani | gio-4b88 | financeiro | sim |
+| Hudson | hud-2e57 | comercial | não |
+| Anderson | and-8k10 | comercial | não |
+| Marketing | mkt-3p04 | marketing | não |
+| Moita (Log/TI) | moi-5x99 | logistica, ti | não |
+
+- **Chave** = senha da pessoa (única, secreta). Troque por valores próprios.
+- **Áreas** = uma ou mais (separadas por vírgula) ou `*` para todas. Uma área
+  pode ter **1 pessoa** (ex.: Giovani no Financeiro) ou **várias** (Comercial =
+  Hudson + Anderson) — é só adicionar/remover linhas.
+- **Financeiro** = `sim` libera Contas a Pagar / dados financeiros; `não` bloqueia.
+
+> Se a aba `Acessos` não existir, o script usa o **time-padrão** do próprio
+> código (`ACESSOS_DEFAULT`, com chaves `*-TROQUE` que você deve trocar).
+
+### Ativar
+1. Crie a aba `Acessos` (acima) **ou** edite `ACESSOS_DEFAULT` no `.gs`.
 2. Mantenha `EXIGIR_CHAVE = true` (sem chave válida, não devolve dados).
 3. **Reimplante** (Gerenciar implantações ▸ editar ▸ Nova versão).
-4. Rode a função **`gerarLinks`** (menu Executar) e veja no **Log** os links
-   prontos de cada área, ex.:
-   `Comercial: …/painel-gestao.html?key=SUA-CHAVE-COM&area=comercial`
-5. Envie a cada área **o link dela**. Quem abrir sem chave vê a **tela de acesso**.
+4. Rode a função **`gerarLinks`** (menu Executar) → o **Log** mostra o link
+   pronto de **cada pessoa** pra você enviar individualmente.
 
-> As chaves são como senhas: não publique. O link do gestor/diretoria
-> (`escopo:['*'], fin:true`) enxerga tudo. Para trocar de acesso, clique no
-> nome (🔒) no topo do painel.
+> As chaves são senhas: não publique. Quem abrir sem chave vê a **tela de
+> acesso**. Para sair/trocar, clique no nome (🔒) no topo do painel.
 
 ## Como o Moita analisa (automático)
 

@@ -35,30 +35,59 @@ var AREA_SHEETS = [
 ];
 
 /* =========================== CONTROLE DE ACESSO ===========================
-   Cada área recebe um LINK com sua CHAVE (?key=...). O servidor devolve SOMENTE
-   os dados que aquela chave pode ver — então o Financeiro/Contas a Pagar nem
-   chega no navegador de quem não tem permissão.
+   O acesso é POR PESSOA (só quem é da equipe). Cada pessoa recebe um LINK com
+   a SUA CHAVE (?key=...) e o servidor devolve SOMENTE o que ela pode ver.
+   Cada área pode ter MAIS ou MENOS pessoas — você controla isso na aba "Acessos".
 
-   ►► TROQUE as chaves abaixo por valores SECRETOS (funcionam como senha).
-      NÃO deixe as chaves de exemplo em produção. Gere links em gerarLinks().
-   - escopo: áreas visíveis. ['*'] = todas.  fin: pode ver Financeiro/Contas a Pagar.
+   ►► Preferencial: crie a aba "Acessos" na planilha MASTER com as colunas:
+        Pessoa | Chave | Áreas | Financeiro
+      - Áreas: lista separada por vírgula (adm, rh, financeiro, logistica,
+        comercial, marketing, ti) ou "*" para todas.
+      - Financeiro: sim/não (pode ver Contas a Pagar / dados financeiros).
+      Ex.:  Jhennifer | jhe-9f3k | rh | não
+            Karolay   | kar-7d21 | adm, rh, financeiro | sim
+            Giovani   | gio-4b88 | financeiro | sim
+            Diretoria | dir-1a90 | * | sim
+
+   Se a aba "Acessos" não existir, cai no time-padrão abaixo (TROQUE as chaves).
    ========================================================================= */
-var ACESSOS = {
-  'videl-geral-TROQUE':  { nome: 'Diretoria',      escopo: ['*'],            fin: true  },
-  'adm-TROQUE':          { nome: 'Administrativo', escopo: ['adm'],          fin: false },
-  'rh-TROQUE':           { nome: 'RH',             escopo: ['rh'],           fin: false },
-  'fin-TROQUE':          { nome: 'Financeiro',     escopo: ['financeiro'],   fin: true  },
-  'log-TROQUE':          { nome: 'Logística',      escopo: ['logistica'],    fin: false },
-  'com-TROQUE':          { nome: 'Comercial',      escopo: ['comercial'],    fin: false },
-  'mkt-TROQUE':          { nome: 'Marketing',      escopo: ['marketing'],    fin: false },
-  'ti-TROQUE':           { nome: 'TI / DEV',       escopo: ['ti'],           fin: false }
+var ACESSOS_DEFAULT = {
+  'dir-TROQUE': { nome: 'Diretoria (Gearlison)', escopo: ['*'], fin: true },
+  'jad-TROQUE': { nome: 'José Adailton (Gestor)', escopo: ['*'], fin: true },
+  'kar-TROQUE': { nome: 'Karolay', escopo: ['adm', 'rh', 'financeiro'], fin: true },
+  'jhe-TROQUE': { nome: 'Jhennifer', escopo: ['rh'], fin: false },
+  'gio-TROQUE': { nome: 'Giovani', escopo: ['financeiro'], fin: true },
+  'com-TROQUE': { nome: 'Comercial (Hudson/Anderson)', escopo: ['comercial'], fin: false },
+  'mkt-TROQUE': { nome: 'Marketing', escopo: ['marketing'], fin: false },
+  'moi-TROQUE': { nome: 'Moita (Logística/TI)', escopo: ['logistica', 'ti'], fin: false }
 };
-// Se true, sem chave válida NÃO devolve dados. Se false, sem chave devolve tudo
-// (modo aberto — use só enquanto testa).
+// Se true, sem chave válida NÃO devolve dados. Se false, modo aberto (só p/ teste).
 var EXIGIR_CHAVE = true;
 
-function resolveAcesso(key) {
-  var a = key && ACESSOS[key];
+// Lê a aba "Acessos" (se existir) -> mapa chave:{nome,escopo,fin}.
+function readAcessos(ss) {
+  var rows = readTab(ss, 'Acessos');
+  if (!rows.length) return null;
+  var map = {};
+  rows.forEach(function (r) {
+    var chave = pick(r, ['chave', 'key', 'codigo', 'senha']);
+    if (!chave) return;
+    var areasTxt = pick(r, ['areas', 'area', 'escopo']) || '*';
+    var escopo = areasTxt.indexOf('*') >= 0 ? ['*']
+      : areasTxt.split(',').map(function (s) { return mapArea(s); }).filter(Boolean);
+    var finTxt = norm(pick(r, ['financeiro', 'fin', 've_financeiro']));
+    map[chave] = {
+      nome: pick(r, ['pessoa', 'nome', 'responsavel']) || 'Acesso',
+      escopo: escopo.length ? escopo : ['*'],
+      fin: /sim|true|1|s$|yes/.test(finTxt)
+    };
+  });
+  return map;
+}
+
+function resolveAcesso(key, ss) {
+  var acessos = (ss && readAcessos(ss)) || ACESSOS_DEFAULT;
+  var a = key && acessos[key];
   if (a) return { ok: true, nome: a.nome, escopo: a.escopo, fin: !!a.fin };
   if (!EXIGIR_CHAVE) return { ok: true, nome: 'Aberto', escopo: ['*'], fin: true };
   return { ok: false, nome: '', escopo: [], fin: false };
@@ -69,7 +98,7 @@ function doGet(e) {
     var ss = SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID)
                             : SpreadsheetApp.getActiveSpreadsheet();
     var key = (e && e.parameter && e.parameter.key) || '';
-    var acc = resolveAcesso(key);
+    var acc = resolveAcesso(key, ss);
     if (!acc.ok) {
       return json({ ok: true, acesso: { ok: false }, atividades: [] });
     }
@@ -88,13 +117,15 @@ function doGet(e) {
   }
 }
 
-// Rode uma vez (menu Executar) para ver os links prontos de cada área no log.
+// Rode uma vez (menu Executar) para ver os links prontos de cada PESSOA no log.
 function gerarLinks() {
+  var ss = SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
+  var acessos = readAcessos(ss) || ACESSOS_DEFAULT;
   var base = 'https://gcaires-png.github.io/fretebi-dashboard/painel-gestao.html';
   var out = [];
-  for (var k in ACESSOS) {
-    var a = ACESSOS[k];
-    var area = a.escopo[0] === '*' ? '' : '&area=' + a.escopo[0];
+  for (var k in acessos) {
+    var a = acessos[k];
+    var area = (a.escopo.length === 1 && a.escopo[0] !== '*') ? '&area=' + a.escopo[0] : '';
     out.push(a.nome + ': ' + base + '?key=' + encodeURIComponent(k) + area);
   }
   Logger.log(out.join('\n'));
