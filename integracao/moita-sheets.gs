@@ -406,11 +406,47 @@ function buildAlerts(ss) {
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('Moita Rev1')
     .addItem('Consolidar áreas na MASTER', 'menuConsolidar')
+    .addItem('Criar aba de Acessos (equipe)', 'menuCriarAcessos')
     .addToUi();
 }
 function menuConsolidar() {
   var n = consolidarMASTER();
   SpreadsheetApp.getUi().alert('Moita Rev1', n + ' demanda(s) nova(s) adicionada(s) à MASTER.', SpreadsheetApp.getUi().ButtonSet.OK);
+}
+
+// Cria a aba "Acessos" já preenchida com o time e CHAVES geradas aleatoriamente.
+// Se a aba já existir, não sobrescreve (para não apagar suas edições).
+function menuCriarAcessos() {
+  var ui = SpreadsheetApp.getUi();
+  var ss = SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
+  if (ss.getSheetByName('Acessos')) {
+    ui.alert('Moita Rev1', 'A aba "Acessos" já existe. Edite-a manualmente (ou apague antes de recriar).', ui.ButtonSet.OK);
+    return;
+  }
+  var sh = ss.insertSheet('Acessos');
+  sh.appendRow(['Pessoa', 'Chave', 'Áreas', 'Financeiro']);
+  var time = [
+    ['Diretoria (Gearlison)', '*', 'sim'],
+    ['José Adailton', '*', 'sim'],
+    ['Karolay', 'adm, rh, financeiro', 'sim'],
+    ['Jhennifer', 'rh', 'não'],
+    ['Giovani', 'financeiro', 'sim'],
+    ['Hudson', 'comercial', 'não'],
+    ['Anderson', 'comercial', 'não'],
+    ['Marketing', 'marketing', 'não'],
+    ['Moita (Log/TI)', 'logistica, ti', 'não']
+  ];
+  time.forEach(function (t) { sh.appendRow([t[0], gerarChave(t[0]), t[1], t[2]]); });
+  sh.setFrozenRows(1);
+  sh.getRange(1, 1, 1, 4).setFontWeight('bold').setBackground('#f1f1ef');
+  sh.autoResizeColumns(1, 4);
+  ui.alert('Moita Rev1', 'Aba "Acessos" criada com o time e chaves geradas. Ajuste as pessoas se precisar, depois reimplante e rode "gerarLinks".', ui.ButtonSet.OK);
+}
+function gerarChave(nome) {
+  var p = norm(nome).replace(/[^a-z]/g, '').slice(0, 3) || 'usr';
+  var chars = 'abcdefghijkmnpqrstuvwxyz23456789', s = '';
+  for (var i = 0; i < 6; i++) s += chars.charAt(Math.floor(Math.random() * chars.length));
+  return p + '-' + s;
 }
 
 function consolidarMASTER() {
