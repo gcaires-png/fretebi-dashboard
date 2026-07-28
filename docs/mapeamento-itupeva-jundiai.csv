@@ -1,0 +1,31 @@
+#,Empresa,Cidade,Segmento,Tipo de carga (Videl),Prioridade,Potencial frete,Ação sugerida
+1,Ball Aerosol Packaging Brasil,Itupeva,Embalagens de alumínio/aerossol,Latas e embalagens paletizadas,1 - Local (centro),Alto,Visita presencial
+2,Trivium Packaging Brasil,Itupeva,Embalagens de alumínio,Embalagens paletizadas,1 - Local (centro),Alto,Visita presencial
+3,L'Occitane (Opera Cosméticos),Itupeva,Cosméticos,Produtos acabados e insumos,1 - Local (centro),Alto,Visita presencial
+4,Fareva Itupeva,Itupeva,Cosméticos/higiene (terceirização),Produtos acabados e insumos,1 - Local (centro),Alto,Visita presencial
+5,Nouryon Pulp & Performance,Itupeva,Químicos,Cargas químicas (docs/ADR),1 - Local (centro),Alto,Visita presencial
+6,Grosfillex,Itupeva,Plásticos/móveis,Produtos plásticos volumosos,1 - Local (centro),Médio-Alto,Visita presencial
+7,Indústria de Motores Anauger,Itupeva,Motores e bombas d'água,Produtos acabados paletizados,1 - Local (centro),Médio,Visita presencial
+8,Sorvetes Jundiá,Itupeva,Alimentos (sorvete),Refrigerado - requer frigorífico,1 - Local (centro),Médio,Visita presencial
+9,Startup Brewing,Itupeva,Bebidas/cervejaria,Bebidas paletizadas,1 - Local (centro),Médio,Visita presencial
+10,Ramos Brasil (moldes),Itupeva,Moldes/metalurgia,Moldes e ferramentais,1 - Local (centro),Médio,Visita presencial
+11,Inger do Brasil,Itupeva,Produtos químicos,Cargas químicas,1 - Local (centro),Médio,Visita presencial
+12,Metalclean Produtos Químicos,Itupeva,Produtos químicos,Cargas químicas,1 - Local (centro),Médio,Visita presencial
+13,Itupeva Industrial,Itupeva,Ácidos graxos/sabões industriais,Insumos e produtos industriais,1 - Local (centro),Médio,Visita presencial
+14,A. Azevedo Óleos,Itupeva,Óleos/alimentos,Óleos e insumos,1 - Local (centro),Médio,Visita presencial
+15,CD Magazine Luiza,Itupeva,Varejo/distribuição,Transferências e last mile,1 - Local (centro),Alto,Visita presencial
+16,CD Grupo Casas Bahia,Itupeva/Jundiaí,Varejo/distribuição,Transferências,1 - Local (centro),Alto,Visita presencial
+17,Ambev,Jundiaí,Bebidas,Bebidas paletizadas alto volume,2 - Vizinha (~15km),Alto,Ligação + reunião
+18,Coca-Cola FEMSA,Jundiaí,Bebidas,Bebidas paletizadas alto volume,2 - Vizinha (~15km),Alto,Ligação + reunião
+19,Klabin,Jundiaí,Papel/embalagens,Bobinas e embalagens,2 - Vizinha (~15km),Alto,Ligação + reunião
+20,PepsiCo,Jundiaí,Alimentos (snacks),Produtos acabados paletizados,2 - Vizinha (~15km),Alto,Ligação + reunião
+21,Bignardi Papéis,Jundiaí,Papel,Bobinas e resmas,2 - Vizinha (~15km),Alto,Ligação + reunião
+22,Astra,Jundiaí,Materiais hidráulicos/sanitários,Materiais de construção,2 - Vizinha (~15km),Alto,Ligação + reunião
+23,Deca / Roca / Ideal Standard,Jundiaí,Louças e metais sanitários,Materiais de construção (pesado/frágil),2 - Vizinha (~15km),Alto,Ligação + reunião
+24,Procter & Gamble,Jundiaí,Higiene/limpeza,Produtos acabados paletizados,2 - Vizinha (~15km),Alto,Ligação + reunião
+25,Plascar Componentes Plásticos,Jundiaí,Autopeças,Componentes plásticos,2 - Vizinha (~15km),Médio,Ligação + reunião
+26,Foxconn,Jundiaí,Eletrônicos,Carga de valor (específico),2 - Vizinha (~15km),Médio,Ligação + reunião
+27,White Martins,Jundiaí,Gases industriais,Gases (especializado),2 - Vizinha (~15km),Médio,Ligação + reunião
+28,Siemens,Jundiaí,Equipamentos elétricos,Equipamentos e componentes,2 - Vizinha (~15km),Médio,Ligação + reunião
+29,CD DHL,Jundiaí,Logística/distribuição,Transferências e dedicados,2 - Vizinha (~15km),Alto,Ligação + reunião
+30,CD Sadia / Avon / Renault-Nissan,Jundiaí,Distribuição,Transferências,2 - Vizinha (~15km),Médio-Alto,Ligação + reunião
