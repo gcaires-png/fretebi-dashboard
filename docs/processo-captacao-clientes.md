@@ -35,3 +35,15 @@ priorizando quem tem **carga que a Videl transporta** e está **perto da base**.
 | # | Data | Input | Entregável | Status |
 |---|------|-------|-----------|--------|
 | 1 | 28/07/2026 | Mapeamento de indústrias/empresas de **Itupeva e Jundiaí-SP** para ligações, reuniões e visitas | Planilha "09 - Mapeamento Estratégico Itupeva & Jundiaí" (30 empresas) + `docs/mapeamento-itupeva-jundiai.csv` | ✅ Executado |
+| 2 | 28/07/2026 | Registrar tarefas de captação no Controle Comercial + criar convenção de intake do Moita | Planilha "05 - Tarefas Comercial (Captação)" + seção abaixo | ✅ Executado |
+| 3 | 28/07/2026 | Agendar o looping de mapeamento (recorrente) | Routine semanal (segunda, 08:00 BRT) — próxima região perto de Itupeva | ✅ Agendado |
+
+## Como acionar o Moita pela planilha (intake colaborativo)
+No **"05 - Controle COMERCIAL"**, qualquer linha com **Responsável = "Moita (Claude)"** é um **pedido para o Moita**.
+- O funcionário escreve, na coluna **Próxima ação / Observação**, o que precisa — **com as próprias palavras**, sem se preocupar com o formato.
+- O Moita **lê, interpreta, filtra e traz para o nosso contexto** (se vier confuso, o Moita organiza) e então executa ou devolve estruturado.
+- Objetivo: ações **mais rápidas e colaborativas**.
+
+Exemplo (linha COM-05, modelo): *"Moita, acha os telefones de compras da Ball e da L'Occitane"* → o Moita entende o pedido, mas **só busca contato quando o Comercial validar/solicitar**.
+
+**Regra reforçada:** busca de contatos (Lusha) **somente quando o Comercial validar/solicitar** explicitamente — nunca gastar crédito por conta própria.
