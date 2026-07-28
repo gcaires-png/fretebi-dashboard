@@ -197,8 +197,8 @@ function toAtiv(r, i, forced) {
   return {
     id: pick(r, ['id']) || ((forced ? forced.area.toUpperCase() + '-' : 'A') + (i + 1)),
     titulo: pick(r, ['demanda', 'tarefa', 'atividade', 'titulo']) || '',
-    resp: pick(r, ['responsavel', 'executa', 'resp']) || '',
-    gestor: pick(r, ['gestor']) || (forced ? forced.gestor : '') || '',
+    resp: canonRespGs(pick(r, ['responsavel', 'executa', 'resp']) || ''),
+    gestor: canonRespGs(pick(r, ['gestor']) || (forced ? forced.gestor : '') || ''),
     area: forced ? forced.area : mapArea(areaTxt || 'geral'),
     prioridade: mapPrio(pick(r, ['prioridade', 'prio'])),
     abertura: fmtData(pickRaw(r, ['abertura', 'inicio'])),
@@ -280,6 +280,26 @@ function mapPrio(p) {
   if (/baix|low/.test(n)) return 'baixa';
   return 'media';
 }
+
+/* --------- Padronização de nomes (mesma lógica do painel) ---------
+   Unifica variações/erros de digitação (Gearlisson/Gerlisson → Gearlison) e
+   trata setores (Logística, Comercial…) como qualificador, não pessoa.
+   Adicione pessoas/apelidos em PEOPLE_GS. */
+var PEOPLE_GS = [
+  ['Gearlison', ['gearlison', 'gearlisson', 'gerlisson', 'gerlison', 'geralison', 'gearlson']],
+  ['José Adailton', ['jose adailton', 'adailton', 'jadam', 'jose']],
+  ['Karolay', ['karolay', 'karol', 'karolai', 'carol', 'karoll']],
+  ['Jhennifer', ['jhennifer', 'jennifer', 'jeniffer', 'jheniffer', 'jhenifer', 'jenifer']],
+  ['Giovani', ['giovani', 'giovanni', 'geovani']],
+  ['Hudson', ['hudson']], ['Anderson', ['anderson']], ['Moita', ['moita']],
+  ['Marcos Paulo', ['marcos paulo', 'marcos']], ['Geanderson', ['geanderson']],
+  ['Gean', ['gean']], ['Contjet', ['contjet', 'conjet']]
+];
+var ROLES_GS = { logistica: 'Logística', comercial: 'Comercial', marketing: 'Marketing', rh: 'RH', financeiro: 'Financeiro', fiscal: 'Fiscal', ti: 'TI', dev: 'TI', administrativo: 'Administrativo', adm: 'Administrativo', operacoes: 'Operações', frota: 'Frota', equipe: 'Equipe' };
+function normNm(s) { return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z\s]/g, ' ').replace(/\s+/g, ' ').trim(); }
+function levGs(a, b) { var m = a.length, n = b.length, d = [], i, j; for (i = 0; i <= m; i++) d[i] = [i]; for (j = 0; j <= n; j++) d[0][j] = j; for (i = 1; i <= m; i++) for (j = 1; j <= n; j++) d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1)); return d[m][n]; }
+function canonOneGs(raw) { var nm = normNm(raw); if (!nm) return ''; var i, k; for (i = 0; i < PEOPLE_GS.length; i++) if (PEOPLE_GS[i][1].indexOf(nm) >= 0) return PEOPLE_GS[i][0]; for (i = 0; i < PEOPLE_GS.length; i++) { var vs = PEOPLE_GS[i][1]; for (k = 0; k < vs.length; k++) if (Math.abs(vs[k].length - nm.length) <= 2 && levGs(vs[k], nm) <= 2) return PEOPLE_GS[i][0]; } return String(raw).trim().replace(/\s+/g, ' '); }
+function canonRespGs(raw) { var parts = String(raw || '').split(/\s*[\/,&+]\s*|\s+e\s+/i), persons = [], roles = [], i; for (i = 0; i < parts.length; i++) { var t = parts[i].trim(); if (!t) continue; var nm = normNm(t); if (!nm) continue; if (ROLES_GS[nm]) { if (roles.indexOf(ROLES_GS[nm]) < 0) roles.push(ROLES_GS[nm]); continue; } var c = canonOneGs(t); if (c && persons.indexOf(c) < 0) persons.push(c); } var out = persons.length ? persons : roles; return out.join(' / '); }
 
 // Status -> colunas do quadro: afazer | andamento | bloqueado | concluido.
 function mapStatus(s) {

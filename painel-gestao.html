@@ -457,6 +457,51 @@ function noPrazoConcluida(a){ // concluída dentro do prazo? (só com data de co
 }
 function media(arr){const v=arr.filter(x=>x!=null);return v.length?Math.round(v.reduce((s,x)=>s+x,0)/v.length):null;}
 
+/* ================= PADRONIZAÇÃO DE NOMES (anti-duplicidade) =================
+   Unifica variações/erros de digitação de um mesmo nome (ex.: Gearlisson,
+   Gerlisson, GEarlison → Gearlison). Para incluir uma pessoa nova ou um apelido,
+   é só adicionar aqui: {c:'Nome Certo', v:['variante1','variante2', ...]}.
+   As variantes devem estar em minúsculas e sem acento. */
+const PEOPLE=[
+  {c:'Gearlison',      v:['gearlison','gearlisson','gerlisson','gerlison','geralison','gearlson']},
+  {c:'José Adailton',  v:['jose adailton','adailton','jadam','jose adailton','jose']},
+  {c:'Karolay',        v:['karolay','karol','karolai','carol','karoll','karolayne']},
+  {c:'Jhennifer',      v:['jhennifer','jennifer','jeniffer','jheniffer','jhenifer','jhenniffer','jenifer']},
+  {c:'Giovani',        v:['giovani','giovanni','geovani','giovane']},
+  {c:'Hudson',         v:['hudson','hudsson']},
+  {c:'Anderson',       v:['anderson','andersson']},
+  {c:'Moita',          v:['moita']},
+  {c:'Marcos Paulo',   v:['marcos paulo','marcos','marco paulo']},
+  {c:'Geanderson',     v:['geanderson']},
+  {c:'Gean',           v:['gean']},
+  {c:'Contjet',        v:['contjet','conjet']}
+];
+// Setores/áreas usados como "responsável" — são qualificador, não pessoa.
+const ROLES={logistica:'Logística',comercial:'Comercial',marketing:'Marketing',rh:'RH',financeiro:'Financeiro',fiscal:'Fiscal',ti:'TI',dev:'TI',administrativo:'Administrativo',adm:'Administrativo',operacoes:'Operações',frota:'Frota',equipe:'Equipe'};
+function stripAcc(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'');}
+function normName(s){return stripAcc(s).toLowerCase().replace(/\(.*?\)/g,'').replace(/[^a-z\s]/g,' ').replace(/\s+/g,' ').trim();}
+function lev(a,b){const m=a.length,n=b.length,d=Array.from({length:m+1},(_,i)=>[i,...Array(n).fill(0)]);for(let j=0;j<=n;j++)d[0][j]=j;
+  for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n];}
+function canonOne(raw){
+  const n=normName(raw); if(!n)return '';
+  for(const p of PEOPLE)if(p.v.includes(n))return p.c;                        // match exato de variante
+  for(const p of PEOPLE)for(const v of p.v)if(Math.abs(v.length-n.length)<=2&&lev(v,n)<=2)return p.c; // erro de digitação
+  return raw.trim().replace(/\s+/g,' ').replace(/\b\w/g,c=>c.toUpperCase());  // desconhecido: só arruma capitalização
+}
+// Divide "A/B", "A e B", "A, B" em pessoas padronizadas (sem repetir). Se houver
+// pessoa(s), setores (Logística, Comercial…) viram só qualificador e são ignorados;
+// se não houver nenhuma pessoa, o setor vira o próprio responsável (ex.: "Marketing").
+function respPeople(raw){
+  const persons=[],roles=[];
+  String(raw||'').split(/\s*[\/,&+]\s*|\s+e\s+/i).map(s=>s.trim()).filter(Boolean).forEach(t=>{
+    const nrm=normName(t); if(!nrm)return;
+    if(ROLES[nrm]){ if(!roles.includes(ROLES[nrm]))roles.push(ROLES[nrm]); return; }
+    const c=canonOne(t); if(c&&!persons.includes(c))persons.push(c);
+  });
+  return persons.length?persons:roles;
+}
+function canonResp(raw){const p=respPeople(raw);return p.length?p.join(' / '):'';}
+
 /* ---------------- Filtro (papel + controles) ---------------- */
 function filtered(){
   const q=(document.getElementById('q').value||'').toLowerCase();
@@ -466,8 +511,8 @@ function filtered(){
   const fp=document.getElementById('fPrio').value;
   return ATIVIDADES.filter(a=>{
     if(fa&&a.area!==fa)return false;
-    if(fr&&a.resp!==fr)return false;
-    if(fg&&a.gestor!==fg)return false;
+    if(fr&&!respPeople(a.resp).includes(fr))return false;
+    if(fg&&!respPeople(a.gestor).includes(fg))return false;
     if(fp&&a.prioridade!==fp)return false;
     if(q&&!(a.titulo.toLowerCase().includes(q)||(a.resp||'').toLowerCase().includes(q)||(a.id||'').toLowerCase().includes(q)))return false;
     return true;
@@ -488,8 +533,8 @@ function analisar(list){
   // gargalo por área (abertas)
   const areaCount={};list.filter(a=>a.status!=='concluido').forEach(a=>areaCount[a.area]=(areaCount[a.area]||0)+1);
   const gargalo=Object.entries(areaCount).sort((x,y)=>y[1]-x[1])[0];
-  // produtividade (concluídas por pessoa)
-  const done={};list.filter(a=>a.status==='concluido'&&a.resp).forEach(a=>done[a.resp]=(done[a.resp]||0)+1);
+  // produtividade (concluídas por pessoa — já padronizado, credita cada envolvido)
+  const done={};list.filter(a=>a.status==='concluido').forEach(a=>respPeople(a.resp).forEach(r=>done[r]=(done[r]||0)+1));
   const topPessoa=Object.entries(done).sort((x,y)=>y[1]-x[1])[0];
   // tempo de resposta
   const tempoResp=media(list.map(respostaDias));                 // média dias p/ concluir
@@ -506,14 +551,16 @@ function analisar(list){
 function placarPorResp(list){
   const map={};
   list.forEach(a=>{
-    const r=a.resp||'— sem responsável';
-    if(!map[r])map[r]={resp:r,total:0,concl:0,abertas:0,atras:0,noPrazo:0,pctSum:0,pctN:0,respSum:0,respN:0,agSum:0,agN:0};
-    const m=map[r]; m.total++;
-    if(a.status==='concluido')m.concl++; else m.abertas++;
-    if(isLate(a))m.atras++; else if(a.status!=='concluido')m.noPrazo++;
-    if(typeof a.pct==='number'){m.pctSum+=a.pct;m.pctN++;}
-    const rd=respostaDias(a); if(rd!=null){m.respSum+=rd;m.respN++;}
-    const ag=agingDias(a); if(ag!=null){m.agSum+=ag;m.agN++;}
+    const ppl=respPeople(a.resp); const names=ppl.length?ppl:['— sem responsável'];
+    names.forEach(r=>{                                  // credita cada pessoa (nomes já padronizados)
+      if(!map[r])map[r]={resp:r,total:0,concl:0,abertas:0,atras:0,noPrazo:0,pctSum:0,pctN:0,respSum:0,respN:0,agSum:0,agN:0};
+      const m=map[r]; m.total++;
+      if(a.status==='concluido')m.concl++; else m.abertas++;
+      if(isLate(a))m.atras++; else if(a.status!=='concluido')m.noPrazo++;
+      if(typeof a.pct==='number'){m.pctSum+=a.pct;m.pctN++;}
+      const rd=respostaDias(a); if(rd!=null){m.respSum+=rd;m.respN++;}
+      const ag=agingDias(a); if(ag!=null){m.agSum+=ag;m.agN++;}
+    });
   });
   return Object.values(map).map(m=>{
     const taxa=m.total?Math.round(m.concl/m.total*100):0;
@@ -667,9 +714,9 @@ function popFilters(){
   const keep=(id,fn)=>{const el=document.getElementById(id);const v=el.value;fn(el);if([...el.options].some(o=>o.value===v))el.value=v;};
   keep('fArea',el=>{const areas=[...new Set(ATIVIDADES.map(a=>a.area))];
     el.innerHTML='<option value="">Todas as áreas</option>'+areas.map(id=>`<option value="${id}">${areaMeta(id).i} ${areaMeta(id).n}</option>`).join('');});
-  keep('fResp',el=>{const resps=[...new Set(ATIVIDADES.map(a=>a.resp).filter(Boolean))].sort();
+  keep('fResp',el=>{const resps=[...new Set(ATIVIDADES.flatMap(a=>respPeople(a.resp)))].sort();
     el.innerHTML='<option value="">Todos os responsáveis</option>'+resps.map(r=>`<option value="${r}">${r}</option>`).join('');});
-  keep('fGestor',el=>{const g=[...new Set(ATIVIDADES.map(a=>a.gestor).filter(Boolean))].sort();
+  keep('fGestor',el=>{const g=[...new Set(ATIVIDADES.flatMap(a=>respPeople(a.gestor)))].sort();
     el.innerHTML='<option value="">Todos os gestores</option>'+g.map(r=>`<option value="${r}">${r}</option>`).join('');});
 }
 
@@ -740,8 +787,8 @@ function applyData(data){
   }
   if(Array.isArray(data.atividades) && (data.atividades.length || (ACCESS&&ACCESS.ok))){
     ATIVIDADES=data.atividades.map((a,i)=>({
-      id:a.id||('A'+(i+1)),titulo:a.titulo||a.atividade||'',resp:a.resp||a.responsavel||'',
-      gestor:a.gestor||'',area:(a.area||'geral'),prioridade:(a.prioridade||'media'),
+      id:a.id||('A'+(i+1)),titulo:a.titulo||a.atividade||'',resp:canonResp(a.resp||a.responsavel||''),
+      gestor:canonResp(a.gestor||''),area:(a.area||'geral'),prioridade:(a.prioridade||'media'),
       abertura:fmtBR(a.abertura),prazo:fmtBR(a.prazo),conclusao:fmtBR(a.conclusao),status:(a.status||'afazer'),
       pct:(typeof a.pct==='number'?a.pct:null),obs:a.obs||''
     }));
