@@ -1,0 +1,34 @@
+proposta_id,cliente,origem_cidade,origem_uf,destino_cidade,destino_uf,carga,valor,data_abertura,status,responsavel
+COT-2026-0101,Energis8,Blumenau,SC,Campinas,SP,Agroquímica,8600,2026-06-30,aprovado,Hudson
+COT-2026-0102,DCA,Joinville,SC,Guarulhos,SP,Peças,5400,2026-07-01,perdido,Anderson
+COT-2026-0103,Movecta,Itajaí,SC,Curitiba,PR,Contêiner,5200,2026-07-02,aprovado,Hudson
+COT-2026-0104,Bold S.A.,Itajaí,SC,Jaraguá do Sul,SC,Contêiner,4200,2026-07-03,aprovado,Anderson
+COT-2026-0105,J Faria,Itajaí,SC,Ribeirão Preto,SP,Bebidas,9200,2026-07-06,em_negociacao,Hudson
+COT-2026-0106,Sylvamo,Três Barras,SC,Suzano,SP,Papel,11800,2026-07-07,novo,Anderson
+COT-2026-0107,Transbold,Jaraguá do Sul,SC,Porto Alegre,RS,Máquinas,6400,2026-07-08,aprovado,Hudson
+COT-2026-0108,Movecta,Navegantes,SC,São Paulo,SP,Contêiner,7800,2026-07-09,aprovado,Anderson
+COT-2026-0109,Energis8,Blumenau,SC,Sorocaba,SP,Agroquímica,7900,2026-07-10,perdido,Hudson
+COT-2026-0110,DCA,Joinville,SC,São José dos Campos,SP,Peças,5900,2026-07-11,aprovado,Anderson
+COT-2026-0111,J Faria,Itajaí,SC,Campinas,SP,Bebidas,8800,2026-07-13,em_negociacao,Hudson
+COT-2026-0112,Sylvamo,Três Barras,SC,Jundiaí,SP,Papel,12200,2026-07-14,aprovado,Anderson
+COT-2026-0113,Bold S.A.,Itajaí,SC,Joinville,SC,Contêiner,3800,2026-07-15,aprovado,Hudson
+COT-2026-0114,Movecta,Itajaí,SC,Curitiba,PR,Contêiner,5100,2026-07-16,perdido,Anderson
+COT-2026-0115,Energis8,Blumenau,SC,Campinas,SP,Agroquímica,8600,2026-07-17,em_negociacao,Hudson
+COT-2026-0116,Construcril,Criciúma,SC,São Paulo,SP,Cerâmica,10400,2026-07-18,novo,Anderson
+COT-2026-0117,DCA,Joinville,SC,Guarulhos,SP,Peças,5600,2026-07-20,aprovado,Hudson
+COT-2026-0118,J Faria,Itajaí,SC,Ribeirão Preto,SP,Bebidas,9400,2026-07-21,aprovado,Anderson
+COT-2026-0119,Sylvamo,Três Barras,SC,Suzano,SP,Papel,11900,2026-07-22,em_negociacao,Hudson
+COT-2026-0120,Transbold,Jaraguá do Sul,SC,Porto Alegre,RS,Máquinas,6600,2026-07-23,perdido,Anderson
+COT-2026-0121,Movecta,Navegantes,SC,São Paulo,SP,Contêiner,7700,2026-07-24,aprovado,Hudson
+COT-2026-0122,Bold S.A.,Itajaí,SC,Jaraguá do Sul,SC,Contêiner,4300,2026-07-25,novo,Anderson
+COT-2026-0123,Energis8,Blumenau,SC,Campinas,SP,Agroquímica,8700,2026-07-26,em_negociacao,Hudson
+COT-2026-0124,DCA,Joinville,SC,São José dos Campos,SP,Peças,6000,2026-07-27,novo,Anderson
+COT-2026-0125,J Faria,Itajaí,SC,Campinas,SP,Bebidas,9100,2026-07-27,em_negociacao,Hudson
+COT-2026-0126,Sylvamo,Três Barras,SC,Jundiaí,SP,Papel,12400,2026-07-28,aprovado,Anderson
+COT-2026-0127,Movecta,Itajaí,SC,Curitiba,PR,Contêiner,5300,2026-07-28,novo,Hudson
+COT-2026-0128,Construcril,Criciúma,SC,Osasco,SP,Cerâmica,10900,2026-07-29,em_negociacao,Anderson
+COT-2026-0129,Bold S.A.,Itajaí,SC,Joinville,SC,Contêiner,3900,2026-07-29,aprovado,Hudson
+COT-2026-0130,Energis8,Blumenau,SC,Sorocaba,SP,Agroquímica,8000,2026-07-30,novo,Anderson
+COT-2026-0131,Transbold,Jaraguá do Sul,SC,Porto Alegre,RS,Máquinas,6700,2026-07-30,em_negociacao,Hudson
+COT-2026-0132,J Faria,Itajaí,SC,Ribeirão Preto,SP,Bebidas,9500,2026-07-31,novo,Anderson
+COT-2026-0133,DCA,Joinville,SC,Guarulhos,SP,Peças,5700,2026-07-31,em_negociacao,Hudson

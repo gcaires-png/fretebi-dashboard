@@ -1,0 +1,129 @@
+// =====================================================================
+// MEDIDAS DAX — Controle de Propostas da Semana (Videl T&L)
+// =====================================================================
+// Cole cada medida no Power BI:  Modelagem > Nova Medida.
+// Modelo esperado:
+//   Tabela 'Leads'      (fonte: 01-Leads-Videl.m ou 01b-Leads-CSV-Exemplo.m)
+//   Tabela 'Calendário' (fonte: 02-Calendario.m), relacionada por [Data]
+// Sugestão: crie uma tabela só de medidas chamada '_Medidas'.
+// =====================================================================
+
+
+// ---------- BASE ------------------------------------------------------
+
+Propostas =
+DISTINCTCOUNT ( 'Leads'[Proposta ID] )
+
+Valor Total =
+SUM ( 'Leads'[Valor] )
+
+Valor Médio =
+DIVIDE ( [Valor Total], [Propostas] )
+
+
+// ---------- JANELA "ESTA SEMANA" (automático, baseado em HOJE) --------
+// Segunda-feira da semana corrente:
+_Início Semana Atual =
+VAR Hoje = TODAY ()
+RETURN Hoje - WEEKDAY ( Hoje, 2 ) + 1        // WEEKDAY tipo 2: seg=1 ... dom=7
+
+_Fim Semana Atual =
+[_Início Semana Atual] + 6                    // domingo
+
+// >>> A MEDIDA PRINCIPAL PEDIDA <<<
+Propostas na Semana =
+CALCULATE (
+    [Propostas],
+    DATESBETWEEN ( 'Calendário'[Data], [_Início Semana Atual], [_Fim Semana Atual] )
+)
+
+Valor na Semana =
+CALCULATE (
+    [Valor Total],
+    DATESBETWEEN ( 'Calendário'[Data], [_Início Semana Atual], [_Fim Semana Atual] )
+)
+
+
+// ---------- SEMANA ANTERIOR + VARIAÇÃO (WoW) --------------------------
+
+Propostas Semana Anterior =
+CALCULATE (
+    [Propostas],
+    DATESBETWEEN (
+        'Calendário'[Data],
+        [_Início Semana Atual] - 7,
+        [_Início Semana Atual] - 1
+    )
+)
+
+Variação Semanal % =
+VAR Ant = [Propostas Semana Anterior]
+RETURN DIVIDE ( [Propostas na Semana] - Ant, Ant )
+
+Tendência Semanal =            // rótulo textual para cartão/tooltip
+VAR d = [Propostas na Semana] - [Propostas Semana Anterior]
+RETURN
+    SWITCH (
+        TRUE (),
+        d > 0, "▲ " & d & " vs. semana passada",
+        d < 0, "▼ " & ABS ( d ) & " vs. semana passada",
+        "= igual à semana passada"
+    )
+
+
+// ---------- QUEBRA POR STATUS (na semana atual) ----------------------
+
+Propostas Novas =
+CALCULATE ( [Propostas na Semana], 'Leads'[Status] = "Novo" )
+
+Propostas Em Negociação =
+CALCULATE ( [Propostas na Semana], 'Leads'[Status] = "Em negociação" )
+
+Propostas Aprovadas =
+CALCULATE ( [Propostas na Semana], 'Leads'[Status] = "Aprovado" )
+
+Propostas Perdidas =
+CALCULATE ( [Propostas na Semana], 'Leads'[Status] = "Perdido" )
+
+// Taxa de conversão da semana (aprovadas / total)
+Taxa de Conversão % =
+DIVIDE ( [Propostas Aprovadas], [Propostas na Semana] )
+
+
+// ---------- APOIO PARA GRÁFICOS DE TENDÊNCIA -------------------------
+// Use estas em visuais com 'Calendário'[Ano-Semana] no eixo — respeitam
+// o contexto de filtro (não fixam em "esta semana"), então mostram a
+// série histórica semana a semana.
+
+Propostas (contexto) =
+[Propostas]
+
+Valor (contexto) =
+[Valor Total]
+
+// Média móvel de 4 semanas (para suavizar a linha de tendência)
+Propostas Média 4S =
+VAR Semanas =
+    TOPN (
+        4,
+        ALLSELECTED ( 'Calendário'[Ano-Semana] ),
+        'Calendário'[Ano-Semana], DESC
+    )
+RETURN
+    CALCULATE (
+        AVERAGEX ( VALUES ( 'Calendário'[Ano-Semana] ), [Propostas] ),
+        Semanas
+    )
+
+
+// ---------- CARTÃO DE TÍTULO DINÂMICO --------------------------------
+
+Título Semana =
+"Semana de "
+    & FORMAT ( [_Início Semana Atual], "dd/MM" )
+    & " a "
+    & FORMAT ( [_Fim Semana Atual], "dd/MM/yyyy" )
+
+// Meta de custo Videl (60–62%) — referência p/ leitura das propostas
+// aprovadas; ajuste o campo de custo se a API passar a expor valor_frete.
+Meta Custo (ref.) = "Meta de custo de frete: 60% – 62% do valor"
