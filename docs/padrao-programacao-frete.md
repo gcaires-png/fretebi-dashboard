@@ -4,7 +4,7 @@
 
 ## Regras
 
-1. Toda programação de frete vai por **e-mail** para a logística, com Gearlison e Adam em cópia.
+1. Toda programação de frete vai por **e-mail** para a logística, com Gearlison, Comercial e Marketing e em cópia.
 2. Assunto padronizado: `PROGRAMAÇÃO DE FRETE | [CLIENTE] | [ORIGEM] x [DESTINO] | Coleta [DATA]`
 3. Programação **incompleta volta ao comercial** em até 10 minutos — não entra na fila.
 4. Alvo de motorista **nunca abaixo do Piso ANTT** (Lei 13.703/18).
