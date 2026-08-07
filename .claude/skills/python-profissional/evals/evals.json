@@ -1,0 +1,23 @@
+{
+  "skill_name": "python-profissional",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Recebi do comercial uma planilha cotacoes.csv com as colunas cliente, origem, destino, valor_operacao e custo_frete. Faz um script Python que leia essa planilha, calcule o percentual de custo de cada cotação, classifique pela nossa regra 60-62% e gere um relatório JSON com as cotações fora da meta.",
+      "expected_output": "Script Python com Decimal para valores, dataclass para a cotação, uso/reaproveitamento da lógica de scripts/calculo_frete.py, logging em vez de print, main() com guard, tratamento de linha inválida sem derrubar o lote, saída JSON com ensure_ascii=False.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Preciso validar em Python se o CNPJ 63.147.064/0001-30 e a chave de acesso 35260812345678000190570010000012341000012347 que vieram num e-mail são válidos antes de criar o rascunho do CT-e. Como faço?",
+      "expected_output": "Uso dos validadores prontos (scripts/validadores.py) com dígito verificador real (não só regex), explicação curta em português, e código de exemplo que trata o caso inválido com erro claro.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Escreve um script Python que rode todo dia às 7h pelo cron: ele consulta a API do Bsoft, lista os CT-e em rascunho e me manda um resumo por e-mail. Não pode duplicar e-mail se rodar duas vezes.",
+      "expected_output": "Script idempotente (registro de processados), requests com Session, timeout e retry, segredos via variável de ambiente, --dry-run, logging, main() retornando código de saída, e observação de que o agendamento fica no cron (sem loop infinito com sleep).",
+      "files": []
+    }
+  ]
+}
