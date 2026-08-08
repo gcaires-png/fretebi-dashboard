@@ -1,0 +1,71 @@
+name: Radar Anthropic
+
+# Coleta automática de tudo que a Anthropic publica (site, blog, X, status,
+# changelogs e release notes) e commit do resultado em dados/.
+
+on:
+  schedule:
+    # A cada 3 horas, fora do minuto cheio para não brigar com o resto do mundo.
+    - cron: '17 */3 * * *'
+  workflow_dispatch:
+    inputs:
+      limite_metadados:
+        description: 'Máximo de páginas novas com metadados por rodada (0 = sem teto)'
+        required: false
+        default: '250'
+      sem_x:
+        description: 'Pular a coleta do X/Twitter'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar-anthropic
+  cancel-in-progress: false
+
+jobs:
+  coletar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Coletar publicações da Anthropic
+        env:
+          # Opcional: cobre perfis do X que não liberam embed público (@ClaudeDevs).
+          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+        run: |
+          python3 radar-anthropic/coletor.py \
+            --limite-metadados "${{ github.event.inputs.limite_metadados || '250' }}" \
+            ${{ github.event.inputs.sem_x == 'true' && '--sem-x' || '' }}
+
+      - name: Publicar novidades
+        run: |
+          if [ -z "$(git status --porcelain dados/)" ]; then
+            echo "Sem novidades nesta rodada — nada a commitar."
+            exit 0
+          fi
+          novos=$(python3 -c "import json;print(json.load(open('dados/radar-anthropic.json'))['novos_nesta_coleta'])")
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dados/radar-anthropic.json dados/radar-anthropic-resumo.md
+          git commit -m "Radar Anthropic: ${novos} novidade(s) na coleta de $(date -u '+%d/%m/%Y %H:%M UTC')"
+          for tentativa in 1 2 3 4; do
+            git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            echo "push falhou (tentativa ${tentativa}), aguardando..."
+            sleep $((2 ** tentativa))
+          done
+          exit 1
+
+      - name: Resumo da rodada
+        if: always()
+        run: cat dados/radar-anthropic-resumo.md >> "$GITHUB_STEP_SUMMARY"

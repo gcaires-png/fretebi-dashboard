@@ -5,6 +5,11 @@ on:
     branches:
       - claude/logistics-analyst-moita-rev1-7ejr53
       - main
+  # Republica o site depois de cada coleta do Radar Anthropic (o push feito pelo
+  # GITHUB_TOKEN não dispara o gatilho de push acima).
+  workflow_run:
+    workflows: ["Radar Anthropic"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -32,8 +37,10 @@ jobs:
           cp index.html _site/index.html
           cp moita-rev1.html _site/moita-rev1.html
           cp painel-gestao.html _site/painel-gestao.html
+          cp radar-anthropic.html _site/radar-anthropic.html
           cp insurance-rules.json _site/insurance-rules.json 2>/dev/null || true
           cp -r cte-drafts _site/cte-drafts 2>/dev/null || true
+          cp -r dados _site/dados 2>/dev/null || true
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

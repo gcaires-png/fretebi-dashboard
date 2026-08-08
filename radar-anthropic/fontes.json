@@ -1,0 +1,74 @@
+{
+  "_comentario": "Configuração das fontes do Radar Anthropic. Edite aqui para incluir/remover canais sem mexer no código.",
+
+  "sitemaps": [
+    {
+      "nome": "anthropic.com",
+      "url": "https://www.anthropic.com/sitemap.xml",
+      "prefixo": "https://www.anthropic.com",
+      "secoes_aceitas": [
+        "news", "research", "engineering", "product", "features", "learn",
+        "events", "claude", "institute", "economic-futures", "transparency",
+        "system-cards", "responsible-scaling-policy", "policy-on-the-ai-exponential",
+        "claude-corps"
+      ],
+      "secoes_ignoradas": [
+        "legal", "careers", "supported-countries", "candidate-ai-guidance",
+        "about-anthropic-interviewer", "ai-for-science-program-rules",
+        "vc-partner-program-official-terms", "startup-program-official-terms"
+      ]
+    },
+    {
+      "nome": "claude.com",
+      "url": "https://claude.com/sitemap.xml",
+      "prefixo": "https://claude.com",
+      "secoes_aceitas": ["blog", "newsroom", "customers"],
+      "secoes_ignoradas": [],
+      "somente_ingles": true
+    }
+  ],
+
+  "x": {
+    "ativo": true,
+    "perfis": ["AnthropicAI", "ClaudeDevs", "claudeai"],
+    "endpoint": "https://syndication.twitter.com/srv/timeline-profile/screen-name/{perfil}"
+  },
+
+  "status": [
+    { "nome": "Claude Status", "url": "https://status.claude.com/history.atom" }
+  ],
+
+  "changelogs": [
+    {
+      "nome": "Claude Code (CHANGELOG)",
+      "url": "https://raw.githubusercontent.com/anthropics/claude-code/main/CHANGELOG.md",
+      "base_html": "https://github.com/anthropics/claude-code/blob/main/CHANGELOG.md",
+      "max_versoes": 40
+    },
+    {
+      "nome": "SDK Python (CHANGELOG)",
+      "url": "https://raw.githubusercontent.com/anthropics/anthropic-sdk-python/main/CHANGELOG.md",
+      "base_html": "https://github.com/anthropics/anthropic-sdk-python/blob/main/CHANGELOG.md",
+      "max_versoes": 25
+    },
+    {
+      "nome": "SDK TypeScript (CHANGELOG)",
+      "url": "https://raw.githubusercontent.com/anthropics/anthropic-sdk-typescript/main/CHANGELOG.md",
+      "base_html": "https://github.com/anthropics/anthropic-sdk-typescript/blob/main/CHANGELOG.md",
+      "max_versoes": 25
+    }
+  ],
+
+  "release_notes": [
+    {
+      "nome": "Release Notes — API",
+      "url": "https://platform.claude.com/docs/en/release-notes/api.md",
+      "base_html": "https://platform.claude.com/docs/en/release-notes/api"
+    },
+    {
+      "nome": "Release Notes — System Prompts",
+      "url": "https://platform.claude.com/docs/en/release-notes/system-prompts.md",
+      "base_html": "https://platform.claude.com/docs/en/release-notes/system-prompts"
+    }
+  ]
+}
