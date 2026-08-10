@@ -55,5 +55,7 @@ lugar (GitHub Pages incluso). Para desligar: `localStorage.removeItem('MOITA_PRO
 ## Rotas expostas
 
 `/shipments` · `/quotes` · `/clients` · `/drivers` · `/vehicles` · `/documents`
+`/payables` · `/receivables` (financeiro — o painel só chama essas duas se o
+acesso tiver permissão de Financeiro)
 (aceitam os mesmos query params da API Videl, ex: `?page=1&limit=100`)
 e `/health` para checar o status do proxy.

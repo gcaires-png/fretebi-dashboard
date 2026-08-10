@@ -66,6 +66,30 @@ body{background:var(--surface);color:var(--ink);font-family:'Inter',ui-sans-seri
 .lockbox{border:1px dashed var(--border2);border-radius:var(--radius);padding:22px;text-align:center;color:var(--muted);font-size:13px;background:var(--surface2)}
 #idChip{background:#eef4ff;border-color:transparent;color:#2c5aa0;font-weight:700}
 
+/* Contas a Receber — gráfico por cliente (barras empilhadas por vencimento) */
+.rcwrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px 8px;margin-bottom:10px}
+.rchead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:2px}
+.rctitle{font-size:13px;font-weight:700;color:var(--ink)}
+.rcsub{font-size:11.5px;color:var(--muted)}
+.rclg{display:flex;flex-wrap:wrap;gap:14px;margin:11px 0 13px}
+.rclg-i{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--ink2)}
+.rclg-s{width:11px;height:11px;border-radius:3px;flex:none}
+.rcrow{display:grid;grid-template-columns:158px minmax(0,1fr) 104px;align-items:center;gap:12px;border-radius:var(--radius)}
+.rcrow:hover{background:var(--hover)}
+.rcname{font-size:12.5px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-left:4px}
+.rctrack{height:30px;display:flex;align-items:center;gap:2px;padding-right:6px}
+.rcseg{height:18px;min-width:3px;cursor:default}
+.rcseg:last-child{border-radius:0 4px 4px 0}
+.rcval{font-size:12.5px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink);text-align:right;padding-right:4px}
+.rcfoot{border-top:1px solid var(--border);margin-top:8px;padding:9px 4px 4px;font-size:11.5px;color:var(--muted)}
+.rcempty{padding:26px;text-align:center;color:var(--muted);font-size:13px}
+.rctip{position:fixed;z-index:120;pointer-events:none;opacity:0;transition:opacity .12s;background:var(--ink);color:#fff;border-radius:var(--radius);padding:8px 10px;font-size:11.5px;line-height:1.45;box-shadow:0 6px 20px rgba(0,0,0,.18);max-width:250px}
+.rctip.show{opacity:1}
+.rctip b{font-size:12.5px}
+.rctip .rct-k{display:inline-flex;align-items:center;gap:5px;margin-top:3px}
+.rctip .rct-d{width:8px;height:8px;border-radius:2px;flex:none}
+@media(max-width:720px){.rcrow{grid-template-columns:104px minmax(0,1fr) 88px;gap:8px}.rcname{font-size:11.5px}.rcval{font-size:11.5px}}
+
 /* Login */
 .login-bg{position:fixed;inset:0;background:var(--surface);display:none;align-items:center;justify-content:center;z-index:500;padding:20px}
 .login-bg.show{display:flex}
@@ -272,7 +296,7 @@ select.flt:focus{border-color:var(--accent)}
 <div class="wrap hide" id="tab-videl">
   <div class="moita" style="display:flex;align-items:center;gap:12px">
     <div class="moita-av">🚚</div>
-    <div class="moita-who">Plataforma Videl <small id="videlConn">Embarques · Leads · Contas a Pagar — conecte a plataforma para dados ao vivo</small></div>
+    <div class="moita-who">Plataforma Videl <small id="videlConn">Embarques · Leads · Contas a Receber · Contas a Pagar — conecte a plataforma para dados ao vivo</small></div>
     <div style="margin-left:auto;display:flex;gap:6px">
       <span class="chip" id="videlMode">◐ Demo</span>
       <button class="btn btn-ico" onclick="videlSync(true)" title="Atualizar">🔄</button>
@@ -299,6 +323,27 @@ select.flt:focus{border-color:var(--accent)}
     </div>
   </div>
 
+  <div class="vsec" id="arSection">
+    <div class="vsec-h">💰 Contas a Receber <span class="vsec-c" id="arCount"></span></div>
+    <div class="rcwrap">
+      <div class="rchead">
+        <span class="rctitle">Em aberto por cliente</span>
+        <span class="rcsub" id="arChartSub"></span>
+      </div>
+      <div class="rclg" id="arLegend"></div>
+      <div id="arChart"></div>
+      <div class="rcfoot" id="arChartFoot"></div>
+    </div>
+    <div class="tw ts">
+      <table class="tbl"><thead><tr><th>Cliente</th><th>Documento</th><th>Descrição</th><th>Valor</th><th>Vencimento</th><th>Status</th></tr></thead>
+      <tbody id="arRows"></tbody></table>
+    </div>
+  </div>
+  <div class="vsec aplock" id="arLock" style="display:none">
+    <div class="vsec-h">🔒 Contas a Receber</div>
+    <div class="lockbox">Área financeira restrita. Este acesso não tem permissão para ver Contas a Receber.</div>
+  </div>
+
   <div class="vsec" id="apSection">
     <div class="vsec-h">💸 Contas a Pagar <span class="vsec-c" id="apCount"></span></div>
     <div class="tw ts">
@@ -318,7 +363,7 @@ select.flt:focus{border-color:var(--accent)}
     <div class="modal-t">🔌 Conectar planilha (tempo real)</div>
     <p class="modal-s">Cole a URL do Web App do Google Apps Script (termina em <code>/exec</code>). Cada área preenche a sua planilha; este painel lê a MASTER + as 7 planilhas e o Moita analisa, atualizando a cada 30s.</p>
     <input type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec" spellcheck="false">
-    <p class="modal-s" style="margin:14px 0 6px">🚚 <b>Plataforma Videl</b> (aba Embarques/Leads/Contas a Pagar) — URL do proxy Cloudflare (opcional):</p>
+    <p class="modal-s" style="margin:14px 0 6px">🚚 <b>Plataforma Videl</b> (abas Embarques/Leads/Contas a Receber/Contas a Pagar) — URL do proxy Cloudflare (opcional):</p>
     <input type="text" id="cfgProxy" placeholder="https://moita-videl-proxy.SEU-SUBDOMINIO.workers.dev" spellcheck="false">
     <div id="cfgMsg" class="modal-msg"></div>
     <div class="modal-actions">
@@ -345,6 +390,7 @@ select.flt:focus{border-color:var(--accent)}
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="rctip" id="rcTip"></div>
 
 <script>
 /* =========================================================================
@@ -782,7 +828,7 @@ function epWithKey(ep){
 function applyData(data){
   if(data.acesso!==undefined){          // endpoint com controle de acesso
     ACCESS=data.acesso;
-    if(!ACCESS.ok){ ATIVIDADES=[]; EMBARQUES=[]; LEADS=[]; CONTAS=[]; render(); renderVidel(); showLogin(true); return; }
+    if(!ACCESS.ok){ ATIVIDADES=[]; EMBARQUES=[]; LEADS=[]; CONTAS=[]; RECEBER=[]; render(); renderVidel(); showLogin(true); return; }
     hideLogin();
   }
   if(Array.isArray(data.atividades) && (data.atividades.length || (ACCESS&&ACCESS.ok))){
@@ -827,6 +873,9 @@ function gateVidel(){
   const s=document.getElementById('apSection'), l=document.getElementById('apLock');
   if(s)s.style.display=fin?'':'none';
   if(l)l.style.display=fin?'none':'';
+  const sr=document.getElementById('arSection'), lr=document.getElementById('arLock');
+  if(sr)sr.style.display=fin?'':'none';
+  if(lr)lr.style.display=fin?'none':'';
 }
 function showLogin(bad){
   document.getElementById('loginBg').classList.add('show');
@@ -899,6 +948,36 @@ let CONTAS=[
   {fornecedor:'Posto Ipiranga',descricao:'Abastecimento frota',valor:4300,venc:'2026-07-20',status:'agendado'},
   {fornecedor:'Contjet Contabilidade',descricao:'Honorários julho',valor:2200,venc:'2026-07-10',status:'pago'}
 ];
+/* Contas a Receber — vencimentos relativos a hoje para o aging fazer sentido em qualquer data */
+function dOff(n){const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()+n);const p=x=>String(x).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+let RECEBER=[
+  {cliente:'Bold S.A.',doc:'CT-e 10428',descricao:'Frete Itajaí → Jaraguá do Sul',valor:12400,venc:dOff(-14),status:'a_receber'},
+  {cliente:'Bold S.A.',doc:'CT-e 10455',descricao:'Frete Itajaí → Joinville',valor:9800,venc:dOff(4),status:'a_receber'},
+  {cliente:'Bold S.A.',doc:'CT-e 10470',descricao:'Frete contêiner Porto de Itajaí',valor:15200,venc:dOff(21),status:'a_receber'},
+  {cliente:'Movecta',doc:'CT-e 10431',descricao:'Frete Itajaí → Curitiba',valor:11600,venc:dOff(-6),status:'a_receber'},
+  {cliente:'Movecta',doc:'CT-e 10462',descricao:'Frete Navegantes → São Paulo',valor:18400,venc:dOff(9),status:'a_receber'},
+  {cliente:'Energis8',doc:'CT-e 10402',descricao:'Frete Blumenau → Campinas',valor:8100,venc:dOff(-32),status:'a_receber'},
+  {cliente:'Energis8',doc:'CT-e 10447',descricao:'Frete agroquímica Blumenau → Campinas',valor:8600,venc:dOff(2),status:'a_receber'},
+  {cliente:'Transbold',doc:'CT-e 10419',descricao:'Frete Jaraguá do Sul → Porto Alegre',valor:6400,venc:dOff(-3),status:'a_receber'},
+  {cliente:'Transbold',doc:'CT-e 10466',descricao:'Frete máquinas → Porto Alegre',valor:7900,venc:dOff(16),status:'a_receber'},
+  {cliente:'Sylvamo',doc:'CT-e 10458',descricao:'Frete papel Três Barras → Suzano',valor:11800,venc:dOff(6),status:'a_receber'},
+  {cliente:'Sylvamo',doc:'CT-e 10473',descricao:'Frete papel — 2ª viagem',valor:10400,venc:dOff(27),status:'a_receber'},
+  {cliente:'J Faria',doc:'CT-e 10444',descricao:'Frete bebidas Itajaí → Ribeirão Preto',valor:9200,venc:dOff(-21),status:'a_receber'},
+  {cliente:'DCA',doc:'CT-e 10451',descricao:'Frete peças Joinville → Guarulhos',valor:5400,venc:dOff(5),status:'a_receber'},
+  {cliente:'Ferrari Transportes',doc:'CT-e 10388',descricao:'Frete spot — antecipação Monkey',valor:22600,venc:dOff(-45),status:'a_receber'},
+  {cliente:'Weg Equipamentos',doc:'CT-e 10469',descricao:'Frete Jaraguá do Sul → Betim',valor:13700,venc:dOff(12),status:'a_receber'},
+  {cliente:'Movecta',doc:'CT-e 10390',descricao:'Frete Itajaí → Curitiba',valor:10900,venc:dOff(-18),status:'recebido',recebimento:dOff(-16)},
+  {cliente:'Bold S.A.',doc:'CT-e 10377',descricao:'Frete contêiner',valor:14100,venc:dOff(-25),status:'recebido',recebimento:dOff(-24)},
+  {cliente:'Sylvamo',doc:'CT-e 10365',descricao:'Frete papel',valor:9600,venc:dOff(-30),status:'recebido',recebimento:dOff(-27)}
+];
+/* Cores do gráfico validadas para daltonismo (ΔE CVD ≥ 8) contra o fundo branco do painel */
+const AR_BK={
+  vencido:{n:'Vencido',c:'#c9342f',sub:'em atraso'},
+  vence7:{n:'Vence em 7 dias',c:'#e0a020',sub:'próximos 7 dias'},
+  avencer:{n:'A vencer',c:'#2f80c9',sub:'acima de 7 dias'}
+};
+const AR_ORDER=['vencido','vence7','avencer'];
+const AR_ST={a_receber:{n:'A receber',c:'#2f80c9'},vence7:{n:'Vence em 7 dias',c:'#e0a020'},vencido:{n:'Vencido',c:'#c9342f'},recebido:{n:'Recebido',c:'var(--s-concluido)'}};
 const EMB_ST={programado:{n:'Programado',c:'var(--s-afazer)'},em_coleta:{n:'Em coleta',c:'var(--p-media)'},em_transito:{n:'Em trânsito',c:'var(--s-andamento)'},entregue:{n:'Entregue',c:'var(--s-concluido)'}};
 const LEAD_ST={novo:{n:'Novo',c:'var(--s-afazer)'},em_negociacao:{n:'Em negociação',c:'var(--s-andamento)'},aprovado:{n:'Aprovado',c:'var(--s-concluido)'},perdido:{n:'Perdido',c:'var(--s-atrasado)'}};
 const AP_ST={a_pagar:{n:'A pagar',c:'var(--p-media)'},agendado:{n:'Agendado',c:'var(--s-andamento)'},pago:{n:'Pago',c:'var(--s-concluido)'},vencido:{n:'Vencido',c:'var(--s-atrasado)'}};
@@ -922,7 +1001,10 @@ function renderVidel(){
     {v:brl(frete),l:'Frete total',sub:'embarques ativos',c:'var(--ink)'},
     {v:leadsAb,l:'Leads abertos',sub:'em negociação',c:'var(--a-comercial)'}
   ];
+  const arTotal=arTotalAberto(), arVenc=arVencido();
   if(fin)kpiArr.push(
+    {v:brl(arTotal),l:'Contas a receber',sub:'em aberto',c:'#2f80c9'},
+    {v:brl(arVenc),l:'Receber vencido',sub:arVenc?'cobrança pendente':'nada em atraso',c:'#c9342f'},
     {v:brl(apTotal),l:'Contas a pagar',sub:'em aberto',c:'var(--p-media)'},
     {v:apVenc,l:'Vencidas',sub:apVenc?'ação necessária':'em dia',c:'var(--s-atrasado)'});
   document.getElementById('videlKpis').innerHTML=kpiArr.map(k=>`<div class="kpi" style="--kc:${k.c}"><div class="kpi-v">${k.v}</div><div class="kpi-l">${k.l}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
@@ -941,8 +1023,11 @@ function renderVidel(){
     <td class="vmoney">${brl(l.valor)}</td><td>${fmtBR(l.aberto)}</td>
     <td>${vpill(LEAD_ST[l.status]||{n:l.status,c:'var(--muted)'})}</td></tr>`).join('')||vEmpty(6);
 
-  // Contas a Pagar: só renderiza (no DOM) se este acesso puder ver — senão nem chega no navegador
+  // Financeiro (Receber/Pagar): só renderiza (no DOM) se este acesso puder ver — senão nem chega no navegador
   gateVidel();
+  if(fin){ renderAR(); }
+  else { document.getElementById('arRows').innerHTML=''; document.getElementById('arChart').innerHTML='';
+         document.getElementById('arLegend').innerHTML=''; document.getElementById('arCount').textContent=''; }
   if(fin){
     document.getElementById('apCount').textContent=CONTAS.length;
     document.getElementById('apRows').innerHTML=CONTAS.map(c=>{const venc=c.status!=='pago'&&isVenc(c.venc);
@@ -954,6 +1039,108 @@ function renderVidel(){
     document.getElementById('apRows').innerHTML=''; document.getElementById('apCount').textContent='';
   }
 }
+/* ---------------- Contas a Receber: aging + gráfico por cliente ---------------- */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function arBucket(t){
+  if(t.status==='recebido')return'recebido';
+  const d=parseDate(t.venc); if(!d)return'avencer';
+  const h=new Date();h.setHours(0,0,0,0);
+  if(d<h)return'vencido';
+  const lim=new Date(h); lim.setDate(lim.getDate()+7);
+  return d<=lim?'vence7':'avencer';
+}
+function arAberto(){return RECEBER.filter(t=>t.status!=='recebido');}
+function arTotalAberto(){return arAberto().reduce((s,t)=>s+(+t.valor||0),0);}
+function arVencido(){return arAberto().filter(t=>arBucket(t)==='vencido').reduce((s,t)=>s+(+t.valor||0),0);}
+function arRecebido30(){
+  const h=new Date();h.setHours(0,0,0,0); const ini=new Date(h); ini.setDate(ini.getDate()-30);
+  return RECEBER.filter(t=>{if(t.status!=='recebido')return false;const d=parseDate(t.recebimento||t.venc);return d&&d>=ini&&d<=h;})
+                .reduce((s,t)=>s+(+t.valor||0),0);
+}
+/* Agrupa por cliente; acima de 8 clientes o excedente vira "Outros" (nunca inventa cores novas) */
+function arPorCliente(){
+  const zero=()=>({vencido:0,vence7:0,avencer:0});
+  const map=new Map();
+  arAberto().forEach(t=>{
+    const k=String(t.cliente||'—').trim()||'—';
+    let g=map.get(k);
+    if(!g){g={cliente:k,total:0,n:0,val:zero(),qtd:zero()};map.set(k,g);}
+    const b=arBucket(t), v=+t.valor||0;
+    g.val[b]+=v; g.qtd[b]++; g.total+=v; g.n++;
+  });
+  const arr=[...map.values()].sort((a,b)=>b.total-a.total);
+  if(arr.length<=9)return arr;   // só agrupa quando "Outros" reúne 2+ clientes
+  const top=arr.slice(0,8), rest=arr.slice(8);
+  const o={cliente:'Outros ('+rest.length+' clientes)',total:0,n:0,val:zero(),qtd:zero()};
+  rest.forEach(g=>{AR_ORDER.forEach(b=>{o.val[b]+=g.val[b];o.qtd[b]+=g.qtd[b];});o.total+=g.total;o.n+=g.n;});
+  top.push(o);
+  return top;
+}
+function renderAR(){
+  const grupos=arPorCliente(), aberto=arAberto();
+  document.getElementById('arCount').textContent=RECEBER.length;
+  document.getElementById('arLegend').innerHTML=AR_ORDER.map(b=>{
+    const m=AR_BK[b], v=grupos.reduce((s,g)=>s+g.val[b],0);
+    return `<span class="rclg-i"><span class="rclg-s" style="background:${m.c}"></span>${m.n} · ${brl(v)}</span>`;
+  }).join('');
+
+  const max=grupos.reduce((m,g)=>Math.max(m,g.total),0);
+  const chart=document.getElementById('arChart');
+  if(!grupos.length||!max){
+    chart.innerHTML='<div class="rcempty">Nenhum título em aberto. 🎉</div>';
+    document.getElementById('arChartSub').textContent='';
+    document.getElementById('arChartFoot').textContent='';
+  } else {
+    chart.innerHTML=grupos.map(g=>{
+      const segs=AR_ORDER.filter(b=>g.val[b]>0).map(b=>{
+        const m=AR_BK[b], pct=(g.val[b]/max*100).toFixed(2);
+        return `<span class="rcseg" style="width:${pct}%;background:${m.c}"
+          data-cli="${esc(g.cliente)}" data-bk="${b}" data-val="${g.val[b]}" data-qtd="${g.qtd[b]}"></span>`;
+      }).join('');
+      return `<div class="rcrow">
+        <div class="rcname" title="${esc(g.cliente)} — ${g.n} título(s)">${esc(g.cliente)}</div>
+        <div class="rctrack">${segs}</div>
+        <div class="rcval">${brl(g.total)}</div>
+      </div>`;
+    }).join('');
+    const nCli=new Set(aberto.map(t=>String(t.cliente||'—').trim()||'—')).size;
+    document.getElementById('arChartSub').textContent=`${nCli} cliente(s) · ${aberto.length} título(s) · ${brl(arTotalAberto())} em aberto`;
+    const venc=arAberto().filter(t=>arBucket(t)==='vencido');
+    document.getElementById('arChartFoot').innerHTML=venc.length
+      ? `⚠ <b style="color:${AR_BK.vencido.c}">${brl(arVencido())}</b> vencidos em ${venc.length} título(s) — cobrar hoje. Recebido nos últimos 30 dias: <b>${brl(arRecebido30())}</b>.`
+      : `Nenhum título vencido. Recebido nos últimos 30 dias: <b>${brl(arRecebido30())}</b>.`;
+  }
+
+  document.getElementById('arRows').innerHTML=RECEBER.slice()
+    .sort((a,b)=>(parseDate(a.venc)||0)-(parseDate(b.venc)||0))
+    .map(t=>{const b=arBucket(t), m=b==='recebido'?AR_ST.recebido:AR_BK[b];
+      return `<tr><td style="font-weight:700">${esc(t.cliente)}</td><td>${esc(t.doc)||'—'}</td><td>${esc(t.descricao)||'—'}</td>
+      <td class="vmoney">${brl(t.valor)}</td>
+      <td style="${b==='vencido'?'color:'+AR_BK.vencido.c+';font-weight:700':''}">${fmtBR(t.venc)}${b==='vencido'?' ⚠':''}</td>
+      <td>${vpill(m)}</td></tr>`;}).join('')||vEmpty(6);
+}
+/* Tooltip do gráfico (hover por segmento) */
+(function(){
+  const tip=document.getElementById('rcTip'); if(!tip)return;
+  const host=document.body;
+  host.addEventListener('mouseover',e=>{
+    const s=e.target.closest&&e.target.closest('.rcseg'); if(!s)return;
+    const m=AR_BK[s.dataset.bk]||{n:s.dataset.bk,c:'var(--muted)',sub:''};
+    tip.innerHTML=`<b>${esc(s.dataset.cli)}</b><br><span class="rct-k"><span class="rct-d" style="background:${m.c}"></span>${m.n}</span><br>
+      ${brl(s.dataset.val)} · ${s.dataset.qtd} título(s)`;
+    tip.classList.add('show');
+  });
+  host.addEventListener('mouseout',e=>{ if(e.target.closest&&e.target.closest('.rcseg'))tip.classList.remove('show'); });
+  host.addEventListener('mousemove',e=>{
+    if(!tip.classList.contains('show'))return;
+    const w=tip.offsetWidth,h=tip.offsetHeight;
+    let x=e.clientX+14,y=e.clientY-h-12;
+    if(x+w>innerWidth-8)x=e.clientX-w-14;
+    if(y<8)y=e.clientY+18;
+    tip.style.left=x+'px'; tip.style.top=y+'px';
+  });
+})();
+function mapAR(s){s=(s||'').toLowerCase();if(/receb|pago|quit|baix|liquid/.test(s))return'recebido';return'a_receber';}
 function mapLead(s){s=(s||'').toLowerCase();if(/aprov|ganho|fech/.test(s))return'aprovado';if(/perd|cancel/.test(s))return'perdido';if(/negoci|andam/.test(s))return'em_negociacao';return'novo';}
 function mapAP(s){s=(s||'').toLowerCase();if(/pago|quit|baix/.test(s))return'pago';if(/agend/.test(s))return'agendado';if(/venc|atras/.test(s))return'vencido';return'a_pagar';}
 async function videlSync(manual){
@@ -961,16 +1148,20 @@ async function videlSync(manual){
   const chip=document.getElementById('videlMode'), conn=document.getElementById('videlConn');
   if(!proxy){ chip.className='chip demo';chip.textContent='◐ Demo'; if(manual)toast('◐ Aba Videl em Demo — conecte o proxy da plataforma em 🔌.'); renderVidel(); return; }
   try{
-    const [sh,qt,ap]=await Promise.all([
+    const fin=videlFin();   // sem permissão financeira o painel nem busca Receber/Pagar — o dado não chega ao navegador
+    const [sh,qt,ap,ar]=await Promise.all([
       fetch(proxy.replace(/\/$/,'')+'/shipments?page=1&limit=100').then(r=>r.json()).catch(()=>({})),
       fetch(proxy.replace(/\/$/,'')+'/quotes?page=1&limit=100').then(r=>r.json()).catch(()=>({})),
-      fetch(proxy.replace(/\/$/,'')+'/payables?page=1&limit=100').then(r=>r.json()).catch(()=>({}))
+      fin?fetch(proxy.replace(/\/$/,'')+'/payables?page=1&limit=100').then(r=>r.json()).catch(()=>({})):Promise.resolve({}),
+      fin?fetch(proxy.replace(/\/$/,'')+'/receivables?page=1&limit=200').then(r=>r.json()).catch(()=>({})):Promise.resolve({})
     ]);
+    if(!fin){ CONTAS=[]; RECEBER=[]; }
     if(Array.isArray(sh.data))EMBARQUES=sh.data.map(s=>({num:s.numero,cliente:s.cliente_nome,origem:s.origem&&s.origem.cidade||'',uf_o:s.origem&&s.origem.uf||'',destino:s.destino&&s.destino.cidade||'',uf_d:s.destino&&s.destino.uf||'',status:s.status,motorista:s.motorista_nome||'',frete:+s.valor_frete||0,coleta:(s.data_coleta||'').slice(0,10),entrega:(s.data_entrega_prevista||'').slice(0,10)}));
     if(Array.isArray(qt.data))LEADS=qt.data.map(q=>({cliente:q.cliente_nome||q.cliente,rota:((q.origem&&q.origem.cidade)||'')+' → '+((q.destino&&q.destino.cidade)||''),carga:q.carga||q.tipo_carga||'',valor:+q.valor||+q.valor_frete||0,aberto:(q.created_at||q.data||'').slice(0,10),status:mapLead(q.status)}));
     if(Array.isArray(ap.data))CONTAS=ap.data.map(c=>({fornecedor:c.fornecedor||c.favorecido||c.nome,descricao:c.descricao||'',valor:+c.valor||0,venc:(c.vencimento||c.due_date||'').slice(0,10),status:mapAP(c.status)}));
+    if(Array.isArray(ar.data))RECEBER=ar.data.map(r=>({cliente:r.cliente_nome||r.cliente||r.tomador||'—',doc:r.documento||r.numero||r.cte||'',descricao:r.descricao||'',valor:+r.valor||+r.valor_total||0,venc:(r.vencimento||r.due_date||'').slice(0,10),status:mapAR(r.status),recebimento:(r.data_recebimento||r.pago_em||'').slice(0,10)}));
     chip.className='chip live';chip.innerHTML='<span class="dot"></span> Ao vivo';
-    conn.textContent='Embarques · Leads · Contas a Pagar — ao vivo da plataforma Videl';
+    conn.textContent='Embarques · Leads · Contas a Receber · Contas a Pagar — ao vivo da plataforma Videl';
     renderVidel(); if(manual)toast('✓ Plataforma Videl atualizada!');
   }catch(e){ chip.className='chip demo';chip.textContent='⚠ falhou'; if(manual)toast('⚠ Videl: '+e.message); }
 }

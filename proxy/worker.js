@@ -16,6 +16,7 @@
  *
  * Rotas expostas (somente GET, somente leitura):
  *   /shipments  /quotes  /clients  /drivers  /vehicles  /documents
+ *   /payables   /receivables  (financeiro — o painel só chama com permissão)
  *   /shipments/:id  /clients/:id  /vehicles/:id  /drivers/:id
  *   /health     — status do proxy (não chama a Videl)
  */
@@ -27,6 +28,8 @@ const ALLOWED_PATHS = [
   'shipments', 'quotes', 'clients', 'drivers', 'vehicles', 'documents',
   // financeiro / contas a pagar (nomes candidatos — a API usa um destes)
   'payables', 'accounts-payable', 'bills', 'finance', 'expenses', 'contas-a-pagar',
+  // financeiro / contas a receber (nomes candidatos — a API usa um destes)
+  'receivables', 'accounts-receivable', 'invoices', 'contas-a-receber', 'titulos',
 ];
 
 // token em memória (persiste enquanto o isolate estiver quente)

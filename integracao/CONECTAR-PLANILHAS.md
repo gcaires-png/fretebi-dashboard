@@ -92,7 +92,7 @@ Para que **todo mundo** abra o link já ao vivo, sem configurar nada:
 
 O corte de acesso é **no servidor** (Apps Script): cada **pessoa** recebe um link
 com a **sua chave** (`?key=...`) e o endpoint devolve **somente** o que ela pode
-ver. Assim, dados sensíveis (Financeiro / Contas a Pagar) **nem chegam** no
+ver. Assim, dados sensíveis (Financeiro / Contas a Receber / Contas a Pagar) **nem chegam** no
 navegador de quem não é da equipe — não adianta abrir o DevTools. **Cada área
 pode ter mais ou menos pessoas** — você controla isso na aba **`Acessos`**.
 
@@ -113,7 +113,7 @@ pode ter mais ou menos pessoas** — você controla isso na aba **`Acessos`**.
 - **Áreas** = uma ou mais (separadas por vírgula) ou `*` para todas. Uma área
   pode ter **1 pessoa** (ex.: Giovani no Financeiro) ou **várias** (Comercial =
   Hudson + Anderson) — é só adicionar/remover linhas.
-- **Financeiro** = `sim` libera Contas a Pagar / dados financeiros; `não` bloqueia.
+- **Financeiro** = `sim` libera Contas a Receber / Contas a Pagar / dados financeiros; `não` bloqueia.
 
 > Se a aba `Acessos` não existir, o script usa o **time-padrão** do próprio
 > código (`ACESSOS_DEFAULT`, com chaves `*-TROQUE` que você deve trocar).
