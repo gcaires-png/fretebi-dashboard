@@ -272,7 +272,7 @@ select.flt:focus{border-color:var(--accent)}
 <div class="wrap hide" id="tab-videl">
   <div class="moita" style="display:flex;align-items:center;gap:12px">
     <div class="moita-av">🚚</div>
-    <div class="moita-who">Plataforma Videl <small id="videlConn">Embarques · Leads · Contas a Pagar — conecte a plataforma para dados ao vivo</small></div>
+    <div class="moita-who">Plataforma Videl <small id="videlConn">Embarques · Leads · Boletos · Contas a Pagar — conecte a plataforma para dados ao vivo</small></div>
     <div style="margin-left:auto;display:flex;gap:6px">
       <span class="chip" id="videlMode">◐ Demo</span>
       <button class="btn btn-ico" onclick="videlSync(true)" title="Atualizar">🔄</button>
@@ -299,6 +299,25 @@ select.flt:focus{border-color:var(--accent)}
     </div>
   </div>
 
+  <div class="vsec" id="arSection">
+    <div class="vsec-h">🧾 Boletos · Contas a Receber <span class="vsec-c" id="arCount"></span>
+      <span class="vsec-link" id="arPos"></span></div>
+    <div class="tw ts">
+      <table class="tbl"><thead><tr><th>Cliente</th><th>OC / CT-e</th><th>Banco</th><th>Valor</th><th>Vencimento</th><th>Pagamento</th><th>Status</th></tr></thead>
+      <tbody id="arRows"></tbody></table>
+    </div>
+    <div class="vsec-h" style="margin-top:14px">🤝 Acordo GramTok — parcelamento do saldo vencido <span class="vsec-c" id="acCount"></span></div>
+    <div id="acNote" class="lockbox" style="background:color-mix(in srgb,var(--p-media) 8%,#fff);border-color:color-mix(in srgb,var(--p-media) 30%,#fff);color:var(--ink)"></div>
+    <div class="tw ts">
+      <table class="tbl"><thead><tr><th>Parcela</th><th>Data de pagamento</th><th>Valor</th><th>Status</th></tr></thead>
+      <tbody id="acRows"></tbody></table>
+    </div>
+  </div>
+  <div class="vsec aplock" id="arLock" style="display:none">
+    <div class="vsec-h">🔒 Boletos · Contas a Receber</div>
+    <div class="lockbox">Área financeira restrita. Este acesso não tem permissão para ver Contas a Receber.</div>
+  </div>
+
   <div class="vsec" id="apSection">
     <div class="vsec-h">💸 Contas a Pagar <span class="vsec-c" id="apCount"></span></div>
     <div class="tw ts">
@@ -318,7 +337,7 @@ select.flt:focus{border-color:var(--accent)}
     <div class="modal-t">🔌 Conectar planilha (tempo real)</div>
     <p class="modal-s">Cole a URL do Web App do Google Apps Script (termina em <code>/exec</code>). Cada área preenche a sua planilha; este painel lê a MASTER + as 7 planilhas e o Moita analisa, atualizando a cada 30s.</p>
     <input type="text" id="cfgUrl" placeholder="https://script.google.com/macros/s/.../exec" spellcheck="false">
-    <p class="modal-s" style="margin:14px 0 6px">🚚 <b>Plataforma Videl</b> (aba Embarques/Leads/Contas a Pagar) — URL do proxy Cloudflare (opcional):</p>
+    <p class="modal-s" style="margin:14px 0 6px">🚚 <b>Plataforma Videl</b> (aba Embarques/Leads/Boletos/Contas a Pagar) — URL do proxy Cloudflare (opcional):</p>
     <input type="text" id="cfgProxy" placeholder="https://moita-videl-proxy.SEU-SUBDOMINIO.workers.dev" spellcheck="false">
     <div id="cfgMsg" class="modal-msg"></div>
     <div class="modal-actions">
@@ -827,6 +846,9 @@ function gateVidel(){
   const s=document.getElementById('apSection'), l=document.getElementById('apLock');
   if(s)s.style.display=fin?'':'none';
   if(l)l.style.display=fin?'none':'';
+  const rs=document.getElementById('arSection'), rl=document.getElementById('arLock');
+  if(rs)rs.style.display=fin?'':'none';
+  if(rl)rl.style.display=fin?'none':'';
 }
 function showLogin(bad){
   document.getElementById('loginBg').classList.add('show');
@@ -899,11 +921,77 @@ let CONTAS=[
   {fornecedor:'Posto Ipiranga',descricao:'Abastecimento frota',valor:4300,venc:'2026-07-20',status:'agendado'},
   {fornecedor:'Contjet Contabilidade',descricao:'Honorários julho',valor:2200,venc:'2026-07-10',status:'pago'}
 ];
+/* Boletos emitidos / Contas a Receber — posição consolidada em 12/08/2026.
+   Fontes: "Programação Atualizada de Recebimentos via Boletos" (Financeiro, 02/07),
+   "Videl | Boletos vencidos – Programação de pagamento" (11/08),
+   "RES: Provisão de pagamento Videl" (GramTok, 12/08) e "Emissão boleto Grupo Gera" (11/08). */
+const AR_POSICAO='2026-08-12';
+let BOLETOS=[
+  // AGRÍCOLA FERRARI — matriz (Bradesco)
+  {cliente:'Agrícola Ferrari Ltda.',cnpj:'91.748.483/0001-62',oc:'OC022',cte:'',banco:'Bradesco',valor:27844.40,venc:'2026-08-14',pgto:'',status:'aberto',obs:'A vencer em 2 dias — confirmar provisão com o cliente.'},
+  {cliente:'Agrícola Ferrari Ltda.',cnpj:'91.748.483/0001-62',oc:'OC023',cte:'',banco:'Bradesco',valor:17033.50,venc:'2026-08-15',pgto:'',status:'aberto',obs:'A vencer em 3 dias.'},
+  // AGRÍCOLA FERRARI — unidade Canarana/MT (Bradesco)
+  {cliente:'Agrícola Ferrari — Canarana/MT',cnpj:'91.748.483/0004-05',oc:'OC025',cte:'',banco:'Bradesco',valor:15840.00,venc:'2026-08-17',pgto:'',status:'aberto',obs:'A vencer em 5 dias.'},
+
+  // GRAMTOK / TOK BOTHANICO — vencidos (posição 11/08, confirmada pelo cliente em 12/08)
+  {cliente:'GramTok Distribuição e Logística',cnpj:'27.483.260/0001-11',oc:'OC063',cte:'166',banco:'Inter',valor:4760.65,venc:'2026-07-31',pgto:'',status:'acordo',obs:'No acordo de parcelamento semanal proposto em 12/08.'},
+  {cliente:'GramTok Distribuição e Logística',cnpj:'27.483.260/0001-11',oc:'OC054/01',cte:'161',banco:'Inter',valor:8303.81,venc:'2026-07-31',pgto:'',status:'acordo',obs:'1ª parcela do frete dividido em 3 boletos.'},
+  {cliente:'GramTok Distribuição e Logística',cnpj:'27.483.260/0001-11',oc:'OC039',cte:'145',banco:'Inter',valor:5019.00,venc:'2026-08-03',pgto:'',status:'acordo',obs:''},
+  {cliente:'GramTok Distribuição e Logística',cnpj:'27.483.260/0001-11',oc:'OC070/01',cte:'179',banco:'Inter',valor:7340.91,venc:'2026-08-03',pgto:'',status:'acordo',obs:''},
+  {cliente:'GramTok Distribuição e Logística',cnpj:'27.483.260/0001-11',oc:'OC040',cte:'142',banco:'Inter',valor:8431.85,venc:'2026-08-03',pgto:'',status:'acordo',obs:''},
+  {cliente:'GramTok Distribuição e Logística',cnpj:'27.483.260/0001-11',oc:'OC041',cte:'143',banco:'Inter',valor:9726.17,venc:'2026-08-03',pgto:'',status:'acordo',obs:''},
+  {cliente:'GramTok Distribuição e Logística',cnpj:'27.483.260/0001-11',oc:'OC054/02',cte:'161',banco:'Inter',valor:8303.81,venc:'2026-08-04',pgto:'',status:'acordo',obs:'2ª parcela.'},
+  {cliente:'GramTok Distribuição e Logística',cnpj:'27.483.260/0001-11',oc:'OC043',cte:'148',banco:'Inter',valor:4057.42,venc:'2026-08-07',pgto:'',status:'acordo',obs:''},
+  {cliente:'GramTok Distribuição e Logística',cnpj:'27.483.260/0001-11',oc:'OC054/03',cte:'161',banco:'Inter',valor:8303.81,venc:'2026-08-10',pgto:'',status:'acordo',obs:'3ª parcela.'},
+  {cliente:'GramTok Distribuição e Logística',cnpj:'27.483.260/0001-11',oc:'OC006',cte:'122',banco:'Inter',valor:5818.00,venc:'2026-08-11',pgto:'2026-08-12',status:'programado',obs:'Cliente confirmou pagamento para 12/08. Boleto reemitido — posição de 02/07 previa R$ 2.900,00 com venc. 06/07.'},
+  {cliente:'GramTok Distribuição e Logística',cnpj:'27.483.260/0001-11',oc:'OC070/02',cte:'179',banco:'Inter',valor:7340.91,venc:'2026-08-11',pgto:'',status:'acordo',obs:'2ª parcela.'},
+
+  // GRUPO GERA / RGD SERVIÇOS O&M — boleto emitido em 11/08
+  {cliente:'RGD Serviços O&M (Grupo Gera)',cnpj:'57.273.475/0002-50',oc:'OC090',cte:'212',banco:'—',valor:4645.00,venc:'2026-09-10',pgto:'',status:'aberto',obs:'Emitido 11/08 com prazo 30DDL após a descarga — vencimento estimado, confirmar com o Financeiro.'},
+
+  // Cobranças em aberto sem valor informado na fonte
+  {cliente:'Authomathika / ATK',cnpj:'17.516.590/0001-02',oc:'OC037',cte:'141',banco:'—',valor:null,venc:'2026-08-03',pgto:'',status:'a_confirmar',obs:'Cobrança reenviada em 03/08 sem retorno. Valor do boleto não consta no e-mail — confirmar com o Financeiro.'},
+  {cliente:'Construcril',cnpj:'',oc:'OC038',cte:'144',banco:'—',valor:null,venc:'2026-08-03',pgto:'',status:'a_confirmar',obs:'Cobrança reenviada em 03/08 ao financeiro do cliente. Valor não consta no e-mail.'},
+
+  // Posição de 02/07 — pendente de baixa/conferência
+  {cliente:'ATK Construções e Serviços',cnpj:'17.516.590/0001-02',oc:'OC015',cte:'',banco:'Inter',valor:4500.00,venc:'2026-07-05',pgto:'',status:'a_confirmar',obs:'Posição de 02/07 — conferir baixa no banco.'},
+  {cliente:'ATK Construções e Serviços',cnpj:'17.516.590/0001-02',oc:'OC017',cte:'',banco:'Inter',valor:9000.00,venc:'2026-07-08',pgto:'',status:'a_confirmar',obs:'Posição de 02/07 — conferir baixa no banco.'},
+  {cliente:'ATK Construções e Serviços',cnpj:'17.516.590/0001-02',oc:'OC020',cte:'',banco:'Bradesco',valor:3500.00,venc:'2026-07-10',pgto:'',status:'a_confirmar',obs:'Posição de 02/07 — conferir baixa no banco.'},
+  {cliente:'ATK Construções e Serviços',cnpj:'17.516.590/0001-02',oc:'OC026',cte:'',banco:'Bradesco',valor:7000.00,venc:'2026-07-19',pgto:'',status:'a_confirmar',obs:'Posição de 02/07 — conferir baixa no banco.'},
+  {cliente:'AVT Energy — Três Lagoas',cnpj:'46.413.006/0002-72',oc:'OC027',cte:'128',banco:'Inter',valor:3550.00,venc:'2026-07-10',pgto:'',status:'a_confirmar',obs:'Posição de 02/07 — conferir baixa no banco.'},
+  {cliente:'AVT Energy — Três Lagoas',cnpj:'46.413.006/0002-72',oc:'OC032',cte:'',banco:'Inter',valor:3400.00,venc:'2026-07-13',pgto:'',status:'a_confirmar',obs:'Posição de 02/07 — conferir baixa no banco.'},
+  {cliente:'AVT Energy — Três Lagoas',cnpj:'46.413.006/0002-72',oc:'OC028',cte:'129',banco:'Bradesco',valor:5000.00,venc:'2026-07-08',pgto:'',status:'a_confirmar',obs:'Posição de 02/07 — conferir baixa no banco.'},
+  {cliente:'AVT Energy — Nova Odessa',cnpj:'46.413.006/0003-53',oc:'OC030',cte:'',banco:'Inter',valor:8800.00,venc:'2026-07-13',pgto:'',status:'a_confirmar',obs:'Posição de 02/07 — conferir baixa no banco.'},
+  {cliente:'AVT Energy — Nova Odessa',cnpj:'46.413.006/0003-53',oc:'OC033',cte:'',banco:'Inter',valor:3400.00,venc:'2026-07-13',pgto:'',status:'a_confirmar',obs:'Posição de 02/07 — conferir baixa no banco.'},
+  {cliente:'AVT Energy — Nova Odessa',cnpj:'46.413.006/0003-53',oc:'OC029',cte:'131',banco:'Bradesco',valor:8200.00,venc:'2026-07-08',pgto:'',status:'a_confirmar',obs:'Posição de 02/07 — conferir baixa no banco.'},
+
+  // Recebimento confirmado
+  {cliente:'5G Energia (pedido Modular)',cnpj:'47.149.673/0001-71',oc:'',cte:'',banco:'—',valor:null,venc:'',pgto:'2026-07-17',status:'pago',obs:'Comprovante recebido e baixa confirmada pelo Financeiro em 17/07.'}
+];
+/* Acordo proposto pela GramTok (Igor Lopes, CFO) em 12/08/2026 para o saldo vencido
+   de R$ 71.588,34 — 12 parcelas semanais. Ainda pendente de aceite formal da Videl. */
+const ACORDO_GRAMTOK={
+  cliente:'GramTok Distribuição e Logística',
+  saldo:71588.34,
+  situacao:'Proposta recebida em 12/08 — aguardando aceite da Videl',
+  parcelas:[
+    {n:1,data:'2026-08-21',valor:5965.75},{n:2,data:'2026-08-28',valor:5965.69},
+    {n:3,data:'2026-09-04',valor:5965.69},{n:4,data:'2026-09-11',valor:5965.69},
+    {n:5,data:'2026-09-18',valor:5965.69},{n:6,data:'2026-09-25',valor:5965.69},
+    {n:7,data:'2026-10-02',valor:5965.69},{n:8,data:'2026-10-09',valor:5965.69},
+    {n:9,data:'2026-10-16',valor:5965.69},{n:10,data:'2026-10-23',valor:5965.69},
+    {n:11,data:'2026-10-30',valor:5965.69},{n:12,data:'2026-11-06',valor:5965.69}
+  ]
+};
 const EMB_ST={programado:{n:'Programado',c:'var(--s-afazer)'},em_coleta:{n:'Em coleta',c:'var(--p-media)'},em_transito:{n:'Em trânsito',c:'var(--s-andamento)'},entregue:{n:'Entregue',c:'var(--s-concluido)'}};
 const LEAD_ST={novo:{n:'Novo',c:'var(--s-afazer)'},em_negociacao:{n:'Em negociação',c:'var(--s-andamento)'},aprovado:{n:'Aprovado',c:'var(--s-concluido)'},perdido:{n:'Perdido',c:'var(--s-atrasado)'}};
 const AP_ST={a_pagar:{n:'A pagar',c:'var(--p-media)'},agendado:{n:'Agendado',c:'var(--s-andamento)'},pago:{n:'Pago',c:'var(--s-concluido)'},vencido:{n:'Vencido',c:'var(--s-atrasado)'}};
 
+const AR_ST={aberto:{n:'A vencer',c:'var(--s-afazer)'},programado:{n:'Pgto programado',c:'var(--s-andamento)'},acordo:{n:'Em acordo',c:'var(--p-media)'},a_confirmar:{n:'A confirmar',c:'var(--muted)'},pago:{n:'Recebido',c:'var(--s-concluido)'},vencido:{n:'Vencido',c:'var(--s-atrasado)'}};
+
 function brl(n){return 'R$ '+(+n||0).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0});}
+// Boletos exigem centavos — o valor tem que bater com o título.
+function brl2(n){return n==null?'—':'R$ '+(+n||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function vpill(m){return `<span class="stpill" style="color:${m.c};background:color-mix(in srgb,${m.c} 12%,#fff)"><span class="sd" style="background:${m.c}"></span>${m.n}</span>`;}
 function isVenc(d){const x=parseDate(d);if(!x)return false;const t=new Date();t.setHours(0,0,0,0);return x<t;}
 function vEmpty(n){return `<tr><td colspan="${n}" style="text-align:center;color:var(--muted);padding:20px">Nenhum registro.</td></tr>`;}
@@ -922,7 +1010,12 @@ function renderVidel(){
     {v:brl(frete),l:'Frete total',sub:'embarques ativos',c:'var(--ink)'},
     {v:leadsAb,l:'Leads abertos',sub:'em negociação',c:'var(--a-comercial)'}
   ];
+  const arAbertos=BOLETOS.filter(b=>b.status!=='pago');
+  const arTotal=arAbertos.reduce((s,b)=>s+(+b.valor||0),0);
+  const arVencido=arAbertos.filter(b=>arStatus(b)==='vencido'||b.status==='acordo').reduce((s,b)=>s+(+b.valor||0),0);
   if(fin)kpiArr.push(
+    {v:brl(arTotal),l:'Boletos a receber',sub:arAbertos.length+' títulos em aberto',c:'var(--s-concluido)'},
+    {v:brl(arVencido),l:'Recebíveis vencidos',sub:arVencido?'cobrança ativa':'em dia',c:'var(--s-atrasado)'},
     {v:brl(apTotal),l:'Contas a pagar',sub:'em aberto',c:'var(--p-media)'},
     {v:apVenc,l:'Vencidas',sub:apVenc?'ação necessária':'em dia',c:'var(--s-atrasado)'});
   document.getElementById('videlKpis').innerHTML=kpiArr.map(k=>`<div class="kpi" style="--kc:${k.c}"><div class="kpi-v">${k.v}</div><div class="kpi-l">${k.l}</div><div class="kpi-sub">${k.sub}</div></div>`).join('');
@@ -941,8 +1034,12 @@ function renderVidel(){
     <td class="vmoney">${brl(l.valor)}</td><td>${fmtBR(l.aberto)}</td>
     <td>${vpill(LEAD_ST[l.status]||{n:l.status,c:'var(--muted)'})}</td></tr>`).join('')||vEmpty(6);
 
-  // Contas a Pagar: só renderiza (no DOM) se este acesso puder ver — senão nem chega no navegador
+  // Contas a Receber / Contas a Pagar: só renderizam (no DOM) se este acesso puder ver — senão nem chegam no navegador
   gateVidel();
+  if(fin){ renderBoletos(); }
+  else { document.getElementById('arRows').innerHTML=''; document.getElementById('acRows').innerHTML='';
+         document.getElementById('arCount').textContent=''; document.getElementById('acCount').textContent='';
+         document.getElementById('acNote').textContent=''; document.getElementById('arPos').textContent=''; }
   if(fin){
     document.getElementById('apCount').textContent=CONTAS.length;
     document.getElementById('apRows').innerHTML=CONTAS.map(c=>{const venc=c.status!=='pago'&&isVenc(c.venc);
@@ -953,6 +1050,42 @@ function renderVidel(){
   } else {
     document.getElementById('apRows').innerHTML=''; document.getElementById('apCount').textContent='';
   }
+}
+// Vencido é estado derivado da data: um boleto em aberto que passou do vencimento
+// aparece como vencido mesmo que ninguém tenha mexido no cadastro.
+function arStatus(b){
+  if(b.status==='pago')return 'pago';
+  if(b.status==='acordo')return 'acordo';
+  if(b.pgto)return 'programado';
+  return isVenc(b.venc)?'vencido':b.status;
+}
+function renderBoletos(){
+  const abertos=BOLETOS.filter(b=>b.status!=='pago');
+  document.getElementById('arCount').textContent=abertos.length;
+  document.getElementById('arPos').textContent='posição de '+fmtBR(AR_POSICAO);
+  document.getElementById('arRows').innerHTML=BOLETOS.map(b=>{
+    const st=arStatus(b), meta=AR_ST[st]||{n:st,c:'var(--muted)'};
+    // título em acordo continua vencido até o acordo ser cumprido — a data tem que gritar
+    const alerta=st==='vencido'||(st==='acordo'&&isVenc(b.venc));
+    const doc=[b.oc,b.cte?'CT-e '+b.cte:''].filter(Boolean).join(' / ')||'—';
+    return `<tr title="${(b.obs||'').replace(/"/g,'&quot;')}">
+      <td style="font-weight:700">${b.cliente}${b.cnpj?`<div style="font-weight:400;font-size:11px;color:var(--muted)">${b.cnpj}</div>`:''}</td>
+      <td>${doc}</td><td>${b.banco||'—'}</td>
+      <td class="vmoney">${brl2(b.valor)}</td>
+      <td style="${alerta?'color:var(--s-atrasado);font-weight:700':''}">${b.venc?fmtBR(b.venc):'—'}${alerta?' ⚠':''}</td>
+      <td>${b.pgto?fmtBR(b.pgto):'—'}</td>
+      <td>${vpill(meta)}</td></tr>`;
+  }).join('')||vEmpty(7);
+
+  const ac=ACORDO_GRAMTOK;
+  document.getElementById('acCount').textContent=ac.parcelas.length;
+  document.getElementById('acNote').innerHTML=`<b>${ac.cliente}</b> — saldo vencido de <b>${brl2(ac.saldo)}</b> em ${ac.parcelas.length} parcelas semanais. ${ac.situacao}.`;
+  document.getElementById('acRows').innerHTML=ac.parcelas.map(p=>{
+    const meta=isVenc(p.data)?AR_ST.vencido:AR_ST.aberto;
+    return `<tr><td style="font-weight:700">${p.n}/${ac.parcelas.length}</td>
+      <td>${fmtBR(p.data)}</td><td class="vmoney">${brl2(p.valor)}</td>
+      <td>${vpill(meta)}</td></tr>`;
+  }).join('')||vEmpty(4);
 }
 function mapLead(s){s=(s||'').toLowerCase();if(/aprov|ganho|fech/.test(s))return'aprovado';if(/perd|cancel/.test(s))return'perdido';if(/negoci|andam/.test(s))return'em_negociacao';return'novo';}
 function mapAP(s){s=(s||'').toLowerCase();if(/pago|quit|baix/.test(s))return'pago';if(/agend/.test(s))return'agendado';if(/venc|atras/.test(s))return'vencido';return'a_pagar';}
@@ -970,7 +1103,7 @@ async function videlSync(manual){
     if(Array.isArray(qt.data))LEADS=qt.data.map(q=>({cliente:q.cliente_nome||q.cliente,rota:((q.origem&&q.origem.cidade)||'')+' → '+((q.destino&&q.destino.cidade)||''),carga:q.carga||q.tipo_carga||'',valor:+q.valor||+q.valor_frete||0,aberto:(q.created_at||q.data||'').slice(0,10),status:mapLead(q.status)}));
     if(Array.isArray(ap.data))CONTAS=ap.data.map(c=>({fornecedor:c.fornecedor||c.favorecido||c.nome,descricao:c.descricao||'',valor:+c.valor||0,venc:(c.vencimento||c.due_date||'').slice(0,10),status:mapAP(c.status)}));
     chip.className='chip live';chip.innerHTML='<span class="dot"></span> Ao vivo';
-    conn.textContent='Embarques · Leads · Contas a Pagar — ao vivo da plataforma Videl';
+    conn.textContent='Embarques · Leads · Boletos · Contas a Pagar — ao vivo da plataforma Videl';
     renderVidel(); if(manual)toast('✓ Plataforma Videl atualizada!');
   }catch(e){ chip.className='chip demo';chip.textContent='⚠ falhou'; if(manual)toast('⚠ Videl: '+e.message); }
 }
