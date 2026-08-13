@@ -102,7 +102,7 @@ function doGet(e) {
     if (!acc.ok) {
       return json({ ok: true, acesso: { ok: false }, atividades: [] });
     }
-    var ativ = buildAtividades(ss);
+    var ativ = atividadesCached(ss);
     if (acc.escopo.indexOf('*') < 0) {
       ativ = ativ.filter(function (a) { return acc.escopo.indexOf(a.area) >= 0; });
     }
@@ -115,6 +115,21 @@ function doGet(e) {
   } catch (err) {
     return json({ ok: false, erro: String(err) });
   }
+}
+
+/* Cache do consolidado: buildAtividades abre a MASTER + 7 planilhas de área
+   (openById é a parte mais lenta do doGet). O cache guarda o consolidado
+   BRUTO por CACHE_SEGUNDOS; o filtro por escopo/pessoa continua sendo feito
+   por request, então o controle de acesso não é afetado. */
+var CACHE_SEGUNDOS = 90;
+function atividadesCached(ss) {
+  var cache = CacheService.getScriptCache();
+  var hit = cache.get('ativ_v1');
+  if (hit) { try { return JSON.parse(hit); } catch (e) {} }
+  var ativ = buildAtividades(ss);
+  // acima de 100KB o CacheService rejeita o put — segue funcionando sem cache
+  try { cache.put('ativ_v1', JSON.stringify(ativ), CACHE_SEGUNDOS); } catch (e) {}
+  return ativ;
 }
 
 // Rode uma vez (menu Executar) para ver os links prontos de cada PESSOA no log.
@@ -167,7 +182,11 @@ var CORES = {
 
 function num(v, def) {
   if (v === '' || v === null || v === undefined) return def === undefined ? 0 : def;
-  var n = Number(String(v).replace(',', '.'));
+  if (typeof v === 'number') return isNaN(v) ? (def === undefined ? 0 : def) : v;
+  var s = String(v).trim();
+  // pt-BR: "1.234,56" → 1234.56 (o replace simples de vírgula gerava NaN)
+  if (s.indexOf(',') !== -1) s = s.replace(/\./g, '').replace(',', '.');
+  var n = Number(s);
   return isNaN(n) ? (def === undefined ? 0 : def) : n;
 }
 
@@ -233,12 +252,29 @@ function demandRows(ss) {
   return [];
 }
 
+// Um cabeçalho "casa" com um token quando é igual a ele ou o contém como
+// palavra inteira (limitada por _ ou pontuação). Substring pura dava falso
+// positivo: o token 'id' casava com 'prioridade' e, em planilha de área sem
+// coluna ID, todas as linhas herdavam o mesmo "id" e eram descartadas na
+// deduplicação.
+function keyMatches(key, token) {
+  if (key === token) return true;
+  var i = key.indexOf(token);
+  while (i !== -1) {
+    var antes = i === 0 || !/[a-z0-9]/.test(key.charAt(i - 1));
+    var depois = i + token.length === key.length || !/[a-z0-9]/.test(key.charAt(i + token.length));
+    if (antes && depois) return true;
+    i = key.indexOf(token, i + 1);
+  }
+  return false;
+}
+
 // Como pick(), mas preserva o valor bruto (ex.: Date) — usado para datas.
 function pickRaw(obj, tokens) {
   var keys = Object.keys(obj);
   for (var t = 0; t < tokens.length; t++) {
     for (var k = 0; k < keys.length; k++) {
-      if (keys[k].indexOf(tokens[t]) !== -1) {
+      if (keyMatches(keys[k], tokens[t])) {
         var v = obj[keys[k]];
         if (v !== '' && v !== null && v !== undefined) return v;
       }
@@ -247,12 +283,12 @@ function pickRaw(obj, tokens) {
   return '';
 }
 
-// Pega o 1º valor cujo cabeçalho CONTÉM um dos tokens (após normalização).
+// Pega o 1º valor cujo cabeçalho casa com um dos tokens (após normalização).
 function pick(obj, tokens) {
   var keys = Object.keys(obj);
   for (var t = 0; t < tokens.length; t++) {
     for (var k = 0; k < keys.length; k++) {
-      if (keys[k].indexOf(tokens[t]) !== -1) {
+      if (keyMatches(keys[k], tokens[t])) {
         var v = obj[keys[k]];
         if (v !== '' && v !== null && v !== undefined) return String(v).trim();
       }
@@ -472,48 +508,62 @@ function menuCriarAcessos() {
   ui.alert('Moita Rev1', 'Aba "Acessos" criada com o time e chaves geradas. Ajuste as pessoas se precisar, depois reimplante e rode "gerarLinks".', ui.ButtonSet.OK);
 }
 function gerarChave(nome) {
+  // A chave viaja na URL e o endpoint é público: usa UUID (não Math.random)
+  // e 12 caracteres para tornar chute/força bruta impraticável.
   var p = norm(nome).replace(/[^a-z]/g, '').slice(0, 3) || 'usr';
-  var chars = 'abcdefghijkmnpqrstuvwxyz23456789', s = '';
-  for (var i = 0; i < 6; i++) s += chars.charAt(Math.floor(Math.random() * chars.length));
+  var s = Utilities.getUuid().replace(/-/g, '').slice(0, 12);
   return p + '-' + s;
 }
 
 function consolidarMASTER() {
-  var ss = SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
-  var sh = demandSheet(ss);
-  var values = sh.getDataRange().getValues();
-  var headers = values[0].map(norm), width = headers.length;
-  var col = {
-    id: hIdx(headers, ['id']), area: hIdx(headers, ['area']), demanda: hIdx(headers, ['demanda', 'tarefa']),
-    resp: hIdx(headers, ['responsavel', 'executa']), gestor: hIdx(headers, ['gestor']),
-    prio: hIdx(headers, ['prioridade']), abertura: hIdx(headers, ['abertura']), prazo: hIdx(headers, ['prazo']),
-    status: hIdx(headers, ['status']), pct: hIdx(headers, ['concluido', 'percentual', 'pct']),
-    obs: hIdx(headers, ['proxima_acao', 'observacao', 'obs'])
-  };
-  var existing = {};
-  for (var i = 1; i < values.length; i++) { var id = norm(values[i][col.id]); if (id) existing[id] = true; }
-  var added = 0;
-  AREA_SHEETS.forEach(function (cfg) {
-    var s2; try { s2 = SpreadsheetApp.openById(cfg.id); } catch (e) { return; }
-    demandRows(s2).forEach(function (r, i) {
-      var a = toAtiv(r, i, cfg);
-      var key = norm(a.id);
-      if (!a.titulo || existing[key]) return;
-      existing[key] = true;
-      var row = new Array(width).fill('');
-      set(row, col.id, a.id); set(row, col.area, AREA_NOME[a.area] || a.area); set(row, col.demanda, a.titulo);
-      set(row, col.resp, a.resp); set(row, col.gestor, a.gestor); set(row, col.prio, a.prioridade);
-      set(row, col.abertura, a.abertura); set(row, col.prazo, a.prazo); set(row, col.status, STATUS_LABEL[a.status] || a.status);
-      set(row, col.pct, a.pct != null ? a.pct + '%' : ''); set(row, col.obs, a.obs);
-      sh.appendRow(row); added++;
+  // Trava: com o acionador por tempo ativo, duas execuções simultâneas liam o
+  // mesmo "existing" e duplicavam linhas na MASTER.
+  var lock = LockService.getScriptLock();
+  if (!lock.tryLock(30000)) return 0;
+  try {
+    var ss = SPREADSHEET_ID ? SpreadsheetApp.openById(SPREADSHEET_ID) : SpreadsheetApp.getActiveSpreadsheet();
+    var sh = demandSheet(ss);
+    var values = sh.getDataRange().getValues();
+    var headers = values[0].map(norm), width = headers.length;
+    var col = {
+      id: hIdx(headers, ['id']), area: hIdx(headers, ['area']), demanda: hIdx(headers, ['demanda', 'tarefa']),
+      resp: hIdx(headers, ['responsavel', 'executa']), gestor: hIdx(headers, ['gestor']),
+      prio: hIdx(headers, ['prioridade']), abertura: hIdx(headers, ['abertura']), prazo: hIdx(headers, ['prazo']),
+      status: hIdx(headers, ['status']), pct: hIdx(headers, ['concluido', 'percentual', 'pct']),
+      obs: hIdx(headers, ['proxima_acao', 'observacao', 'obs'])
+    };
+    var existing = {};
+    for (var i = 1; i < values.length; i++) { var id = norm(values[i][col.id]); if (id) existing[id] = true; }
+    var novas = [];
+    AREA_SHEETS.forEach(function (cfg) {
+      var s2; try { s2 = SpreadsheetApp.openById(cfg.id); } catch (e) { return; }
+      demandRows(s2).forEach(function (r, i) {
+        var a = toAtiv(r, i, cfg);
+        var key = norm(a.id);
+        if (!a.titulo || existing[key]) return;
+        existing[key] = true;
+        var row = new Array(width).fill('');
+        set(row, col.id, a.id); set(row, col.area, AREA_NOME[a.area] || a.area); set(row, col.demanda, a.titulo);
+        set(row, col.resp, a.resp); set(row, col.gestor, a.gestor); set(row, col.prio, a.prioridade);
+        set(row, col.abertura, a.abertura); set(row, col.prazo, a.prazo); set(row, col.status, STATUS_LABEL[a.status] || a.status);
+        set(row, col.pct, a.pct != null ? a.pct + '%' : ''); set(row, col.obs, a.obs);
+        novas.push(row);
+      });
     });
-  });
-  return added;
+    // Escrita em lote: appendRow por linha custa ~1s cada no Apps Script.
+    if (novas.length) {
+      sh.getRange(sh.getLastRow() + 1, 1, novas.length, width).setValues(novas);
+      try { CacheService.getScriptCache().remove('ativ_v1'); } catch (e) {}
+    }
+    return novas.length;
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 var AREA_NOME = { adm: 'Administrativo', rh: 'RH', financeiro: 'Financeiro', logistica: 'Logística', comercial: 'Comercial', marketing: 'Marketing', ti: 'TI/DEV', geral: 'Geral' };
 var STATUS_LABEL = { afazer: 'A fazer', andamento: 'Em andamento', bloqueado: 'Bloqueado', concluido: 'Concluído' };
-function hIdx(headers, tokens) { for (var t = 0; t < tokens.length; t++) for (var k = 0; k < headers.length; k++) if (headers[k].indexOf(tokens[t]) !== -1) return k; return -1; }
+function hIdx(headers, tokens) { for (var t = 0; t < tokens.length; t++) for (var k = 0; k < headers.length; k++) if (keyMatches(headers[k], tokens[t])) return k; return -1; }
 function set(row, idx, val) { if (idx >= 0) row[idx] = val; }
 function demandSheet(ss) {
   var names = ['Atividades', 'MASTER', 'Master', 'Demandas', 'Controle'];
@@ -568,6 +618,13 @@ function enviarFeedbackSemanal() {
   return enviados;
 }
 
+// Nomes/observações vêm de células editáveis por toda a equipe — escapa antes
+// de interpolar no HTML do e-mail.
+function esc(s) {
+  return String(s === null || s === undefined ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 function montarEmailFeedback(gestor, list) {
   var total = list.length;
   var concl = list.filter(function (a) { return a.status === 'concluido'; }).length;
@@ -585,7 +642,7 @@ function montarEmailFeedback(gestor, list) {
     var m = byP[r];
     var tm = m.trN ? Math.round(m.trSum / m.trN) + 'd' : '—';
     var ag = m.agN ? Math.round(m.agSum / m.agN) + 'd' : '—';
-    return '<tr><td style="padding:6px;border-bottom:1px solid #eee">' + m.resp + '</td>' +
+    return '<tr><td style="padding:6px;border-bottom:1px solid #eee">' + esc(m.resp) + '</td>' +
       '<td align="center" style="padding:6px;border-bottom:1px solid #eee">' + m.total + '</td>' +
       '<td align="center" style="padding:6px;border-bottom:1px solid #eee">' + m.concl + '</td>' +
       '<td align="center" style="padding:6px;border-bottom:1px solid #eee;color:' + (m.atras ? '#c0392b' : '#999') + '">' + m.atras + '</td>' +
@@ -594,7 +651,7 @@ function montarEmailFeedback(gestor, list) {
   }).join('');
   function card(l, v, c) { return '<td style="padding:12px 16px;border:1px solid #eaeaea;border-radius:8px;text-align:center"><div style="font-size:24px;font-weight:bold;color:' + (c || '#333') + '">' + v + '</div><div style="font-size:11px;color:#777">' + l + '</div></td>'; }
   return '<div style="font-family:Arial,Helvetica,sans-serif;color:#222;max-width:660px">' +
-    '<h2 style="color:#c12026;margin:0 0 2px">Feedback semanal — ' + gestor + '</h2>' +
+    '<h2 style="color:#c12026;margin:0 0 2px">Feedback semanal — ' + esc(gestor) + '</h2>' +
     '<p style="color:#777;margin:0 0 16px;font-size:13px">Videl Transporte &amp; Logística · Controle de Demandas</p>' +
     '<table cellspacing="8"><tr>' + card('Demandas', total) + card('Concluídas', concl, '#0a7d34') + card('Atrasadas', atras.length, atras.length ? '#c0392b' : '#333') + card('Tempo de resposta', tMed, '#1f6feb') + '</tr></table>' +
     '<h3 style="margin:18px 0 6px">Por pessoa</h3>' +
