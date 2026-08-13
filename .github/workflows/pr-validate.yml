@@ -1,0 +1,41 @@
+name: Validar PR
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Páginas obrigatórias existem
+        run: |
+          for f in index.html moita-rev1.html painel-gestao.html; do
+            test -f "$f" || { echo "::error file=$f::arquivo obrigatório ausente"; exit 1; }
+          done
+
+      - name: JSON válido
+        run: |
+          erro=0
+          while IFS= read -r -d '' f; do
+            python3 -c "import json,sys; json.load(open(sys.argv[1]))" "$f" \
+              || { echo "::error file=$f::JSON inválido"; erro=1; }
+          done < <(find . -name '*.json' -not -path './.git/*' -print0)
+          exit $erro
+
+      - name: Segredos não podem entrar no repo (público)
+        run: |
+          padrao='(AIza[0-9A-Za-z_-]{35}|ghp_[0-9A-Za-z]{36}|xox[baprs]-[0-9A-Za-z-]{10,}|-----BEGIN [A-Z ]*PRIVATE KEY-----)'
+          if grep -rInE "$padrao" --exclude-dir=.git --exclude-dir=.github .; then
+            echo "::error::possível segredo commitado — remova antes do merge"
+            exit 1
+          fi
+          echo "Nenhum segredo detectado."

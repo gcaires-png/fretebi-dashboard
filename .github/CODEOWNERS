@@ -1,0 +1,18 @@
+# Donos do código — quem é chamado para revisar cada parte.
+# Conta pessoal não tem Teams: só dá para citar usuários (@usuario).
+# Ao adicionar gente da Videl no GitHub, troque/acrescente os @ abaixo.
+
+# Padrão: tudo passa pela diretoria/TI
+*                       @gcaires-png
+
+# Painel de gestão e regras de acesso por área — sensível
+/painel-gestao.html     @gcaires-png
+/integracao/            @gcaires-png
+
+# Motor de documentos fiscais e regras de seguro
+/cte-drafts/            @gcaires-png
+/insurance-rules.json   @gcaires-png
+/proxy/                 @gcaires-png
+
+# Automação e proteção de branch
+/.github/               @gcaires-png
