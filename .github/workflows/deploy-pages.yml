@@ -32,6 +32,7 @@ jobs:
           cp index.html _site/index.html
           cp moita-rev1.html _site/moita-rev1.html
           cp painel-gestao.html _site/painel-gestao.html
+          cp -r assets _site/assets
           cp insurance-rules.json _site/insurance-rules.json 2>/dev/null || true
           cp -r cte-drafts _site/cte-drafts 2>/dev/null || true
 
