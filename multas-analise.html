@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Multas e Pontuação — FSH0F15 | Moita Rev1</title>
+<style>
+:root{--bg:#080c16;--card:#0f1729;--card2:#162036;--border:#1a2744;--accent:#00d4ff;--green:#00ff88;--orange:#ff9f43;--red:#ff4757;--purple:#a55eea;--text:#e8ecf4;--muted:#5c6b8a}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',ui-sans-serif,-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 18px 60px}
+header{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+h1{font-size:22px;font-weight:700;letter-spacing:-.2px}
+h2{font-size:16px;font-weight:700;margin:34px 0 12px;display:flex;align-items:center;gap:8px}
+h2::before{content:"";width:3px;height:15px;background:var(--accent);border-radius:2px}
+h3{font-size:13px;font-weight:700;margin:18px 0 8px;color:var(--accent);text-transform:uppercase;letter-spacing:.6px}
+.sub{color:var(--muted);font-size:13px;margin-top:4px}
+p{margin:8px 0}
+.grid{display:grid;gap:12px}
+.k4{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.k2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.kpi .lab{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.7px}
+.kpi .val{font-size:26px;font-weight:700;margin:6px 0 2px;letter-spacing:-.5px}
+.kpi .hint{font-size:12px;color:var(--muted)}
+.red{color:var(--red)}.green{color:var(--green)}.orange{color:var(--orange)}.accent{color:var(--accent)}.purple{color:var(--purple)}.muted{color:var(--muted)}
+.alert{border-left:3px solid var(--red);background:rgba(255,71,87,.08);border-radius:8px;padding:14px 16px;margin:14px 0}
+.alert.warn{border-left-color:var(--orange);background:rgba(255,159,67,.08)}
+.alert.ok{border-left-color:var(--green);background:rgba(0,255,136,.07)}
+.alert .t{font-weight:700;margin-bottom:4px}
+.tw{overflow-x:auto;border:1px solid var(--border);border-radius:10px;background:var(--card)}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:820px}
+th{text-align:left;padding:10px 12px;font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);border-bottom:1px solid var(--border);white-space:nowrap;background:var(--card2)}
+td{padding:10px 12px;border-bottom:1px solid rgba(26,39,68,.6);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(0,212,255,.04)}
+td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+th.num{text-align:right}
+.tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.t-gv{background:rgba(255,71,87,.16);color:var(--red)}
+.t-gr{background:rgba(255,159,67,.16);color:var(--orange)}
+.t-me{background:rgba(0,212,255,.14);color:var(--accent)}
+.t-nc{background:rgba(92,107,138,.18);color:var(--muted)}
+.pts{font-weight:700;font-variant-numeric:tabular-nums}
+.bar{height:10px;border-radius:6px;background:var(--card2);overflow:hidden;margin:10px 0 6px;position:relative}
+.bar>i{display:block;height:100%;border-radius:6px}
+ol,ul{margin:8px 0 8px 20px}
+li{margin:6px 0}
+.foot{margin-top:38px;padding-top:16px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
+code{background:var(--card2);padding:1px 6px;border-radius:4px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Análise de Multas e Pontuação — <span class="accent">FSH0F15</span></h1>
+  <div class="sub">JEEP/COMPASS LIMITED F H · Filtro: Não Pagas (A Vencer e Vencidas) · Período ago/2024 a ago/2026 · Consolidado por <strong>Moita Rev1</strong> em 19/08/2026</div>
+</header>
+
+<div class="alert">
+  <div class="t red">🚨 RISCO CRÍTICO — SUSPENSÃO DA CNH</div>
+  O condutor acumula <strong>60 pontos nos últimos 12 meses</strong> com <strong>4 infrações gravíssimas</strong>.
+  Pela Lei 14.071/2021, com 2 ou mais gravíssimas no período o limite cai para <strong>20 pontos</strong>.
+  O teto está ultrapassado em <strong>3x</strong>. Pagar a multa <u>não</u> retira ponto — só recurso deferido retira.
+</div>
+
+<h2>Panorama financeiro</h2>
+<div class="grid k4">
+  <div class="card kpi"><div class="lab">Total em aberto (veículo)</div><div class="val red">R$ 3.842,13</div><div class="hint">20 infrações não pagas</div></div>
+  <div class="card kpi"><div class="lab">Vencidas</div><div class="val orange">R$ 3.288,34</div><div class="hint">17 autos · sujeitos a juros/mora</div></div>
+  <div class="card kpi"><div class="lab">A vencer</div><div class="val green">R$ 553,79</div><div class="hint">3 autos · desconto ainda possível</div></div>
+  <div class="card kpi"><div class="lab">Atribuído ao infrator</div><div class="val">R$ 3.126,26</div><div class="hint">16 de 20 autos (4 sem condutor identificado)</div></div>
+</div>
+
+<h2>Pontuação na CNH</h2>
+<div class="grid k4">
+  <div class="card kpi"><div class="lab">Pontos — últimos 12 meses</div><div class="val red">60</div><div class="hint">12 infrações entre 20/08/2025 e 19/08/2026</div></div>
+  <div class="card kpi"><div class="lab">Limite aplicável</div><div class="val orange">20</div><div class="hint">4 gravíssimas no período → teto reduzido</div></div>
+  <div class="card kpi"><div class="lab">Excedente</div><div class="val red">+40</div><div class="hint">300% acima do limite</div></div>
+  <div class="card kpi"><div class="lab">Pontos totais em aberto</div><div class="val">68</div><div class="hint">soma das 16 infrações do infrator</div></div>
+</div>
+
+<div class="card" style="margin-top:12px">
+  <div class="muted" style="font-size:12px;text-transform:uppercase;letter-spacing:.7px">Ocupação do limite de 20 pontos</div>
+  <div class="bar"><i style="width:100%;background:linear-gradient(90deg,var(--orange),var(--red))"></i></div>
+  <div style="font-size:12px;color:var(--muted)">60 / 20 pontos — limite estourado. Só as 4 gravíssimas (28 pts) já ultrapassam o teto sozinhas.</div>
+</div>
+
+<h3>Regra de suspensão vigente (Lei 14.071/2021)</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Cenário nos últimos 12 meses</th><th class="num">Limite</th><th>Situação atual</th></tr></thead>
+<tbody>
+<tr><td>Nenhuma infração gravíssima</td><td class="num">40 pts</td><td class="muted">não se aplica</td></tr>
+<tr><td>Exatamente 1 infração gravíssima</td><td class="num">30 pts</td><td class="muted">não se aplica</td></tr>
+<tr><td><strong>2 ou mais infrações gravíssimas</strong></td><td class="num">20 pts</td><td class="red"><strong>← É O SEU CASO (4 gravíssimas)</strong></td></tr>
+<tr><td>Condutor com EAR (motorista profissional)</td><td class="num">40 pts</td><td class="orange">mesmo assim: 60 &gt; 40</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2>Infrações que contam pontos hoje (últimos 12 meses)</h2>
+<div class="tw">
+<table>
+<thead><tr><th>Data / hora</th><th>Dia</th><th>Infração</th><th>Auto</th><th>Natureza</th><th class="num">Pontos</th><th class="num">Valor</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>09/08/2026 17:31</td><td>Dom</td><td>Velocidade até 20%</td><td>1VA4741501</td><td><span class="tag t-me">Média</span></td><td class="num pts">4</td><td class="num">130,16</td><td class="green">A vencer</td></tr>
+<tr><td>24/04/2026 14:57</td><td>Sex</td><td>Velocidade até 20%</td><td>1VA3007241</td><td><span class="tag t-me">Média</span></td><td class="num pts">4</td><td class="num">130,16</td><td class="red">Vencida</td></tr>
+<tr><td>23/04/2026 16:06</td><td>Qui</td><td>Faixa exclusiva de ônibus</td><td>8TA1089253</td><td><span class="tag t-gv">Gravíssima</span></td><td class="num pts red">7</td><td class="num">293,47</td><td class="green">A vencer</td></tr>
+<tr><td>15/04/2026 17:23</td><td>Qua</td><td>Rodízio (local/horário)</td><td>8RA2553783</td><td><span class="tag t-me">Média</span></td><td class="num pts">4</td><td class="num">130,16</td><td class="green">A vencer</td></tr>
+<tr><td>03/03/2026 15:34</td><td>Ter</td><td>Faixa exclusiva de ônibus</td><td>8XA1918821</td><td><span class="tag t-gv">Gravíssima</span></td><td class="num pts red">7</td><td class="num">293,47</td><td class="red">Vencida</td></tr>
+<tr><td>14/02/2026 11:17</td><td class="orange"><strong>Sáb</strong></td><td>Faixa exclusiva de ônibus</td><td>8TA1080331</td><td><span class="tag t-gv">Gravíssima</span></td><td class="num pts red">7</td><td class="num">293,47</td><td class="red">Vencida</td></tr>
+<tr><td>14/02/2026 11:16</td><td class="orange"><strong>Sáb</strong></td><td>Faixa exclusiva de ônibus</td><td>2TA1005337</td><td><span class="tag t-gv">Gravíssima</span></td><td class="num pts red">7</td><td class="num">293,47</td><td class="red">Vencida</td></tr>
+<tr><td>29/01/2026 18:03</td><td>Qui</td><td>Velocidade até 20%</td><td>2VA1417704</td><td><span class="tag t-me">Média</span></td><td class="num pts">4</td><td class="num">130,16</td><td class="red">Vencida</td></tr>
+<tr><td>05/11/2025 17:23</td><td>Qua</td><td>Rodízio (local/horário)</td><td>8RA2250515</td><td><span class="tag t-me">Média</span></td><td class="num pts">4</td><td class="num">130,16</td><td class="red">Vencida</td></tr>
+<tr><td>27/08/2025 18:12</td><td>Qua</td><td>Rodízio (local/horário)</td><td>8RA2100865</td><td><span class="tag t-me">Média</span></td><td class="num pts">4</td><td class="num">130,16</td><td class="red">Vencida</td></tr>
+<tr><td>24/08/2025 11:13</td><td>Dom</td><td>Velocidade até 20%</td><td>8VA1660954</td><td><span class="tag t-me">Média</span></td><td class="num pts">4</td><td class="num">130,16</td><td class="red">Vencida</td></tr>
+<tr><td>20/08/2025 08:43</td><td>Qua</td><td>Rodízio (local/horário)</td><td>6RA1836626</td><td><span class="tag t-me">Média</span></td><td class="num pts">4</td><td class="num">130,16</td><td class="red">Vencida</td></tr>
+</tbody>
+<tfoot><tr style="background:var(--card2)"><td colspan="5"><strong>TOTAL — janela de 12 meses</strong></td><td class="num pts red"><strong>60</strong></td><td class="num"><strong>2.215,16</strong></td><td></td></tr></tfoot>
+</table>
+</div>
+
+<h2>Infrações fora da janela de 12 meses (não pontuam mais, mas seguem em aberto)</h2>
+<div class="tw">
+<table>
+<thead><tr><th>Data / hora</th><th>Infração</th><th>Auto</th><th>Natureza</th><th class="num">Pontos</th><th class="num">Valor</th><th>No infrator?</th></tr></thead>
+<tbody>
+<tr><td>10/03/2025 11:18</td><td>Velocidade até 20%</td><td>6VA1638785</td><td><span class="tag t-me">Média</span></td><td class="num pts">4</td><td class="num">130,16</td><td class="green">Sim</td></tr>
+<tr><td>24/02/2025 17:04</td><td>Não identificação do condutor (PJ)</td><td>N430310985</td><td><span class="tag t-nc">S/ pontos</span></td><td class="num pts muted">0</td><td class="num">390,46</td><td class="green">Sim</td></tr>
+<tr><td>24/02/2025 17:04</td><td>Não identificação do condutor (PJ)</td><td>N430311073</td><td><span class="tag t-nc">S/ pontos</span></td><td class="num pts muted">0</td><td class="num">260,32</td><td class="green">Sim</td></tr>
+<tr><td>19/02/2025 18:03</td><td>Rodízio (local/horário)</td><td>5RA1140453</td><td><span class="tag t-me">Média</span></td><td class="num pts">4</td><td class="num">130,16</td><td class="green">Sim</td></tr>
+<tr><td>30/11/2024 11:08</td><td>Velocidade até 20%</td><td>1Q 0693287</td><td><span class="tag t-me">Média</span></td><td class="num pts">4</td><td class="num">130,16</td><td class="orange">Não</td></tr>
+<tr><td>22/09/2024 15:58</td><td>Velocidade até 20%</td><td>E002284331</td><td><span class="tag t-me">Média</span></td><td class="num pts">4</td><td class="num">130,16</td><td class="orange">Não</td></tr>
+<tr><td>20/09/2024 23:04</td><td>Velocidade +20% até 50%</td><td>E002276261</td><td><span class="tag t-gr">Grave</span></td><td class="num pts">5</td><td class="num">195,23</td><td class="orange">Não</td></tr>
+<tr><td>23/08/2024 14:27</td><td>Não identificação do condutor (PJ)</td><td>N430296110</td><td><span class="tag t-nc">S/ pontos</span></td><td class="num pts muted">0</td><td class="num">260,32</td><td class="orange">Não</td></tr>
+</tbody>
+<tfoot><tr style="background:var(--card2)"><td colspan="4"><strong>SUBTOTAL</strong></td><td class="num pts"><strong>21</strong></td><td class="num"><strong>1.626,97</strong></td><td></td></tr></tfoot>
+</table>
+</div>
+
+<h2>Padrões detectados</h2>
+
+<div class="grid k2">
+  <div class="card">
+    <h3 style="margin-top:0">🔁 Rodízio: 100% às quartas-feiras</h3>
+    <p>As <strong>5</strong> multas de rodízio caíram todas em <strong>quarta-feira</strong> — coerente com placa de final <strong>5</strong> (rodízio de SP: finais 5 e 6 = quarta).</p>
+    <p class="muted">Horários: 08:43, 17:23, 17:23, 18:12, 18:03 — ou seja, dentro das janelas de restrição (7h–10h e 17h–20h) no centro expandido.</p>
+    <p><strong class="green">Custo evitável: R$ 650,80 + 20 pontos.</strong></p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">🚌 Faixa exclusiva: o maior ofensor</h3>
+    <p>São <strong>4 autuações gravíssimas</strong> (R$ 293,47 cada) = <strong class="red">R$ 1.173,88 e 28 pontos</strong> — 47% da pontuação de risco vindo de apenas 4 das 20 multas.</p>
+    <p class="muted">Duas delas no <strong>mesmo minuto-a-minuto</strong> (14/02/2026, 11:16 e 11:17) e num <strong>sábado</strong>.</p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">📄 4 autos sem condutor identificado</h3>
+    <p>As 4 infrações de 2024 aparecem no veículo mas <u>não</u> no infrator. Se a indicação de condutor não foi feita no prazo, cada uma vira uma <strong>multa NIC</strong> adicional para a PJ.</p>
+    <p class="muted">Já existem 3 multas NIC no histórico (R$ 911,10) — sinal de que o processo de indicação está falhando.</p>
+  </div>
+  <div class="card">
+    <h3 style="margin-top:0">⏱️ Velocidade: 6 autuações recorrentes</h3>
+    <p>5 leves (até 20%) + 1 acima de 20% = <strong>R$ 846,03 e 25 pontos</strong>. Perfil de excesso habitual, não pontual.</p>
+    <p class="muted">Sugestão: telemetria/alerta de velocidade no veículo.</p>
+  </div>
+</div>
+
+<h2>Oportunidades de recurso (prioridade)</h2>
+<div class="tw">
+<table>
+<thead><tr><th>#</th><th>Alvo</th><th>Tese</th><th class="num">Em jogo</th><th class="num">Pontos</th><th>Chance</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>1</strong></td>
+  <td>8TA1080331 + 2TA1005337<br><span class="muted">14/02/2026, 11:16 e 11:17</span></td>
+  <td><strong>Duplicidade + dia não útil.</strong> Duas autuações pela mesma conduta com 1 minuto de diferença (conduta única continuada). Além disso, foi <strong>sábado</strong> — muitas faixas exclusivas de SP não operam ou têm horário reduzido aos sábados. Verificar a placa de regulamentação do local.</td>
+  <td class="num">R$ 586,94</td>
+  <td class="num pts red">14</td>
+  <td class="green"><strong>Alta</strong></td>
+</tr>
+<tr>
+  <td><strong>2</strong></td>
+  <td>N430310985 + N430311073<br><span class="muted">24/02/2025, 17:04</span></td>
+  <td><strong>NIC — validade da notificação.</strong> Duas NIC no mesmo instante. Conferir se a Notificação de Autuação chegou à Videl e se o prazo de indicação do condutor (art. 257, §7º CTB) foi de fato aberto. Falha na notificação anula a NIC.</td>
+  <td class="num">R$ 650,78</td>
+  <td class="num pts muted">0</td>
+  <td class="orange">Média</td>
+</tr>
+<tr>
+  <td><strong>3</strong></td>
+  <td>8XA1918821 e 8TA1089253<br><span class="muted">03/03 e 23/04/2026</span></td>
+  <td><strong>Sinalização e horário.</strong> Puxar a foto/vídeo da autuação e comparar com a regulamentação do trecho (horário da faixa, sinalização visível, conversão à direita permitida).</td>
+  <td class="num">R$ 586,94</td>
+  <td class="num pts red">14</td>
+  <td class="orange">Média</td>
+</tr>
+<tr>
+  <td><strong>4</strong></td>
+  <td>4 autos de 2024 sem infrator</td>
+  <td><strong>Bloquear NIC futura.</strong> Verificar imediatamente se ainda há prazo aberto de indicação de condutor. Se sim, indicar. Se o prazo já fechou, recorrer da NIC quando ela chegar.</td>
+  <td class="num">R$ 715,87</td>
+  <td class="num pts">13</td>
+  <td class="accent">Preventiva</td>
+</tr>
+</tbody>
+<tfoot><tr style="background:var(--card2)"><td colspan="3"><strong>POTENCIAL TOTAL EM DISPUTA</strong></td><td class="num"><strong>R$ 2.540,53</strong></td><td class="num pts"><strong>41</strong></td><td></td></tr></tfoot>
+</table>
+</div>
+
+<h2>Economia possível nas 3 multas a vencer</h2>
+<div class="tw">
+<table>
+<thead><tr><th>Cenário</th><th class="num">Valor</th><th class="num">Economia</th><th>Condição</th></tr></thead>
+<tbody>
+<tr><td>Pagamento integral (sem desconto)</td><td class="num">R$ 553,79</td><td class="num muted">—</td><td class="muted">após o vencimento</td></tr>
+<tr><td>Desconto de 20% (art. 284 CTB)</td><td class="num green">R$ 443,03</td><td class="num green">R$ 110,76</td><td>pagar até o vencimento, sem recorrer</td></tr>
+<tr><td>Desconto de 40% (adesão ao SNE)</td><td class="num green"><strong>R$ 332,27</strong></td><td class="num green"><strong>R$ 221,52</strong></td><td>com adesão ao SNE e pagamento no prazo da Notificação de Autuação</td></tr>
+</tbody>
+</table>
+</div>
+<div class="alert warn">
+  <div class="t orange">⚠️ Atenção: desconto x recurso são excludentes</div>
+  Pagar com desconto significa reconhecer a infração e <strong>abrir mão do recurso</strong> — e o ponto entra do mesmo jeito.
+  Para <strong>8TA1089253</strong> (faixa exclusiva, 7 pontos, a vencer) vale mais recorrer do que economizar R$ 58,69: o ativo em risco é a CNH, não o dinheiro.
+</div>
+
+<h2>Plano de regularização</h2>
+
+<h3>Agora — até 48h</h3>
+<ol>
+  <li><strong>Puxar o extrato oficial completo</strong> no Detran-SP / Senatran (Portal Gov.br → CNH) e confirmar quantas infrações já estão <em>definitivas</em> (com Notificação de Penalidade). <span class="muted">Só as definitivas computam ponto — parte das 60 pode ainda estar em fase de autuação.</span></li>
+  <li><strong>Verificar se já existe processo de suspensão instaurado</strong> (art. 261 CTB). Se houver notificação, o prazo de defesa prévia é curto e perdê-lo é irreversível.</li>
+  <li><strong>Checar prazo de indicação de condutor</strong> dos 4 autos de 2024 e do auto de 09/08/2026 (recentíssimo — janela de indicação e de desconto de 40% provavelmente ainda aberta).</li>
+  <li><strong>Contratar advogado/despachante especialista em trânsito</strong> para as 4 gravíssimas. É o item de maior retorno da lista.</li>
+</ol>
+
+<h3>Esta semana</h3>
+<ol start="5">
+  <li>Protocolar <strong>defesa da autuação/recurso JARI</strong> nos autos 8TA1080331 e 2TA1005337 (duplicidade + sábado) — maior chance e maior impacto: 14 pontos.</li>
+  <li>Solicitar as <strong>imagens das 4 autuações de faixa exclusiva</strong> junto ao órgão autuador para instruir os recursos.</li>
+  <li>Definir a estratégia de pagamento: <strong>pagar</strong> o que não tem tese de defesa (velocidade e rodízio confirmados) e <strong>segurar</strong> o que vai a recurso.</li>
+</ol>
+
+<h3>Este mês</h3>
+<ol start="8">
+  <li>Quitar as vencidas sem tese de defesa para <strong>liberar o licenciamento do veículo</strong> — multas vencidas travam o CRLV e podem levar a retenção em blitz.</li>
+  <li>Avaliar <strong>parcelamento</strong> junto ao Detran-SP para os R$ 3.288,34 vencidos, se o caixa exigir.</li>
+  <li>Implantar as <strong>medidas preventivas</strong> abaixo — sem elas, o problema se repete no próximo ciclo de 12 meses.</li>
+</ol>
+
+<h2>Prevenção — parar a sangria</h2>
+<div class="grid k2">
+  <div class="card">
+    <div class="t" style="font-weight:700;margin-bottom:6px">🗓️ Alerta de rodízio</div>
+    Placa final <strong>5</strong> → restrição <strong>toda quarta-feira</strong>, 7h–10h e 17h–20h, no centro expandido de SP. Criar evento recorrente no Google Calendar e bloqueio de rota nesses horários.
+  </div>
+  <div class="card">
+    <div class="t" style="font-weight:700;margin-bottom:6px">🚌 Rotas fora de corredor</div>
+    4 gravíssimas em faixa exclusiva. Configurar navegação para evitar corredores de ônibus e treinar o condutor sobre conversão à direita em faixa exclusiva.
+  </div>
+  <div class="card">
+    <div class="t" style="font-weight:700;margin-bottom:6px">👤 Indicação automática de condutor</div>
+    Processo formal: toda NA que chegar → indicar condutor em até 15 dias. Isso zera o risco de novas multas NIC (já custaram R$ 911,10).
+  </div>
+  <div class="card">
+    <div class="t" style="font-weight:700;margin-bottom:6px">📡 Monitoramento contínuo</div>
+    Consulta mensal automatizada ao Detran-SP e alerta no painel Moita Rev1 a cada nova autuação — hoje as multas só apareceram quando já eram 20.
+  </div>
+</div>
+
+<div class="foot">
+  <strong>Fonte:</strong> capturas do app de consulta de infrações (Infrações por Veículo e Infrações por Infrator), filtro "Não Pagas", período ago/2024–ago/2026, consultadas em 19/08/2026 15:16–15:17.<br>
+  <strong>Base de cálculo dos pontos:</strong> CTB arts. 218, 184, 187 e 259; valores de referência: leve R$ 88,38 · média R$ 130,16 · grave R$ 195,23 · gravíssima R$ 293,47. Limites de suspensão conforme Lei 14.071/2021.<br>
+  <strong>Ressalva:</strong> a pontuação só é efetivada após a Notificação de Penalidade; parte dos autos pode ainda estar em fase recursal. Confirme o extrato oficial no Detran-SP/Senatran. Esta análise é operacional e não substitui parecer jurídico.<br><br>
+  Gerado por <strong class="accent">Moita Rev1</strong> — Analista de Logística Virtual · Videl T&amp;I Transportes
+</div>
+
+</div>
+</body>
+</html>
