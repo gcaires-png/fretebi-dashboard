@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Guia de Defesas e Recursos — FSH0F15 | Moita Rev1</title>
+<style>
+:root{--bg:#080c16;--card:#0f1729;--card2:#162036;--border:#1a2744;--accent:#00d4ff;--green:#00ff88;--orange:#ff9f43;--red:#ff4757;--purple:#a55eea;--text:#e8ecf4;--muted:#5c6b8a}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',ui-sans-serif,-apple-system,'Segoe UI',sans-serif;font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding:28px 18px 70px}
+header{border-bottom:1px solid var(--border);padding-bottom:18px;margin-bottom:26px}
+h1{font-size:22px;font-weight:700;letter-spacing:-.2px}
+h2{font-size:17px;font-weight:700;margin:38px 0 12px;display:flex;align-items:center;gap:8px}
+h2::before{content:"";width:3px;height:16px;background:var(--accent);border-radius:2px}
+h3{font-size:14px;font-weight:700;margin:22px 0 8px}
+h4{font-size:12px;font-weight:700;margin:16px 0 6px;color:var(--accent);text-transform:uppercase;letter-spacing:.7px}
+.sub{color:var(--muted);font-size:13px;margin-top:4px}
+p{margin:8px 0}
+.grid{display:grid;gap:12px}
+.k3{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.red{color:var(--red)}.green{color:var(--green)}.orange{color:var(--orange)}.accent{color:var(--accent)}.purple{color:var(--purple)}.muted{color:var(--muted)}
+.alert{border-left:3px solid var(--red);background:rgba(255,71,87,.08);border-radius:8px;padding:14px 16px;margin:16px 0}
+.alert.warn{border-left-color:var(--orange);background:rgba(255,159,67,.08)}
+.alert.ok{border-left-color:var(--green);background:rgba(0,255,136,.07)}
+.alert.info{border-left-color:var(--accent);background:rgba(0,212,255,.07)}
+.alert .t{font-weight:700;margin-bottom:5px}
+.tw{overflow-x:auto;border:1px solid var(--border);border-radius:10px;background:var(--card);margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+th{text-align:left;padding:10px 12px;font-size:10.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);border-bottom:1px solid var(--border);background:var(--card2);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid rgba(26,39,68,.6);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.t-gv{background:rgba(255,71,87,.16);color:var(--red)}
+.t-me{background:rgba(0,212,255,.14);color:var(--accent)}
+.t-ok{background:rgba(0,255,136,.14);color:var(--green)}
+.t-nc{background:rgba(92,107,138,.18);color:var(--muted)}
+ol,ul{margin:8px 0 8px 22px}
+li{margin:7px 0}
+.minuta{background:#0a1020;border:1px solid var(--border);border-left:3px solid var(--purple);border-radius:8px;padding:16px 18px;margin:10px 0;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:12.5px;line-height:1.75;white-space:pre-wrap;overflow-x:auto}
+.minuta b{color:var(--accent);font-weight:600}
+.fill{background:rgba(255,159,67,.16);color:var(--orange);padding:0 4px;border-radius:3px}
+code{background:var(--card2);padding:1px 6px;border-radius:4px;font-size:12px}
+.step{display:flex;gap:14px;margin:14px 0}
+.step .n{flex:0 0 30px;height:30px;border-radius:50%;background:var(--accent);color:#04121a;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:14px}
+.step .c{flex:1}
+.foot{margin-top:42px;padding-top:16px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Guia de Defesas e Recursos — <span class="accent">FSH0F15</span></h1>
+  <div class="sub">Onde protocolar cada multa, qual tese usar e minutas prontas para copiar · <strong>Moita Rev1</strong> · 19/08/2026</div>
+</header>
+
+<div class="alert">
+  <div class="t red">⚠️ Descoberta crítica no print do Senatran</div>
+  O auto <strong>7587-0 / RENAINF 11117842770</strong> (faixa exclusiva, R$ 293,47, infração de 14/02/2026) mostra:
+  <br>· Data limite para <strong>Defesa Prévia: 01/05/2026</strong> — <span class="red">vencida há 3,5 meses</span>
+  <br>· Data limite para <strong>Recurso: 25/06/2026</strong> — <span class="red">vencida há 2 meses</span>
+  <br>· <strong>Notificação de Penalidade já emitida em 23/05/2026</strong> — a penalidade está definitiva e <u>a pontuação já entrou na CNH</u>.
+  <br><br>
+  Isso muda a estratégia: para os autos com prazo vencido, a briga individual está encerrada na via administrativa comum.
+  <strong class="accent">O campo de batalha passa a ser o processo de suspensão do direito de dirigir</strong>, que tem prazo próprio e permite atacar a validade das infrações que compõem os 60 pontos.
+</div>
+
+<h2>1. Onde se responde cada multa — o mapa correto</h2>
+
+<div class="alert warn">
+  <div class="t orange">O Portal do Senatran NÃO recebe defesa nem recurso</div>
+  O <code>portalservicos.senatran.serpro.gov.br</code> é <strong>consulta</strong>. Ali você só faz três coisas:
+  <strong>(1)</strong> pagar, <strong>(2)</strong> indicar o Real Infrator e <strong>(3)</strong> baixar as notificações.
+  A defesa e o recurso são protocolados <strong>no órgão autuador</strong> de cada multa.
+</div>
+
+<h3>Os 3 botões do print e para que servem</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Botão</th><th>Serve para</th><th>Use quando</th></tr></thead>
+<tbody>
+<tr><td><strong>Pagamento</strong></td><td>Gerar guia/boleto e pagar</td><td>Quando você decidiu não recorrer. <span class="muted">Pagar não retira ponto e encerra o direito de recurso.</span></td></tr>
+<tr><td><strong>Real Infrator</strong></td><td>Indicar quem dirigia (art. 257 CTB)</td><td class="green">Nos <strong>4 autos de 2024 sem condutor</strong> — se a "Data Limite para Identificação do Condutor Infrator" ainda estiver aberta. É aqui que se evita a multa NIC.</td></tr>
+<tr><td><strong>Notificações</strong> ⭐</td><td>Baixar o PDF da Notificação de Autuação e da Notificação de Penalidade</td><td class="accent"><strong>Comece sempre por aqui.</strong> É o PDF que traz o <strong>órgão autuador</strong>, o <strong>local exato</strong> da infração e o <strong>endereço/canal de protocolo</strong>.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3>Canal de protocolo por órgão autuador</h3>
+<div class="tw">
+<table>
+<thead><tr><th>Órgão</th><th>Autos prováveis</th><th>Onde protocolar defesa / recurso</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>Prefeitura de SP — DSV/CET</strong><br><span class="muted">rodízio, faixa exclusiva, velocidade urbana</span></td>
+  <td>1VA·, 2VA·, 6VA·, 8VA·, 8RA·, 6RA·, 5RA·, 8TA·, 2TA·, 8XA·</td>
+  <td>Portal <strong>SP156</strong> (<code>sp156.prefeitura.sp.gov.br</code>) → buscar "Defesa da Autuação de Trânsito" ou "Recurso à JARI". Também presencial nas Praças de Atendimento.</td>
+</tr>
+<tr>
+  <td><strong>Detran-SP</strong></td>
+  <td>N430·<span class="muted"> (as 3 multas NIC)</span></td>
+  <td><code>detran.sp.gov.br</code> → Infrações → Defesa/Recurso. Ou Poupatempo.</td>
+</tr>
+<tr>
+  <td><strong>A confirmar</strong> (DER-SP / PRF / outro município)</td>
+  <td>E002·, 1Q ·</td>
+  <td class="orange">Ler o órgão no PDF da notificação. O canal muda conforme o órgão.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="muted">A associação acima é <strong>inferida pelo padrão dos números de auto</strong> — confirme sempre no PDF da Notificação antes de protocolar. Protocolar no órgão errado = perda de prazo.</p>
+
+<h2>2. Triagem obrigatória — faça isto antes de escrever qualquer defesa</h2>
+
+<p>Abra <strong>cada um dos 8 autos prioritários</strong> no Senatran e anote as 4 datas que aparecem no print. Só depois disso dá pra saber qual peça cabe.</p>
+
+<div class="tw">
+<table>
+<thead><tr><th>Se a situação é…</th><th>A peça cabível é</th><th>Prazo</th><th>Instância</th></tr></thead>
+<tbody>
+<tr><td>Data limite de <strong>Defesa Prévia</strong> ainda no futuro</td><td class="green"><strong>Defesa da Autuação</strong> (defesa prévia)</td><td>até a data indicada</td><td>Autoridade de trânsito do órgão</td></tr>
+<tr><td>Defesa vencida, mas <strong>data limite de Recurso</strong> no futuro</td><td class="green"><strong>Recurso em 1ª instância</strong></td><td>até a data indicada</td><td>JARI</td></tr>
+<tr><td>JARI já <strong>julgou e indeferiu</strong></td><td class="orange"><strong>Recurso em 2ª instância</strong></td><td>30 dias da decisão</td><td>CETRAN</td></tr>
+<tr><td><strong>Todos os prazos vencidos</strong> <span class="muted">(caso do 7587-0)</span></td><td class="red"><strong>Pedido de nulidade administrativa</strong> (autotutela) <br>ou <strong>ação judicial anulatória</strong></td><td>nulidade: sem prazo · judicial: 5 anos</td><td>Órgão autuador / Justiça</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="alert info">
+  <div class="t accent">💡 O botão "Advertência por Escrito" no print</div>
+  Existe uma via pouco usada: o art. 267 do CTB permite <strong>substituir a multa por advertência por escrito</strong> quando a infração é de natureza
+  <strong>leve ou média</strong> E o condutor <strong>não é reincidente na mesma infração nos últimos 12 meses</strong>.
+  <br><br>
+  Nas suas multas, quase todas as médias têm reincidência e não passam no teste. Os dois candidatos possíveis são:
+  <strong>5RA1140453</strong> (rodízio, 19/02/2025 — sem rodízio anterior nos 12 meses precedentes) e
+  <strong>E002284331</strong> (velocidade, 22/09/2024 — o mais antigo da série).
+  <br><span class="muted">O pedido deve ser feito junto com a defesa prévia. Gravíssimas e graves não se qualificam — ou seja, não resolve as 4 de faixa exclusiva.</span>
+</div>
+
+<h2>3. As teses — o que dá para justificar, com fundamento</h2>
+
+<div class="grid k3">
+  <div class="card">
+    <h4 style="margin-top:0">Tese A — Bis in idem</h4>
+    <strong>Alvo:</strong> 8TA1080331 + 2TA1005337<br>
+    <strong>Força:</strong> <span class="green">Alta</span><br>
+    <strong>Base:</strong> CF art. 5º, LIV e LV; CTB art. 280; princípio do <em>non bis in idem</em>.<br>
+    <span class="muted">Duas autuações pela mesma conduta com 60 segundos de diferença = deslocamento contínuo, não duas condutas autônomas.</span>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">Tese B — Carnaval / bloqueio viário</h4>
+    <strong>Alvo:</strong> 8TA1080331 + 2TA1005337<br>
+    <strong>Força:</strong> <span class="green">Alta — se confirmada</span><br>
+    <strong>Base:</strong> CTB art. 90; estado de necessidade; desvio operacional determinado pelo poder público.<br>
+    <span class="muted"><strong>14/02/2026 foi o sábado de Carnaval.</strong> Operação Carnaval da CET fecha vias e cria desvios obrigatórios que empurram o tráfego para a faixa.</span>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">Tese C — Sinalização deficiente</h4>
+    <strong>Alvo:</strong> 8XA1918821 e 8TA1089253<br>
+    <strong>Força:</strong> <span class="orange">Média — depende de prova</span><br>
+    <strong>Base:</strong> <strong>CTB art. 90, §1º</strong> — não serão aplicadas sanções quando a sinalização for insuficiente ou incorreta.<br>
+    <span class="muted">É a tese mais aceita pelas JARIs. Exige foto do local.</span>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">Tese D — Vício de notificação</h4>
+    <strong>Alvo:</strong> qualquer auto, e as 3 NIC<br>
+    <strong>Força:</strong> <span class="green">Alta se confirmada</span><br>
+    <strong>Base:</strong> CTB arts. 280, 281 e 282; Resolução CONTRAN 918/2022.<br>
+    <span class="muted">NA não expedida em 30 dias, ou enviada para endereço desatualizado da PJ = nulidade insanável. Vale <u>mesmo com prazo vencido</u>.</span>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">Tese E — NIC sem base</h4>
+    <strong>Alvo:</strong> N430310985, N430311073, N430296110<br>
+    <strong>Força:</strong> <span class="orange">Média</span><br>
+    <strong>Base:</strong> CTB art. 257, §§ 7º e 8º.<br>
+    <span class="muted">A NIC só é válida se a PJ foi regularmente notificada e teve prazo aberto para indicar. Conferir também o multiplicador: R$ 390,46 = 3× e R$ 260,32 = 2× o valor base.</span>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">Tese F — Vício formal do auto</h4>
+    <strong>Alvo:</strong> todos (checagem)<br>
+    <strong>Força:</strong> <span class="orange">Variável</span><br>
+    <strong>Base:</strong> CTB art. 280 + Resolução CONTRAN 918/2022.<br>
+    <span class="muted">Conferir no PDF: placa, local, data/hora, código, identificação do agente/equipamento e certificado de aferição. Erro em campo obrigatório = nulidade.</span>
+  </div>
+</div>
+
+<h2>4. Minutas prontas — copie, preencha os campos em laranja</h2>
+
+<h3 class="accent">Estrutura padrão (vale para todas)</h3>
+<div class="minuta">ILUSTRÍSSIMO(A) SENHOR(A) <span class="fill">[AUTORIDADE DE TRÂNSITO DO ÓRGÃO AUTUADOR]</span>
+<span class="muted">— para recurso, trocar por: PRESIDENTE DA JARI DO(A) [ÓRGÃO]</span>
+
+Auto de Infração nº: <span class="fill">[Nº DO AI]</span>
+RENAINF nº: <span class="fill">[Nº RENAINF]</span>
+Código da Infração: <span class="fill">[CÓDIGO]</span>
+Placa: FSH0F15 — JEEP/COMPASS LIMITED F H
+Data/hora da infração: <span class="fill">[DD/MM/AAAA — HH:MM]</span>
+Local: <span class="fill">[LOCAL CONFORME A NOTIFICAÇÃO]</span>
+
+<span class="fill">[NOME COMPLETO / RAZÃO SOCIAL]</span>, <span class="fill">[CPF/CNPJ]</span>,
+CNH nº <span class="fill">[Nº]</span>, residente/estabelecido em <span class="fill">[ENDEREÇO COMPLETO]</span>,
+telefone <span class="fill">[TEL]</span>, e-mail <span class="fill">[E-MAIL]</span>,
+vem, tempestivamente, apresentar <b>DEFESA DA AUTUAÇÃO</b> <span class="muted">[ou RECURSO]</span>
+pelos fatos e fundamentos a seguir.
+
+<b>I — DA TEMPESTIVIDADE</b>
+A notificação foi expedida em <span class="fill">[DATA]</span>, com prazo limite em <span class="fill">[DATA]</span>.
+Protocolada nesta data, a presente peça é tempestiva.
+
+<b>II — DOS FATOS</b>
+<span class="fill">[DESCREVER — usar o bloco da tese correspondente abaixo]</span>
+
+<b>III — DO DIREITO</b>
+<span class="fill">[USAR O BLOCO DA TESE CORRESPONDENTE ABAIXO]</span>
+
+<b>IV — DOS PEDIDOS</b>
+Ante o exposto, requer:
+a) o acolhimento da presente e o <b>CANCELAMENTO do Auto de Infração nº</b> <span class="fill">[Nº]</span>,
+   com o consequente <b>arquivamento</b> e a <b>exclusão da pontuação</b> do prontuário da CNH;
+b) subsidiariamente, a substituição da penalidade por <b>advertência por escrito</b>, nos termos
+   do art. 267 do CTB; <span class="muted">[incluir APENAS em infrações leves/médias sem reincidência]</span>
+c) a intimação do resultado no e-mail e endereço acima indicados.
+
+Nestes termos, pede deferimento.
+<span class="fill">[CIDADE]</span>, <span class="fill">[DATA]</span>.
+
+_______________________________________
+<span class="fill">[NOME] — [CPF/CNPJ]</span></div>
+
+<h3 class="accent">Bloco Tese A + B — 14/02/2026, autos 8TA1080331 e 2TA1005337</h3>
+<p class="muted">Use os dois juntos numa única peça. Protocole a peça no auto <strong>8TA1080331</strong> (o das 11:17) pedindo o cancelamento dele, e uma peça espelhada no 2TA1005337.</p>
+<div class="minuta"><b>II — DOS FATOS</b>
+
+Foram lavradas contra o mesmo veículo DUAS autuações pela mesma conduta,
+no mesmo local e com intervalo de apenas 60 (sessenta) segundos:
+
+  · AI 2TA1005337 — 14/02/2026, às 11h16
+  · AI 8TA1080331 — 14/02/2026, às 11h17
+
+Ambas capitulam a mesma infração (transitar em faixa/via exclusiva
+regulamentada para transporte público coletivo), com idêntico valor.
+
+Ademais, a data de 14/02/2026 correspondeu ao SÁBADO DE CARNAVAL, período
+em que o Município mantém operação especial de trânsito, com interdições,
+bloqueios e desvios obrigatórios de tráfego em razão dos eventos de rua.
+
+<b>III — DO DIREITO</b>
+
+<b>1. Da dupla autuação pela mesma conduta — bis in idem</b>
+
+O trânsito por uma faixa exclusiva constitui conduta ÚNICA E CONTINUADA,
+não se fracionando em tantas infrações quantos forem os minutos de
+deslocamento. Um intervalo de 60 segundos entre as autuações demonstra,
+de forma inequívoca, tratar-se do mesmo e ininterrupto percurso, e não de
+duas condutas autônomas — não havendo nos autos qualquer elemento que
+comprove que o veículo tenha saído da faixa e nela reingressado.
+
+A dupla punição pelo mesmo fato viola o princípio do NON BIS IN IDEM e as
+garantias do art. 5º, incisos LIV e LV, da Constituição Federal, além de
+contrariar os princípios da proporcionalidade e da razoabilidade que regem
+o exercício do poder de polícia administrativa.
+
+Requer-se, portanto, o cancelamento de uma das autuações, subsistindo, no
+máximo, uma única penalidade pela conduta.
+
+<b>2. Da operação especial de trânsito — Carnaval</b>
+
+O art. 90 do CTB estabelece que não serão aplicadas as sanções previstas
+neste Código quando a sinalização for insuficiente ou incorreta.
+
+Na data e horário da suposta infração vigorava operação especial de trânsito
+do Carnaval, com bloqueios e desvios que impuseram ao condutor trajeto
+diverso do ordinário. Nessas condições, a eventual passagem pela faixa
+decorreu de determinação operacional do próprio poder público, e não de
+conduta voluntária do condutor, restando afastada a tipicidade.
+
+Requer-se que o órgão autuador junte aos autos a Portaria/Ato que
+disciplinou o tráfego no local na data de 14/02/2026, bem como as imagens
+integrais das autuações, sob pena de cerceamento de defesa.</div>
+
+<h3 class="accent">Bloco Tese C — sinalização (8XA1918821 · 03/03/2026 e 8TA1089253 · 23/04/2026)</h3>
+<div class="minuta"><b>II — DOS FATOS</b>
+
+O condutor trafegava pela via em condições normais quando foi autuado por
+suposto trânsito em faixa exclusiva. Ocorre que, no ponto exato indicado no
+auto, a sinalização que regulamenta a restrição é <span class="fill">[insuficiente / de difícil
+visualização / obstruída por [X] / ausente]</span>, conforme registro fotográfico anexo
+(Doc. <span class="fill">[nº]</span>), não permitindo ao condutor médio a percepção inequívoca da
+restrição e do seu horário de vigência.
+
+<span class="muted">[Se aplicável, acrescentar:]</span>
+Acresça-se que a manobra realizada consistiu em <span class="fill">[conversão à direita no ponto mais
+próximo / acesso a imóvel lindeiro / desvio de obstáculo]</span>, uso admitido pela
+própria regulamentação municipal da faixa.
+
+<b>III — DO DIREITO</b>
+
+Dispõe o art. 90 do CTB que não serão aplicadas as sanções previstas neste
+Código quando a sinalização for insuficiente ou incorreta, dispondo o §1º
+que o órgão ou entidade de trânsito com circunscrição sobre a via é
+responsável pela implantação e manutenção da sinalização.
+
+A infração de trânsito exige TIPICIDADE ESTRITA: a conduta só se configura
+se a via estiver efetivamente regulamentada e a regulamentação estiver
+adequadamente sinalizada e vigente no horário da autuação. Ausente ou
+deficiente a sinalização, ausente o suporte fático da autuação.
+
+Requer-se que o órgão autuador junte aos autos:
+  a) a imagem/vídeo integral que instruiu a autuação;
+  b) o ato de regulamentação da faixa no trecho, com o horário de operação;
+  c) o comprovante de implantação e manutenção da sinalização no local.
+
+A não juntada acarreta cerceamento de defesa e, por consequência, a nulidade
+do auto de infração.</div>
+
+<h3 class="accent">Bloco Tese D/E — NIC e vício de notificação (N430310985, N430311073, N430296110)</h3>
+<div class="minuta"><b>II — DOS FATOS</b>
+
+Foi imposta à pessoa jurídica proprietária a penalidade por não identificação
+do condutor infrator (art. 257, §8º, do CTB). Ocorre que a Requerente
+<span class="fill">[não foi regularmente notificada da autuação originária / não teve aberto o prazo
+de 15 dias para indicação do condutor / recebeu a notificação em endereço
+diverso do constante no CRLV]</span>.
+
+Registre-se ainda que os autos N430310985 e N430311073 foram lavrados no
+MESMO dia e MESMO horário (24/02/2025, às 17h04), com valores distintos
+(R$ 390,46 e R$ 260,32), o que evidencia multiplicadores diversos aplicados
+sobre a mesma base, a demandar esclarecimento e comprovação.
+
+<b>III — DO DIREITO</b>
+
+A penalidade do art. 257, §8º, do CTB é SUBSIDIÁRIA e pressupõe,
+necessariamente, que o proprietário tenha sido regularmente notificado da
+autuação originária e que lhe tenha sido franqueado o prazo legal para a
+identificação do condutor. Sem a notificação válida, não se inaugura o dever
+de indicar — e, sem esse dever, não há como puni-lo por descumprimento.
+
+Nos termos dos arts. 280, 281 e 282 do CTB e da Resolução CONTRAN nº
+918/2022, a notificação regular é requisito de validade do procedimento
+administrativo. Sua ausência configura VÍCIO INSANÁVEL, que fulmina de
+nulidade a penalidade dela decorrente, por ofensa direta ao contraditório e
+à ampla defesa (art. 5º, LV, da CF).
+
+Requer-se que o órgão autuador junte aos autos:
+  a) cópia da Notificação de Autuação da infração originária;
+  b) o comprovante de sua remessa e entrega (AR/DDT), com data;
+  c) a memória de cálculo do multiplicador aplicado em cada NIC.</div>
+
+<h3 class="accent">Bloco Tese D — nulidade por prazo vencido (autotutela)</h3>
+<p class="muted">É o que resta para o 7587-0 e para qualquer outro com todos os prazos encerrados. Endereçar à autoridade máxima do órgão autuador.</p>
+<div class="minuta"><b>PEDIDO DE REVISÃO E DECLARAÇÃO DE NULIDADE — art. 281 do CTB e
+autotutela administrativa (Súmula 473 do STF)</b>
+
+A Requerente não busca a reabertura de prazo recursal, mas o exercício do
+DEVER DE AUTOTUTELA da Administração, que pode e deve anular seus próprios
+atos quando eivados de vício de legalidade, independentemente de prazo
+recursal, nos termos da Súmula 473 do STF:
+
+  "A Administração pode anular seus próprios atos, quando eivados de vícios
+   que os tornam ilegais, porque deles não se originam direitos."
+
+No caso, o vício é insanável: <span class="fill">[descrever — bis in idem / ausência de notificação
+válida / sinalização inexistente / erro em elemento essencial do auto]</span>.
+
+Requer-se, pois, a DECLARAÇÃO DE NULIDADE do Auto de Infração nº <span class="fill">[Nº]</span>,
+com o arquivamento do procedimento e a EXCLUSÃO DA RESPECTIVA PONTUAÇÃO do
+prontuário da CNH, bem como a suspensão de qualquer processo de suspensão do
+direito de dirigir que a considere no cômputo.</div>
+
+<h2>5. Documentos para anexar em toda peça</h2>
+<div class="grid k3">
+  <div class="card">
+    <h4 style="margin-top:0">Sempre</h4>
+    <ul style="margin-left:18px">
+      <li>Cópia da CNH do condutor</li>
+      <li>Cópia do CRLV do FSH0F15</li>
+      <li>Cópia da Notificação (NA e/ou NP)</li>
+      <li>Comprovante de endereço</li>
+      <li>Procuração, se assinado por terceiro</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">Se PJ (Videl)</h4>
+    <ul style="margin-left:18px">
+      <li>Contrato social / última alteração</li>
+      <li>Cartão CNPJ</li>
+      <li>Documento do representante legal</li>
+      <li>CNH do condutor indicado</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4 style="margin-top:0">Provas por tese</h4>
+    <ul style="margin-left:18px">
+      <li><strong>A:</strong> as duas notificações lado a lado</li>
+      <li><strong>B:</strong> Portaria da Operação Carnaval + notícias/mapa dos bloqueios de 14/02/2026</li>
+      <li><strong>C:</strong> fotos da sinalização no local (data visível) + Street View</li>
+      <li><strong>D/E:</strong> pedido de vista do AR/comprovante de entrega</li>
+    </ul>
+  </div>
+</div>
+
+<h2>6. Sequência de execução</h2>
+<div class="step"><div class="n">1</div><div class="c"><strong>Baixe as notificações dos 8 autos prioritários</strong> no Senatran (botão "Notificações"). Salve os PDFs. É deles que sai o órgão autuador e o local exato.</div></div>
+<div class="step"><div class="n">2</div><div class="c"><strong>Monte a tabela de prazos</strong> com as 4 datas de cada auto. Isso define quem ainda tem defesa/recurso aberto e quem vai para nulidade.</div></div>
+<div class="step"><div class="n">3</div><div class="c"><strong>Confira o botão "Real Infrator"</strong> nos 4 autos de 2024. Se o prazo estiver aberto, indique o condutor <u>hoje</u> — cada indicação perdida vira uma NIC nova.</div></div>
+<div class="step"><div class="n">4</div><div class="c"><strong>Vá ao local das 4 faixas exclusivas</strong> e fotografe a sinalização com data. Sem foto, a Tese C não se sustenta.</div></div>
+<div class="step"><div class="n">5</div><div class="c"><strong>Protocole primeiro o que tem prazo aberto</strong> — prazo perdido não volta. Depois os pedidos de nulidade.</div></div>
+<div class="step"><div class="n">6</div><div class="c"><strong>Consulte o extrato de pontuação</strong> e verifique se já existe processo de suspensão instaurado. <span class="accent">Se existir, é ali que se concentra toda a defesa</span> — e ali as teses acima voltam a valer integralmente, mesmo as dos autos com prazo vencido.</div></div>
+
+<div class="alert ok">
+  <div class="t green">A jogada mais importante</div>
+  Com 60 pontos e Notificações de Penalidade já emitidas, o processo de suspensão do direito de dirigir é questão de tempo.
+  Esse processo é <strong>autônomo e tem prazo de defesa próprio</strong> — e nele você pode atacar a validade de cada infração que compõe a pontuação,
+  inclusive as que já tiveram o prazo individual encerrado. <strong>Se as duas autuações de 14/02/2026 caírem por bis in idem, são 7 pontos a menos</strong>
+  e a contagem de gravíssimas cai de 4 para 3. É a peça de maior alavancagem de todo o caso — e exige advogado de trânsito.
+</div>
+
+<div class="foot">
+  <strong>Base legal citada:</strong> CTB (Lei 9.503/97) arts. 90, 184, 187, 218, 257, 259, 261, 267, 280, 281 e 282; Lei 14.071/2021; Resolução CONTRAN nº 918/2022; CF art. 5º, LIV e LV; Súmula 473 do STF.<br>
+  <strong>Ressalvas:</strong> a associação órgão × número de auto é inferida pelo padrão de numeração e deve ser confirmada no PDF da notificação. O sábado de Carnaval de 2026 (14/02) decorre do calendário litúrgico — confirme a operação especial de trânsito junto à CET antes de usar a tese. As minutas são modelos operacionais e <strong>não substituem parecer jurídico</strong>: dada a iminência da suspensão da CNH, contrate advogado especializado em trânsito.<br><br>
+  Gerado por <strong class="accent">Moita Rev1</strong> — Analista de Logística Virtual · Videl T&amp;I Transportes
+</div>
+
+</div>
+</body>
+</html>
