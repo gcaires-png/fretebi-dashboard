@@ -15,7 +15,7 @@
  *                     (ex: "https://gcaires-png.github.io,http://localhost:8080")
  *
  * Rotas expostas (somente GET, somente leitura):
- *   /shipments  /quotes  /clients  /drivers  /vehicles  /documents
+ *   /shipments  /quotes  /clients  /drivers  /vehicles  /documents  /leads
  *   /shipments/:id  /clients/:id  /vehicles/:id  /drivers/:id
  *   /health     — status do proxy (não chama a Videl)
  */
@@ -25,6 +25,8 @@ const VIDEL_BASE = 'https://www.videltel.com.br/api';
 // rotas de leitura liberadas (prefixos)
 const ALLOWED_PATHS = [
   'shipments', 'quotes', 'clients', 'drivers', 'vehicles', 'documents',
+  // leads CRM (prospecção — topo de funil, distinto de "quotes"/cotações)
+  'leads',
   // financeiro / contas a pagar (nomes candidatos — a API usa um destes)
   'payables', 'accounts-payable', 'bills', 'finance', 'expenses', 'contas-a-pagar',
 ];

@@ -160,6 +160,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
     <li><a class="active" onclick="show('painel')">📊 <span class="lbl">Painel Geral</span></a></li>
     <li><a onclick="show('motoristas')">🚛 <span class="lbl">Motoristas</span></a></li>
     <li><a onclick="show('cotacoes')">💰 <span class="lbl">Cotações</span> <span class="badge" id="cotBadge">8</span></a></li>
+    <li><a onclick="show('leadscrm')">🎯 <span class="lbl">Leads CRM</span> <span class="badge" id="leadsCrmBadge">—</span></a></li>
     <li><a onclick="show('docs')">📄 <span class="lbl">Documentos</span></a></li>
     <li><a onclick="show('gmail')">📧 <span class="lbl">Gmail</span> <span class="badge" id="gmBadge">—</span></a></li>
   </ul>
@@ -504,6 +505,51 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
     </div>
   </div>
 
+  <!-- ========== LEADS CRM (prospecção — plataforma Videl /leads) ========== -->
+  <div id="leadscrm" class="sw">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+      <div class="card-t" style="font-size:18px">🎯 Leads CRM — Novos (Prospecção)</div>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="sLeadsCrm" placeholder="🔍 Buscar cliente, contato, e-mail..." style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 14px;border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;outline:none;width:250px" onkeyup="renderLeadsCRM()">
+        <select id="fLeadsPrio" style="background:var(--card);border:1px solid var(--border);color:var(--text);padding:8px 10px;border-radius:10px;font-size:13px" onchange="renderLeadsCRM()">
+          <option value="">Prioridade: Todas</option>
+          <option value="Alta">Alta</option>
+          <option value="Média">Média</option>
+          <option value="Baixa">Baixa</option>
+        </select>
+        <button class="btn btn-o btn-sm" onclick="exportLeadsCRM()">⬇ CSV</button>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:20px">
+      <div class="card kpi" style="border-top:3px solid var(--accent);padding:14px">
+        <div class="kpi-v" style="color:var(--accent);font-size:22px" id="lcTotal">—</div>
+        <div class="kpi-l">Leads novos (status=novo)</div>
+      </div>
+      <div class="card kpi" style="border-top:3px solid var(--green);padding:14px">
+        <div class="kpi-v" style="color:var(--green);font-size:22px" id="lcAlta">—</div>
+        <div class="kpi-l">Prioridade Alta</div>
+      </div>
+      <div class="card kpi" style="border-top:3px solid var(--orange);padding:14px">
+        <div class="kpi-v" style="color:var(--orange);font-size:22px" id="lcMedia">—</div>
+        <div class="kpi-l">Prioridade Média</div>
+      </div>
+      <div class="card kpi" style="border-top:3px solid var(--red);padding:14px">
+        <div class="kpi-v" style="color:var(--red);font-size:22px" id="lcBaixa">—</div>
+        <div class="kpi-l">Prioridade Baixa (dado incompleto)</div>
+      </div>
+    </div>
+
+    <div class="tw">
+      <div class="ts">
+        <table class="tbl" id="tLeadsCrm">
+          <thead><tr><th>Cliente</th><th>Contato</th><th>Telefone</th><th>E-mail</th><th>Site (domínio e-mail)</th><th>Segmento</th><th>Origem</th><th>Prioridade</th></tr></thead>
+          <tbody id="leadsCrmReal"><tr><td colspan="8" style="color:var(--muted)">Conecte a plataforma Videl (proxy) para carregar os leads reais.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
   <!-- ========== DOCUMENTOS ========== -->
   <div id="docs" class="sw">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
@@ -733,7 +779,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;font-
 </main>
 
 <script>
-const SECS=['painel','motoristas','cotacoes','docs','gmail','ops','alertas','relatorios','conexoes','config'];
+const SECS=['painel','motoristas','cotacoes','leadscrm','docs','gmail','ops','alertas','relatorios','conexoes','config'];
 
 function show(id){
   SECS.forEach(s=>{const e=document.getElementById(s);if(e)e.style.display=s===id?'':'none'});
@@ -1035,9 +1081,10 @@ async function loginLive(){
 }
 async function carregarLive(tk){
   const h = USE_PROXY ? {} : {'Authorization':'Bearer '+(tk||'')};
-  const [sh,qt]=await Promise.all([
+  const [sh,qt,ld]=await Promise.all([
     fetch(API+'/shipments?page=1&limit=100',{headers:h}).then(r=>r.json()),
-    fetch(API+'/quotes?page=1&limit=100',{headers:h}).then(r=>r.json())
+    fetch(API+'/quotes?page=1&limit=100',{headers:h}).then(r=>r.json()),
+    fetch(API+'/leads?status=novo&page=1&pageSize=2000',{headers:h}).then(r=>r.json()).catch(()=>({}))
   ]);
   // remapear para DATA (mesmo formato do snapshot)
   DATA.embarques=(sh.data||[]).map(s=>({num:s.numero,cliente:s.cliente_nome,status:s.status,origem:s.origem?.cidade||'',destino:s.destino?.cidade||'',uf_o:s.origem?.uf||'',uf_d:s.destino?.uf||'',frete:+s.valor_frete||0,nf:+s.valor_nf||0,peso:+s.peso||0,motorista:s.motorista_nome||'',placa:s.veiculo_placa||'',cte:!!s.cte_obrigatorio,coleta:(s.data_coleta||'').slice(0,10),entrega:(s.data_entrega_prevista||'').slice(0,10)}));
@@ -1045,11 +1092,65 @@ async function carregarLive(tk){
   if(qt.summary){DATA.kpis.cotacoes=qt.summary.total;DATA.kpis.cotacoes_aprovadas=qt.summary.aprovadas;}
   DATA.kpis.operacoes_andamento=DATA.embarques.filter(e=>['em_transito','em_coleta','programado'].includes(e.status)).length;
   DATA.kpis.alertas=DATA.embarques.filter(e=>!e.motorista&&['programado','em_coleta'].includes(e.status)).length;
+  if(Array.isArray(ld.data)){
+    DATA.leads=ld.data.map(l=>{
+      const site=leadSite(l.email);
+      const mapped={cliente:l.empresa||l.nome||'',contato:l.nome||'',telefone:l.telefone||'',email:l.email||'',site,segmento:l.segmentacao||'',origem:l.origem||'',cnpj:l.cnpj||''};
+      mapped.prioridade=leadPriority(mapped);
+      return mapped;
+    });
+  }
   renderAll();
 }
 function setConn(id,on,txt){ const e=document.getElementById('conn-'+id); if(e){e.className='conn-st '+(on?'on':'');e.style.color=on?'':'var(--orange)';e.textContent=txt;} }
 
-function renderAll(){ renderKPIs();renderEmbarquesTimeline();renderTasks();renderCotacoes();renderEmbarquesMotoristas();renderOps();renderAlertas(); }
+// ====== LEADS CRM (prospecção) ======
+const GENERIC_DOMAINS=['gmail.com','hotmail.com','outlook.com','yahoo.com','yahoo.com.br','icloud.com','live.com','uol.com.br','bol.com.br','terra.com.br','msn.com','ig.com.br','globo.com','outlook.com.br','hotmail.com.br'];
+function leadSite(email){
+  if(!email||email.indexOf('@')<0)return '';
+  const dom=email.trim().toLowerCase().split('@').pop();
+  return (!dom||GENERIC_DOMAINS.includes(dom))?'':('www.'+dom);
+}
+function leadPriority(l){
+  const score=[!!l.telefone,!!l.email,!!(l.site||l.cnpj)].filter(Boolean).length;
+  return score>=3?'Alta':(score===2?'Média':'Baixa');
+}
+function renderLeadsCRM(){
+  const tb=document.getElementById('leadsCrmReal'); if(!tb)return;
+  const leads=DATA.leads||[];
+  const q=(document.getElementById('sLeadsCrm')?.value||'').toLowerCase();
+  const pf=document.getElementById('fLeadsPrio')?.value||'';
+  const prioColor={Alta:'st-ok',Média:'st-pend',Baixa:'st-err'};
+  const filtered=leads.filter(l=>{
+    if(pf&&l.prioridade!==pf)return false;
+    if(!q)return true;
+    return (l.cliente+' '+l.contato+' '+l.email).toLowerCase().includes(q);
+  });
+  tb.innerHTML=filtered.map(l=>
+    '<tr><td><b>'+(l.cliente||'—')+'</b></td><td>'+(l.contato||'—')+'</td><td>'+(l.telefone||'—')+'</td><td>'+(l.email||'—')+'</td><td>'+(l.site||'—')+'</td><td>'+(l.segmento||'—')+'</td><td>'+(l.origem||'—')+'</td><td><span class="op-status '+(prioColor[l.prioridade]||'st-pend')+'">'+l.prioridade+'</span></td></tr>'
+  ).join('') || '<tr><td colspan="8" style="color:var(--muted)">Nenhum lead encontrado.</td></tr>';
+  document.getElementById('lcTotal').textContent=leads.length||'—';
+  document.getElementById('lcAlta').textContent=leads.filter(l=>l.prioridade==='Alta').length;
+  document.getElementById('lcMedia').textContent=leads.filter(l=>l.prioridade==='Média').length;
+  document.getElementById('lcBaixa').textContent=leads.filter(l=>l.prioridade==='Baixa').length;
+  const b=document.getElementById('leadsCrmBadge'); if(b)b.textContent=leads.length||'—';
+}
+function exportLeadsCRM(){
+  const leads=DATA.leads||[];
+  if(!leads.length){ alert('Nenhum lead carregado ainda. Conecte a plataforma Videl primeiro.'); return; }
+  const NL=String.fromCharCode(10);
+  const esc=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';
+  const head=['Cliente','Contato','Telefone','E-mail','Site','Segmento','Origem','Prioridade'];
+  const rows=leads.map(l=>[l.cliente,l.contato,l.telefone,l.email,l.site,l.segmento,l.origem,l.prioridade].map(esc).join(','));
+  const csv=[head.map(esc).join(','), ...rows].join(NL);
+  const blob=new Blob(['﻿'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='leads_crm_novos_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+function renderAll(){ renderKPIs();renderEmbarquesTimeline();renderTasks();renderCotacoes();renderEmbarquesMotoristas();renderOps();renderAlertas();renderLeadsCRM(); }
 
 window.addEventListener('DOMContentLoaded',()=>{
   show('painel'); renderAll();
