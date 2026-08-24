@@ -1,0 +1,199 @@
+{
+  "inicio": "2026-08-31",
+  "semanas": 4,
+  "hashtags": "#logistica #transportadora #cargasdealtovalor #freteseguro #energiasolar #agro #maranhao #saopaulo #supplychain #transporterodoviario",
+  "plano": [
+    {
+      "semana": 1,
+      "dias": [
+        {
+          "data": "2026-08-31",
+          "dataBR": "31/08",
+          "dia": "segunda",
+          "tipo": "feed",
+          "formato": "FEED",
+          "titulo": "Duas bases, uma operação: MA + SP",
+          "legenda": "Base no Maranhão para o Norte/Nordeste, base em São Paulo para o Sudeste/Sul — e uma torre de controle só. Previsibilidade de ponta a ponta."
+        },
+        {
+          "data": "2026-09-01",
+          "dataBR": "01/09",
+          "dia": "terça",
+          "tipo": "story",
+          "formato": "STORY",
+          "titulo": "Bastidor rápido: [VÍDEO] do pátio ou carregamento"
+        },
+        {
+          "data": "2026-09-02",
+          "dataBR": "02/09",
+          "dia": "quarta",
+          "tipo": "feed",
+          "formato": "CARROSSEL",
+          "titulo": "Checklist: como escolher transportadora para carga de alto valor",
+          "legenda": "5 critérios objetivos: seguro, rastreamento, comunicação, SLA e comprovação de entrega. Quantos a sua transportadora atual cumpre?"
+        },
+        {
+          "data": "2026-09-03",
+          "dataBR": "03/09",
+          "dia": "quinta",
+          "tipo": "story",
+          "formato": "STORY",
+          "titulo": "Antes/depois: carga embalada vs. carga entregue"
+        },
+        {
+          "data": "2026-09-04",
+          "dataBR": "04/09",
+          "dia": "sexta",
+          "tipo": "feed",
+          "formato": "REELS",
+          "titulo": "Da cotação à entrega comprovada em 4 passos",
+          "legenda": "[FILMAR/ANIMAR] Cotação → coleta → transporte monitorado → entrega comprovada. Simples de acompanhar, difícil de igualar."
+        }
+      ]
+    },
+    {
+      "semana": 2,
+      "dias": [
+        {
+          "data": "2026-09-07",
+          "dataBR": "07/09",
+          "dia": "segunda",
+          "tipo": "feed",
+          "formato": "FEED",
+          "titulo": "Cobertura MA ⇄ SP: o corredor que a Videl domina",
+          "legenda": "Do Maranhão a São Paulo com frequência regular — e cobertura nacional com parceiros estratégicos. Sua carga tem rota certa. Cotação em até 24h úteis: link na bio."
+        },
+        {
+          "data": "2026-09-08",
+          "dataBR": "08/09",
+          "dia": "terça",
+          "tipo": "story",
+          "formato": "STORY",
+          "titulo": "Enquete: 'Qual seu maior medo ao embarcar carga de alto valor?'"
+        },
+        {
+          "data": "2026-09-09",
+          "dataBR": "09/09",
+          "dia": "quarta",
+          "tipo": "feed",
+          "formato": "CARROSSEL",
+          "titulo": "O que torna uma carga 'de alto valor'?",
+          "legenda": "Não é só o preço na nota: risco, seguro, gerenciamento e quem responde quando algo foge do plano. Arrasta pro lado e entenda como avaliamos cada embarque."
+        },
+        {
+          "data": "2026-09-10",
+          "dataBR": "10/09",
+          "dia": "quinta",
+          "tipo": "story",
+          "formato": "STORY",
+          "titulo": "Bastidor do dia: carregamento em andamento [VÍDEO]"
+        },
+        {
+          "data": "2026-09-11",
+          "dataBR": "11/09",
+          "dia": "sexta",
+          "tipo": "feed",
+          "formato": "REELS",
+          "titulo": "Bastidores: um dia na operação Videl",
+          "legenda": "[FILMAR] Coleta, conferência, amarração e saída — a rotina real de quem cuida da sua carga. #bastidores"
+        }
+      ]
+    },
+    {
+      "semana": 3,
+      "dias": [
+        {
+          "data": "2026-09-14",
+          "dataBR": "14/09",
+          "dia": "segunda",
+          "tipo": "feed",
+          "formato": "FEED",
+          "titulo": "Rota da semana: São Paulo → São Luís em imagens",
+          "legenda": "[FOTOS DA VIAGEM] Estrada, equipe e carga chegando inteira. É assim que a gente conecta o Sudeste ao Nordeste. #naestrada"
+        },
+        {
+          "data": "2026-09-15",
+          "dataBR": "15/09",
+          "dia": "terça",
+          "tipo": "story",
+          "formato": "STORY",
+          "titulo": "Caixa de perguntas: 'Pergunte sobre frete e logística'"
+        },
+        {
+          "data": "2026-09-16",
+          "dataBR": "16/09",
+          "dia": "quarta",
+          "tipo": "feed",
+          "formato": "FEED",
+          "titulo": "+350 mil entregas: o que aprendemos",
+          "legenda": "Cada entrega ensinou alguma coisa sobre prazo, comunicação e risco. O resultado: 98,5% de foco em SLA e clientes que dormem tranquilos."
+        },
+        {
+          "data": "2026-09-17",
+          "dataBR": "17/09",
+          "dia": "quinta",
+          "tipo": "story",
+          "formato": "STORY",
+          "titulo": "Responder as perguntas da caixinha de terça"
+        },
+        {
+          "data": "2026-09-18",
+          "dataBR": "18/09",
+          "dia": "sexta",
+          "tipo": "feed",
+          "formato": "REELS",
+          "titulo": "Um dia com [NOME] — destaque da equipe",
+          "legenda": "[FILMAR] 45 segundos com quem faz a operação acontecer. Pessoas cuidando de cargas — é disso que a logística é feita."
+        }
+      ]
+    },
+    {
+      "semana": 4,
+      "dias": [
+        {
+          "data": "2026-09-21",
+          "dataBR": "21/09",
+          "dia": "segunda",
+          "tipo": "feed",
+          "formato": "FEED",
+          "titulo": "Agro: a safra não espera — sua logística também não",
+          "legenda": "Escoamento com prazo firme, seguro dimensionado e comunicação em cada etapa. Fale com a Videl antes do pico da safra."
+        },
+        {
+          "data": "2026-09-22",
+          "dataBR": "22/09",
+          "dia": "terça",
+          "tipo": "story",
+          "formato": "STORY",
+          "titulo": "Rota do dia no mapa + km rodados da semana"
+        },
+        {
+          "data": "2026-09-23",
+          "dataBR": "23/09",
+          "dia": "quarta",
+          "tipo": "feed",
+          "formato": "CARROSSEL",
+          "titulo": "Seguro de carga: RCTR-C explicado sem juridiquês",
+          "legenda": "O que cobre, o que não cobre e por que a cobertura deve ser dimensionada pelo valor da nota — não pelo peso. Salva este post antes do próximo embarque."
+        },
+        {
+          "data": "2026-09-24",
+          "dataBR": "24/09",
+          "dia": "quinta",
+          "tipo": "story",
+          "formato": "STORY",
+          "titulo": "Repost de cliente/parceiro marcando a Videl"
+        },
+        {
+          "data": "2026-09-25",
+          "dataBR": "25/09",
+          "dia": "sexta",
+          "tipo": "feed",
+          "formato": "FEED",
+          "titulo": "Feche o próximo mês com frete garantido",
+          "legenda": "Agenda aberta para novas operações. Cotação em até 24h úteis pelo WhatsApp (98) 8507-0197 ou link na bio. #cotacao"
+        }
+      ]
+    }
+  ]
+}

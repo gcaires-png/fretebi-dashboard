@@ -1,0 +1,80 @@
+<!--
+  HEAD SEO CORRIGIDO — videltel.com.br
+  Substituir o <head> atual do index.html do site por este bloco
+  (mantendo as tags <script type="module"> e <link rel="stylesheet"> do build Vite).
+
+  Correções em relação ao head em produção (auditado em 24/08/2026):
+  1. canonical/og:url apontavam para https://videl.com.br (domínio errado) -> www.videltel.com.br
+  2. og:image e twitter:image não existiam -> criar /og-image.png (1200x630) com logo + headline
+  3. JSON-LD Organization + Service não existia
+  4. title e description sem localização (São Luís/MA, São Paulo/SP) nem setores
+-->
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+
+<title>VIDEL Transportadora e Logística | Cargas de Alto Valor — MA e SP</title>
+<meta name="description" content="Transportadora especializada em cargas de alto valor com bases no Maranhão e em São Paulo. Longa distância, carga fracionada, armazenagem e logística para energia solar. Cotação em até 24h." />
+<meta name="author" content="VIDEL Transportadora e Logística" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://www.videltel.com.br/" />
+
+<meta property="og:title" content="VIDEL Transportadora e Logística | Cargas de Alto Valor" />
+<meta property="og:description" content="Logística de alto valor com previsibilidade e controle. Bases no Maranhão e em São Paulo, cobertura nacional. Cotação em até 24h." />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="pt_BR" />
+<meta property="og:url" content="https://www.videltel.com.br/" />
+<meta property="og:image" content="https://www.videltel.com.br/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="VIDEL Transportadora e Logística" />
+<meta name="twitter:description" content="Logística de alto valor com previsibilidade e controle para operação B2B. Cotação em até 24h." />
+<meta name="twitter:image" content="https://www.videltel.com.br/og-image.png" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://www.videltel.com.br/#org",
+  "name": "VIDEL Transportadora e Logística",
+  "legalName": "Videl T&I Transportes",
+  "taxID": "63.147.064/0001-30",
+  "url": "https://www.videltel.com.br/",
+  "logo": "https://www.videltel.com.br/assets/videl-logo-B9czxjtK.png",
+  "sameAs": ["https://www.instagram.com/videl_br/"],
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+55-98-8507-0197",
+    "contactType": "sales",
+    "availableLanguage": "Portuguese",
+    "areaServed": "BR"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "serviceType": "Transporte rodoviário de cargas de alto valor",
+  "provider": { "@id": "https://www.videltel.com.br/#org" },
+  "areaServed": [
+    { "@type": "State", "name": "Maranhão" },
+    { "@type": "State", "name": "São Paulo" },
+    { "@type": "Country", "name": "Brasil" }
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Soluções logísticas",
+    "itemListElement": [
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Longa Distância" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Carga Fracionada" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Armazenagem" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Distribuição" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Gestão de Entregas" } },
+      { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Logística para Energia Solar" } }
+    ]
+  }
+}
+</script>

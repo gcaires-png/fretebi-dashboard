@@ -1,0 +1,7 @@
+# Publicar em https://www.videltel.com.br/robots.txt (pasta public/ do projeto Vite)
+# Mudança vs. produção: linha Sitemap adicionada e /dashboard bloqueado (área interna).
+User-agent: *
+Allow: /
+Disallow: /dashboard
+
+Sitemap: https://www.videltel.com.br/sitemap.xml

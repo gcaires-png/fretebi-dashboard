@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Publicar em https://www.videltel.com.br/sitemap.xml (pasta public/ do projeto Vite).
+     Hoje essa URL devolve o HTML da home — o Google não tem mapa do site.
+     Acrescentar aqui cada página nova de serviço/rota quando for criada. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.videltel.com.br/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+</urlset>
