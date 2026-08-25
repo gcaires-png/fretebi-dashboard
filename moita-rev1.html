@@ -877,6 +877,8 @@ const SNAPSHOT = {"kpis": {"cotacoes": 73, "cotacoes_aprovadas": 65, "operacoes_
 // ====== CAMADA DE DADOS REAIS + LIVE FETCH (Moita Rev1) ======
 let DATA = JSON.parse(JSON.stringify(SNAPSHOT));
 const PROXY = (typeof localStorage!=='undefined' && localStorage.getItem('MOITA_PROXY'))||'';
+// chave do proxy (segredo PROXY_KEY no Worker): localStorage.setItem('MOITA_PROXY_KEY','...')
+const PROXY_KEY = (typeof localStorage!=='undefined' && localStorage.getItem('MOITA_PROXY_KEY'))||'';
 const API = PROXY || 'https://www.videltel.com.br/api';
 const USE_PROXY = !!PROXY;
 const brl = v => 'R$ ' + (Number(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -1034,7 +1036,7 @@ async function loginLive(){
   }catch(e){ alert('Falha no login ao vivo: '+e.message+String.fromCharCode(10)+'(A API pode bloquear CORS fora do dominio videltel.com.br - use o painel dentro da plataforma.)'); }
 }
 async function carregarLive(tk){
-  const h = USE_PROXY ? {} : {'Authorization':'Bearer '+(tk||'')};
+  const h = USE_PROXY ? (PROXY_KEY?{'X-Moita-Key':PROXY_KEY}:{}) : {'Authorization':'Bearer '+(tk||'')};
   const [sh,qt]=await Promise.all([
     fetch(API+'/shipments?page=1&limit=100',{headers:h}).then(r=>r.json()),
     fetch(API+'/quotes?page=1&limit=100',{headers:h}).then(r=>r.json())

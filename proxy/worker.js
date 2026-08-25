@@ -9,6 +9,12 @@
  * Segredos (configurar via `wrangler secret put`):
  *   VIDEL_EMAIL     — e-mail de acesso à plataforma Videl
  *   VIDEL_PASSWORD  — senha de acesso à plataforma Videl
+ *   PROXY_KEY       — chave que o painel envia (header X-Moita-Key ou ?pk=).
+ *                     IMPORTANTE: CORS só protege dentro do navegador; sem
+ *                     esta chave, qualquer pessoa com a URL do Worker lê a
+ *                     API inteira (clientes, motoristas, contas a pagar).
+ *                     Se o segredo não estiver configurado, o proxy segue
+ *                     aberto (compatível com o comportamento anterior).
  *
  * Variáveis (wrangler.toml [vars]):
  *   ALLOWED_ORIGINS — lista separada por vírgula das origens permitidas
@@ -37,7 +43,7 @@ function corsHeaders(origin, allowed) {
   return {
     'Access-Control-Allow-Origin': ok ? origin : allowed[0] || '*',
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Moita-Key',
     'Access-Control-Max-Age': '86400',
     'Vary': 'Origin',
   };
@@ -50,6 +56,7 @@ async function getToken(env) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email: env.VIDEL_EMAIL, password: env.VIDEL_PASSWORD }),
+    signal: AbortSignal.timeout(20_000),
   });
   if (!r.ok) throw new Error(`login Videl falhou: HTTP ${r.status}`);
   const j = await r.json();
@@ -62,6 +69,13 @@ async function getToken(env) {
 
 function pathAllowed(seg0) {
   return ALLOWED_PATHS.includes(seg0);
+}
+
+// Só letras, números, _ . e - em cada segmento (ids, slugs). Bloqueia '..'
+// e caracteres codificados que a API upstream poderia decodificar como
+// separador de path (ex.: /shipments/%2e%2e/users).
+function segsValidos(segs) {
+  return segs.every((s) => /^[A-Za-z0-9_.-]+$/.test(s) && !s.includes('..'));
 }
 
 export default {
@@ -98,18 +112,36 @@ export default {
       return json({ error: 'route_not_allowed', route }, 403, cors);
     }
 
+    if (!segsValidos(segs)) {
+      return json({ error: 'invalid_path' }, 400, cors);
+    }
+
     // origem não permitida → bloqueia (defesa extra além do CORS do navegador)
     if (allowed.length && origin && !allowed.includes(origin)) {
       return json({ error: 'origin_not_allowed', origin }, 403, cors);
     }
 
+    // autenticação do proxy (se PROXY_KEY estiver configurada como segredo)
+    if (env.PROXY_KEY) {
+      const chave = request.headers.get('X-Moita-Key') || url.searchParams.get('pk') || '';
+      if (chave !== env.PROXY_KEY) {
+        return json({ error: 'unauthorized' }, 401, cors);
+      }
+      url.searchParams.delete('pk'); // não repassa a chave para a Videl
+    }
+
     try {
-      const token = await getToken(env);
-      // repassa path + querystring exatamente para a Videl
+      // repassa path + querystring para a Videl
       const target = `${VIDEL_BASE}/${segs.join('/')}${url.search}`;
-      const r = await fetch(target, {
-        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
-      });
+      let token = await getToken(env);
+      let r = await fetchVidel(target, token);
+      // token pode ser invalidado antes do TTL do cache (deploy, logout na
+      // Videl): em 401/403, força novo login e tenta UMA vez mais
+      if (r.status === 401 || r.status === 403) {
+        tokenCache = { value: null, exp: 0 };
+        token = await getToken(env);
+        r = await fetchVidel(target, token);
+      }
       const body = await r.text();
       return new Response(body, {
         status: r.status,
@@ -120,6 +152,13 @@ export default {
     }
   },
 };
+
+function fetchVidel(target, token) {
+  return fetch(target, {
+    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
+    signal: AbortSignal.timeout(20_000),
+  });
+}
 
 function json(obj, status, cors) {
   return new Response(JSON.stringify(obj), {
