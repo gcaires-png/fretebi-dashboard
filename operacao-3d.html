@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Videl T&L — Operação em 3D</title>
+<meta name="description" content="Videl Transporte & Logística — logística inteligente para a cadeia de energia solar. Veja nossa operação nacional em 3D.">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B0E14; --panel:#131A26; --panel-2:#1B2432; --line:#26303F;
+  --ink:#E8ECF2; --mute:#8A94A6; --dim:#5B6678;
+  --amber:#F2A81D; --laranja:#E0603A; --verde:#2E9E5B; --azul:#4A86E8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;line-height:1.55}
+a{color:var(--amber);text-decoration:none}
+.mono{font-family:'IBM Plex Mono',monospace}
+
+/* ---------- hero 3D ---------- */
+#hero{position:relative;height:100svh;min-height:520px;overflow:hidden}
+#c3d{position:absolute;inset:0}
+#c3d canvas{display:block}
+.hero-grad{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(11,14,20,.25) 0%,rgba(11,14,20,0) 35%,rgba(11,14,20,.92) 88%,#0B0E14 100%)}
+.hero-ui{position:absolute;left:0;right:0;bottom:0;padding:0 22px 34px;max-width:1060px;margin:0 auto}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.22em;color:var(--amber);text-transform:uppercase;margin-bottom:10px}
+h1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(40px,8vw,76px);line-height:.94;text-transform:uppercase;letter-spacing:.01em}
+h1 small{display:block;font-size:clamp(17px,3vw,26px);font-weight:600;color:var(--mute);letter-spacing:.04em;margin-top:10px;text-transform:none}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{border:1px solid var(--line);background:rgba(19,26,38,.7);backdrop-filter:blur(6px);color:var(--mute);padding:7px 12px;border-radius:3px;font-size:12px}
+.chip b{color:var(--ink);font-weight:600}
+.scrolldown{position:absolute;right:22px;bottom:34px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--dim);text-transform:uppercase;writing-mode:vertical-rl;opacity:.8}
+#hint3d{position:absolute;top:16px;right:16px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);background:rgba(19,26,38,.75);border:1px solid var(--line);padding:7px 10px;border-radius:3px;letter-spacing:.08em}
+
+/* ---------- seções ---------- */
+section{max-width:1060px;margin:0 auto;padding:64px 22px}
+.sec-eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.2em;color:var(--amber);text-transform:uppercase;margin-bottom:10px}
+h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:clamp(30px,5vw,44px);line-height:1;text-transform:uppercase;margin-bottom:14px}
+.lead{color:var(--mute);font-size:16px;max-width:640px}
+.grid{display:grid;gap:14px;margin-top:30px}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.cardx{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:20px 20px 22px}
+.cardx .ic{font-size:22px;margin-bottom:12px}
+.cardx h3{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px}
+.cardx p{font-size:13.5px;color:var(--mute)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:30px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:18px;text-align:center}
+.kpi b{display:block;font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:700;color:var(--amber);line-height:1}
+.kpi span{font-size:12px;color:var(--mute)}
+.rotas{margin-top:26px;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.rota{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel);font-size:13.5px}
+.rota:last-child{border-bottom:0}
+.rota .seta{color:var(--amber)}
+.rota .tag{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--verde);border:1px solid var(--verde);border-radius:2px;padding:2px 7px;letter-spacing:.08em;white-space:nowrap}
+.time-card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:22px 20px;text-align:center}
+.time-card .av{width:58px;height:58px;border-radius:50%;background:var(--panel-2);border:1px solid var(--line);display:grid;place-items:center;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;color:var(--amber);margin:0 auto 12px}
+.time-card b{display:block;font-size:15px}
+.time-card span{font-size:12px;color:var(--mute)}
+.mundo{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.mundo .chip{font-size:13px;padding:9px 14px}
+.cta{background:linear-gradient(135deg,#1B2432,#131A26);border:1px solid var(--line);border-radius:6px;padding:36px 26px;text-align:center;margin-top:10px}
+.cta h2{margin-bottom:8px}
+.cta p{color:var(--mute);margin-bottom:22px}
+.btn{display:inline-block;background:var(--amber);color:#141005;padding:13px 26px;border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:16px;letter-spacing:.08em;text-transform:uppercase;margin:4px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--dim)}
+footer{border-top:1px solid var(--line);padding:26px 22px 40px;text-align:center;color:var(--dim);font-size:12px}
+footer .mono{letter-spacing:.1em}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- ================= HERO 3D ================= -->
+<div id="hero">
+  <div id="c3d"></div>
+  <div class="hero-grad"></div>
+  <div id="hint3d">ARRASTE PARA GIRAR</div>
+  <div class="hero-ui">
+    <div class="eyebrow">Intersolar South America 2026 · Transporte &amp; Logística</div>
+    <h1>Videl<small>Logística inteligente para a cadeia de energia solar — do porto à usina.</small></h1>
+    <div class="chips">
+      <div class="chip"><b>Cobertura nacional</b> · rodoviário porta a porta</div>
+      <div class="chip"><b>Cargas solares</b> · módulos, inversores, kits e trackers</div>
+      <div class="chip"><b>IA na torre de controle</b> · Moita Rev1</div>
+    </div>
+  </div>
+  <div class="scrolldown">role para conhecer ↓</div>
+</div>
+
+<!-- ================= O QUE FAZEMOS ================= -->
+<section>
+  <div class="sec-eyebrow">O que fazemos</div>
+  <h2>Transporte dedicado e spot,<br>sem fronteira de estado</h2>
+  <p class="lead">A Videl opera fretes rodoviários em todo o Brasil com modelo asset-light: rede qualificada de motoristas agregados, contratação ágil e acompanhamento de ponta a ponta. Especialistas em cargas do setor de energia solar.</p>
+  <div class="grid g3">
+    <div class="cardx"><div class="ic">🔆</div><h3>Cadeia solar completa</h3><p>Módulos fotovoltaicos, inversores, estruturas, trackers e kits completos — incluindo cargas paletizadas em pé, com veículo e amarração adequados ao produto.</p></div>
+    <div class="cardx"><div class="ic">🚛</div><h3>Porta a porta</h3><p>Coleta na fábrica, porto ou CD e entrega na obra ou usina, com ajudantes para descarga e agendamento direto com o destinatário.</p></div>
+    <div class="cardx"><div class="ic">🛡️</div><h3>Carga segurada</h3><p>Apólice RCV com seguradora de primeira linha e averbação eletrônica de cada CT-e. Documentação fiscal 100% digital.</p></div>
+  </div>
+</section>
+
+<!-- ================= TECNOLOGIA ================= -->
+<section>
+  <div class="sec-eyebrow">Tecnologia</div>
+  <h2>Uma torre de controle com IA de verdade</h2>
+  <p class="lead">No centro da operação está o <b style="color:var(--ink)">Moita Rev1</b>, nosso analista de logística virtual: uma IA que cruza cotações, contrata motoristas, monta a documentação e monitora cada viagem — com um humano aprovando cada passo crítico.</p>
+  <div class="grid g4">
+    <div class="cardx"><div class="ic">🤖</div><h3>Moita Rev1</h3><p>IA operacional que analisa custo, busca o motorista certo por geolocalização e prepara o CT-e em minutos.</p></div>
+    <div class="cardx"><div class="ic">📊</div><h3>FreteBI</h3><p>BI de fretes em tempo real: preço de mercado por rota, demanda por região e performance da operação.</p></div>
+    <div class="cardx"><div class="ic">📡</div><h3>Monitoramento</h3><p>Atualização de status em cada etapa — coleta, trânsito, descarga — comunicada ao cliente sem que ele precise perguntar.</p></div>
+    <div class="cardx"><div class="ic">🧾</div><h3>Docs digitais</h3><p>CT-e, MDF-e e averbação de seguro emitidos e conferidos digitalmente, com dupla checagem humano + IA.</p></div>
+  </div>
+</section>
+
+<!-- ================= OPERAÇÃO ================= -->
+<section>
+  <div class="sec-eyebrow">Operação ao vivo</div>
+  <h2>Rotas recentes da nossa malha</h2>
+  <p class="lead">Uma amostra real das últimas semanas — kits solares, equipamentos e carga geral cruzando o país.</p>
+  <div class="kpis">
+    <div class="kpi"><b>8+</b><span>estados atendidos<br>nas últimas semanas</span></div>
+    <div class="kpi"><b>100%</b><span>das operações com<br>CT-e e seguro averbado</span></div>
+    <div class="kpi"><b>24h</b><span>da cotação à<br>contratação do veículo</span></div>
+    <div class="kpi"><b>IA+</b><span>torre de controle<br>assistida por IA</span></div>
+  </div>
+  <div class="rotas">
+    <div class="rota">Nova Odessa/SP <span class="seta">→</span> Curitiba/PR <span class="tag">KITS SOLARES ✓</span></div>
+    <div class="rota">Itaquaquecetuba/SP <span class="seta">→</span> Trindade/GO <span class="tag">KITS SOLARES ✓</span></div>
+    <div class="rota">Aguaí/SP <span class="seta">→</span> Irecê/BA <span class="tag">CARGA GERAL ✓</span></div>
+    <div class="rota">Três Lagoas/MS <span class="seta">→</span> São José do Xingu/MT <span class="tag">EM ROTA</span></div>
+    <div class="rota">Nova Odessa/SP <span class="seta">→</span> Londrina/PR <span class="tag">PROGRAMADO</span></div>
+  </div>
+</section>
+
+<!-- ================= TIME ================= -->
+<section>
+  <div class="sec-eyebrow">Quem está na feira</div>
+  <h2>Fale com a gente nos corredores</h2>
+  <p class="lead">Estamos na Intersolar de 25 a 27 de agosto. Procure o time Videl:</p>
+  <div class="grid g4">
+    <div class="time-card"><div class="av">GC</div><b>Gearlison Caires</b><span>Diretor Geral</span></div>
+    <div class="time-card"><div class="av">JA</div><b>José Adailton (Adam)</b><span>Gerente de Logística &amp; Supply</span></div>
+    <div class="time-card"><div class="av">AF</div><b>Anderson Fernandes</b><span>Business Development</span></div>
+    <div class="time-card"><div class="av">HM</div><b>Hudson Melônio</b><span>Coordenador de Logística</span></div>
+  </div>
+</section>
+
+<!-- ================= INTERNACIONAL ================= -->
+<section>
+  <div class="sec-eyebrow">Além do Brasil</div>
+  <h2>Pontes comerciais Brasil ↔ mundo</h2>
+  <p class="lead">Nossa diretoria tem trajetória em multinacionais e relacionamento ativo com o mercado chinês, contatos na Europa e na África — apoiando parcerias de importação, distribuição e supply chain entre o Brasil e a União Europeia.</p>
+  <div class="mundo">
+    <div class="chip">🇧🇷 <b>Brasil</b> · operação nacional</div>
+    <div class="chip">🇨🇳 <b>China</b> · sourcing &amp; fornecedores</div>
+    <div class="chip">🇪🇺 <b>Europa</b> · parcerias e distribuição</div>
+    <div class="chip">🌍 <b>África</b> · rede de contatos</div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section>
+  <div class="cta">
+    <div class="sec-eyebrow">Vamos conversar?</div>
+    <h2>Sua carga solar merece uma logística à altura</h2>
+    <p>Cotação em até 24h · frete-teste sem compromisso · atendimento nacional</p>
+    <a class="btn" href="https://www.videltel.com.br" target="_blank" rel="noopener">videltel.com.br</a>
+    <a class="btn ghost" href="mailto:asfernandes@videltel.com.br?subject=Contato%20Intersolar%202026">Falar com o comercial</a>
+  </div>
+</section>
+
+<footer>
+  <div class="mono">VIDEL TRANSPORTE &amp; LOGÍSTICA · CNPJ 63.147.064/0001-30</div>
+  <div style="margin-top:6px">Intersolar South America 2026 · São Paulo · Expo Center Norte</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+'use strict';
+if(!window.THREE) return; // sem WebGL/CDN, a página segue estática
+
+/* ---------- malha da operação (cidades reais das últimas semanas) ---------- */
+const CIDADES = {
+  'São Luís/MA':        [-2.53,-44.30],
+  'São José do Xingu/MT':[-10.80,-52.75],
+  'Irecê/BA':           [-11.30,-41.86],
+  'Trindade/GO':        [-16.65,-49.49],
+  'Três Lagoas/MS':     [-20.75,-51.68],
+  'Viçosa/MG':          [-20.75,-42.88],
+  'Birigui/SP':         [-21.29,-50.34],
+  'Aguaí/SP':           [-22.06,-46.97],
+  'Nova Odessa/SP':     [-22.78,-47.30],
+  'São Paulo/SP':       [-23.55,-46.63],
+  'Itaquaquecetuba/SP': [-23.48,-46.35],
+  'Londrina/PR':        [-23.31,-51.16],
+  'Curitiba/PR':        [-25.43,-49.27],
+  'Itajaí/SC':          [-26.90,-48.66]
+};
+const ROTAS = [
+  ['Nova Odessa/SP','Curitiba/PR'],
+  ['Nova Odessa/SP','Viçosa/MG'],
+  ['Nova Odessa/SP','Londrina/PR'],
+  ['Itaquaquecetuba/SP','Trindade/GO'],
+  ['Aguaí/SP','Irecê/BA'],
+  ['Três Lagoas/MS','Birigui/SP'],
+  ['Três Lagoas/MS','São José do Xingu/MT'],
+  ['Itajaí/SC','Aguaí/SP']
+];
+// projeção simples: x = (lon-lon0)*K ; z = (lat0-lat)*K  (norte fica em -z)
+const K = 2.6, LAT0=-18.5, LON0=-47.5;
+function proj(nome){
+  const [lat,lon] = CIDADES[nome];
+  return new THREE.Vector3((lon-LON0)*K, 0, (lat-LAT0)*-K);
+}
+
+/* ---------- cena ---------- */
+const wrap = document.getElementById('c3d');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0B0E14);
+scene.fog = new THREE.Fog(0x0B0E14, 120, 260);
+const camera = new THREE.PerspectiveCamera(46, 1, 0.5, 600);
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+wrap.appendChild(renderer.domElement);
+
+scene.add(new THREE.HemisphereLight(0x9FB6D9, 0x0B0E14, 0.9));
+const key = new THREE.DirectionalLight(0xFFF3DC, 0.7); key.position.set(40,80,30); scene.add(key);
+
+const piso = new THREE.Mesh(new THREE.PlaneGeometry(400,400),
+  new THREE.MeshStandardMaterial({color:0x0F141D, roughness:1}));
+piso.rotation.x = -Math.PI/2; piso.position.y=-0.06; scene.add(piso);
+scene.add(new THREE.GridHelper(400, 80, 0x1B2432, 0x141B27));
+
+function rotulo(txt, cor, x, y, z, esc){
+  const c = document.createElement('canvas'); c.width=512; c.height=128;
+  const g = c.getContext('2d');
+  g.fillStyle='#'+cor.toString(16).padStart(6,'0');
+  g.font='600 44px "Barlow Condensed", sans-serif';
+  g.textAlign='center'; g.fillText(txt,256,58);
+  const t = new THREE.CanvasTexture(c);
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({map:t, transparent:true, depthTest:false}));
+  s.position.set(x,y,z); s.scale.set(esc, esc*0.25, 1); s.renderOrder=5;
+  scene.add(s); return s;
+}
+
+/* cidades */
+const geoNo = new THREE.CylinderGeometry(0.7,0.7,0.5,20);
+Object.keys(CIDADES).forEach(nome=>{
+  const p = proj(nome);
+  const emRota = ROTAS.some(r=>r.includes(nome));
+  const cor = emRota ? 0xF2A81D : 0x5B6678;
+  const no = new THREE.Mesh(geoNo, new THREE.MeshStandardMaterial({
+    color:cor, emissive:cor, emissiveIntensity: emRota?.5:.15}));
+  no.position.set(p.x, .25, p.z); scene.add(no);
+  const anel = new THREE.Mesh(new THREE.RingGeometry(1.1,1.35,28),
+    new THREE.MeshBasicMaterial({color:cor, transparent:true, opacity:.35, side:THREE.DoubleSide}));
+  anel.rotation.x = -Math.PI/2; anel.position.set(p.x,.02,p.z); scene.add(anel);
+  rotulo(nome, emRota?0xE8ECF2:0x8A94A6, p.x, 3.4, p.z, emRota?11:8.5);
+});
+
+/* arcos das rotas + pulsos */
+const pulsos = [];
+ROTAS.forEach(([a,b],i)=>{
+  const pa = proj(a), pb = proj(b);
+  const meio = pa.clone().add(pb).multiplyScalar(.5);
+  meio.y = pa.distanceTo(pb)*0.28 + 2;
+  const curva = new THREE.QuadraticBezierCurve3(pa.clone().setY(.4), meio, pb.clone().setY(.4));
+  const tubo = new THREE.Mesh(new THREE.TubeGeometry(curva, 40, 0.10, 6, false),
+    new THREE.MeshBasicMaterial({color:0xE0603A, transparent:true, opacity:.5}));
+  scene.add(tubo);
+  const pulso = new THREE.Mesh(new THREE.SphereGeometry(0.5, 12, 12),
+    new THREE.MeshBasicMaterial({color:0xF2A81D}));
+  scene.add(pulso);
+  pulsos.push({curva, mesh:pulso, fase: i*0.13, vel: 0.00011 + (i%3)*0.00003});
+});
+
+/* logotipo central */
+rotulo('OPERAÇÃO VIDEL · AO VIVO', 0xF2A81D, 0, 20, 0, 30);
+
+/* ---------- câmera orbital com auto-giro ---------- */
+let alvo = new THREE.Vector3(2, 0, 4);
+let raio = 66, theta = -1.15, phi = 1.02, autoGiro = true;
+function posCam(){
+  camera.position.set(
+    alvo.x + raio*Math.sin(phi)*Math.cos(theta),
+    alvo.y + raio*Math.cos(phi),
+    alvo.z + raio*Math.sin(phi)*Math.sin(theta));
+  camera.lookAt(alvo);
+}
+const cv = renderer.domElement;
+let arrast=false, lx=0, ly=0;
+cv.addEventListener('pointerdown', e=>{arrast=true; autoGiro=false; lx=e.clientX; ly=e.clientY; cv.setPointerCapture(e.pointerId);});
+cv.addEventListener('pointermove', e=>{
+  if(!arrast) return;
+  const dx=e.clientX-lx, dy=e.clientY-ly; lx=e.clientX; ly=e.clientY;
+  theta -= dx*0.0055;
+  phi = Math.max(0.25, Math.min(1.4, phi - dy*0.0042));
+  posCam();
+});
+addEventListener('pointerup', ()=>{arrast=false;});
+cv.addEventListener('wheel', e=>{
+  // não roubar o scroll da página: zoom só com ctrl
+  if(!e.ctrlKey) return;
+  e.preventDefault();
+  raio = Math.max(26, Math.min(160, raio*(1+Math.sign(e.deltaY)*0.09)));
+  posCam();
+},{passive:false});
+
+function resize(){
+  const w = wrap.clientWidth, h = wrap.clientHeight;
+  camera.aspect = w/h; camera.updateProjectionMatrix();
+  renderer.setSize(w,h);
+}
+addEventListener('resize', resize);
+resize(); posCam();
+
+let t0=0;
+(function loop(t){
+  requestAnimationFrame(loop);
+  const dt=(t-t0); t0=t;
+  if(autoGiro){ theta += dt*0.00006; posCam(); }
+  pulsos.forEach(p=>{
+    p.fase = (p.fase + dt*p.vel) % 1;
+    p.mesh.position.copy(p.curva.getPoint(p.fase));
+  });
+  renderer.render(scene, camera);
+})(0);
+})();
+</script>
+</body>
+</html>

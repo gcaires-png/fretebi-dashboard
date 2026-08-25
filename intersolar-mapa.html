@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Planta 3D — Intersolar South America 2026 · Videl T&L</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0B0E14; --panel:#131A26; --panel-2:#1B2432; --line:#26303F;
+  --ink:#E8ECF2; --mute:#8A94A6; --dim:#5B6678;
+  --vermelho:#C0392B; --verde:#2E9E5B; --branco:#D9DEE6; --azul:#2C6FD1;
+  --amber:#F2A81D;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',system-ui,sans-serif;overflow:hidden}
+#app{display:grid;grid-template-columns:320px 1fr;height:100vh}
+#side{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
+.brand{padding:18px 18px 14px;border-bottom:1px solid var(--line)}
+.brand .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--amber);text-transform:uppercase;margin-bottom:6px}
+.brand h1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:30px;line-height:.95;letter-spacing:.01em;text-transform:uppercase}
+.brand .sub{font-size:11.5px;color:var(--mute);margin-top:7px;line-height:1.45}
+.tabs{display:flex;border-bottom:1px solid var(--line);flex-shrink:0}
+.tab{flex:1;padding:11px 4px;background:none;border:0;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--dim);border-bottom:2px solid transparent;transition:.15s}
+.tab:hover{color:var(--mute)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--amber)}
+.pane{display:none;overflow-y:auto;flex:1;padding:16px 18px 28px}
+.pane[data-on="1"]{display:block}
+.pane::-webkit-scrollbar{width:8px}
+.pane::-webkit-scrollbar-thumb{background:var(--line);border-radius:4px}
+label.f{display:block;font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin:0 0 7px}
+.sec{margin-bottom:22px}
+input[type=text]{width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--ink);padding:9px 11px;border-radius:3px;font:inherit;font-size:13px}
+input[type=text]:focus{outline:2px solid var(--amber);outline-offset:-1px;border-color:transparent}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{border:1px solid var(--line);background:transparent;color:var(--mute);padding:5px 9px;border-radius:2px;cursor:pointer;font-size:11px;display:flex;align-items:center;gap:6px;transition:.13s;text-align:left}
+.chip:hover{border-color:var(--dim);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--panel-2);color:var(--ink);border-color:var(--dim)}
+.swatch{width:9px;height:9px;border-radius:1px;flex-shrink:0}
+.btn{width:100%;background:var(--amber);color:#141005;border:0;padding:10px;border-radius:3px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase}
+.btn:hover{filter:brightness(1.1)}
+.btn.ghost{background:transparent;color:var(--mute);border:1px solid var(--line)}
+.btn.ghost:hover{color:var(--ink);border-color:var(--dim)}
+.btn-row{display:flex;gap:7px;margin-top:9px}
+.route-item{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line)}
+.route-n{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--amber);border:1px solid var(--amber);width:20px;height:20px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;margin-top:1px}
+.route-b{flex:1;min-width:0}
+.route-b b{display:block;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.route-b span{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--mute)}
+.x{background:none;border:0;color:var(--dim);cursor:pointer;font-size:16px;line-height:1;padding:0 2px}
+.x:hover{color:var(--vermelho)}
+.empty{color:var(--dim);font-size:12px;line-height:1.6;padding:14px 0}
+.stat{display:flex;justify-content:space-between;padding:6px 0;font-size:12px;border-bottom:1px solid var(--line)}
+.stat span{color:var(--mute)}
+.stat b{font-family:'IBM Plex Mono',monospace;font-weight:600}
+.note{background:rgba(242,168,29,.07);border-left:2px solid var(--amber);padding:10px 12px;font-size:11.5px;line-height:1.55;color:var(--mute);margin-bottom:18px}
+.note b{color:var(--ink);font-weight:600}
+#stage{position:relative}
+canvas{display:block}
+#hud-top{position:absolute;top:16px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;gap:14px}
+.legend{background:rgba(19,26,38,.88);backdrop-filter:blur(8px);border:1px solid var(--line);padding:11px 13px;border-radius:3px;pointer-events:auto}
+.legend h4{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);font-weight:400;margin-bottom:8px}
+.legend .row{display:flex;align-items:center;gap:7px;font-size:11px;margin-bottom:5px;color:var(--mute)}
+.legend .row:last-child{margin-bottom:0}
+.hint{background:rgba(19,26,38,.88);backdrop-filter:blur(8px);border:1px solid var(--line);padding:9px 12px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);line-height:1.8;pointer-events:auto}
+.hint b{color:var(--mute);font-weight:400}
+#card{position:absolute;bottom:18px;left:18px;width:296px;background:rgba(19,26,38,.95);backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:3px;padding:15px 16px;display:none}
+#card[data-on="1"]{display:block}
+#card .code{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--amber);letter-spacing:.08em;margin-bottom:5px}
+#card h3{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;line-height:1.05;text-transform:uppercase;margin-bottom:10px}
+#card .meta{display:flex;flex-direction:column;gap:4px;margin-bottom:13px}
+#card .meta div{font-size:11.5px;color:var(--mute);display:flex;gap:8px}
+#card .meta div b{color:var(--ink);font-weight:500}
+#card .tag{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border-radius:2px;border:1px solid var(--verde);color:var(--verde);margin-bottom:10px}
+#loading{position:absolute;inset:0;display:grid;place-items:center;background:var(--bg);font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:.15em}
+@media (max-width:900px){
+  #app{grid-template-columns:1fr;grid-template-rows:44vh 56vh}
+  #side{border-right:0;border-bottom:1px solid var(--line)}
+  #hud-top{flex-direction:column}
+  .hint{display:none}
+  #card{width:calc(100% - 36px)}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+
+<aside id="side">
+  <div class="brand">
+    <div class="eyebrow">25–27 ago · Expo Center Norte</div>
+    <h1>Planta 3D<br>Intersolar SA 26</h1>
+    <div class="sub">Lista oficial carregada: <b style="color:var(--ink)" id="subCount"></b> expositores com estande real (Intersolar · ees · Eletrotec/EM-Power). Ache o fornecedor, monte a rota, ande menos.</div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-pane="buscar">Buscar</button>
+    <button class="tab" role="tab" aria-selected="false" data-pane="rota">Rota</button>
+    <button class="tab" role="tab" aria-selected="false" data-pane="dados">Dados</button>
+  </div>
+
+  <!-- BUSCAR -->
+  <div class="pane" data-name="buscar" data-on="1">
+    <div class="sec">
+      <label class="f">Empresa, estande ou país</label>
+      <input type="text" id="q" placeholder="TE Connectivity, B4.31, China…" autocomplete="off">
+      <div id="hits"></div>
+    </div>
+    <div class="sec">
+      <label class="f">Evento</label>
+      <div class="chips" id="evChips"></div>
+    </div>
+    <div class="sec">
+      <label class="f">Pavilhão</label>
+      <div class="chips" id="pavChips"></div>
+    </div>
+    <div class="sec">
+      <label class="f">Ocupação</label>
+      <div id="stats"></div>
+    </div>
+  </div>
+
+  <!-- ROTA -->
+  <div class="pane" data-name="rota">
+    <div class="note">Cada parada acende um feixe âmbar visível de qualquer ângulo. <b>Ordenar por proximidade</b> reencadeia as paradas pelo vizinho mais próximo a partir da entrada sul.</div>
+    <div id="routeList"></div>
+    <div class="btn-row"><button class="btn" id="optRoute">Ordenar por proximidade</button></div>
+    <div class="btn-row">
+      <button class="btn ghost" id="csvRoute">Baixar CSV</button>
+      <button class="btn ghost" id="clrRoute">Limpar</button>
+    </div>
+  </div>
+
+  <!-- DADOS -->
+  <div class="pane" data-name="dados">
+    <div class="note"><b>Fonte:</b> exportação oficial da relação de expositoras do portal intersolar.net.br (planilha Videl). Posições de rua e estande seguem o código real (ex.: <b>B4.31</b> = pavilhão azul, rua 4, estande 31). A posição na rua é aproximada pela numeração — confirme no totem do pavilhão.</div>
+    <div class="sec">
+      <label class="f">Validação Moita · 25/08/2026</label>
+      <div class="empty" style="padding-top:4px">
+        Mapeamento anterior corrigido:<br><br>
+        · <b style="color:var(--ink)">TE Connectivity</b> está em <b style="color:var(--amber)">B4.31</b> (não R2.30 — lá é a UNITRAFO).<br>
+        · <b style="color:var(--ink)">Suntrack</b> e <b style="color:var(--ink)">Saft</b> não constam na lista oficial de expositores.<br>
+        · <b style="color:var(--amber)">R5.30</b> = AEB Transformadores / ABMT (Eletrotec).<br><br>
+        Alvos Videl Supply sugeridos: TE Connectivity (B4.31), Arctech Solar (B3.59), Huasun (W6.50), BYD/CATL/Moura no pavilhão azul (ees) — use a busca.
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main id="stage">
+  <div id="loading">CARREGANDO PLANTA…</div>
+  <div id="hud-top">
+    <div class="legend">
+      <h4>Pavilhões · Evento</h4>
+      <div class="row"><span class="swatch" style="background:#C0392B"></span>Vermelho</div>
+      <div class="row"><span class="swatch" style="background:#2E9E5B"></span>Verde</div>
+      <div class="row"><span class="swatch" style="background:#D9DEE6"></span>Branco</div>
+      <div class="row"><span class="swatch" style="background:#2C6FD1"></span>Azul</div>
+      <div class="row" style="margin-top:8px;border-top:1px solid var(--line);padding-top:8px"><span class="swatch" style="background:#E0603A"></span>Intersolar SA</div>
+      <div class="row"><span class="swatch" style="background:#4A86E8"></span>ees (baterias)</div>
+      <div class="row"><span class="swatch" style="background:#3FA796"></span>Eletrotec/EM-Power</div>
+      <div class="row" style="margin-top:8px;border-top:1px solid var(--line);padding-top:8px"><span class="swatch" style="background:#F2A81D"></span>Na sua rota</div>
+    </div>
+    <div class="hint"><b>arrastar</b> girar<br><b>scroll</b> zoom<br><b>botão direito</b> deslocar<br><b>clique</b> abrir estande</div>
+  </div>
+  <div id="card">
+    <div class="code" id="cCode"></div>
+    <h3 id="cName"></h3>
+    <div class="tag" id="cTag"></div>
+    <div class="meta" id="cMeta"></div>
+    <button class="btn" id="cAdd">Adicionar à rota</button>
+  </div>
+</main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+'use strict';
+
+/* ============ DADOS OFICIAIS (planilha Videl · portal Intersolar) ============ */
+const DATA = [{"estande": "W4.51", "empresa": "2P ACESSORIOS", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R4.53", "empresa": "3E", "evento": "Eletrotec / EM-Power", "pais": "Bélgica", "nota": ""}, {"estande": "G6.100", "empresa": "77Sol", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.30", "empresa": "AEB TRANSFORMADORES", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R1.36", "empresa": "ENERGITRAFO TRANSFORMADORES", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R5.70", "empresa": "Adias Sol.Ar.", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G5.104", "empresa": "ARaymond", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B2.59", "empresa": "Associação Brasileira de Energia Solar - ABENS", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.30", "empresa": "ABMT Logística Reversa de Matérias Eletricos", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B5.39", "empresa": "ABRASOL", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G7.85", "empresa": "Lepono do Brasil", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B1.70", "empresa": "BATERIAS MOURA", "evento": "ees South America", "pais": "Brasil", "nota": ""}, {"estande": "G1.70", "empresa": "\"AdvanSol Power Technology Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "A AdvanSol desenvolve inversores de micro-cadeia de terceira geração e sistemas solares e de armazenamento de barramento"}, {"estande": "W1.34", "empresa": "AESOLAR Brasil", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R2.52", "empresa": "Aeon Security", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R3.60", "empresa": "Afaplan", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G7.67", "empresa": "\"Afore New Energy Technology (Shanghai) Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W4.69", "empresa": "Solplanet Brasil", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.39", "empresa": "ALFA SENSE", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R4.35", "empresa": "ALIARA BRASIL", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R5.118", "empresa": "American Ground Screw", "evento": "Intersolar South America", "pais": "Estados Unidos da América", "nota": ""}, {"estande": "R0.19", "empresa": "POWERNET UPS", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B4.80", "empresa": "Ampace", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "R3.40", "empresa": "AMPERI SOLUÇÕES INDUSTRIAIS", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R6.117", "empresa": "\"AndSolar Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"Os produtos da empresa incluem Inteligente Otimizador, Inteligente RSD, Inteligente PV Módulo, Gateway e AndSolar Cloud\""}, {"estande": "W6.50", "empresa": "Huasun", "evento": "Intersolar South America", "pais": "China", "nota": "\"Huasun: maior produtora global de HJT (20 GW/ano), com inovação e integração total da cadeia produtiva.\" \"B1.59, B1.59.\" WOO POWER ees South America"}, {"estande": "R1.80", "empresa": "\"Anhui Zhenda Brush Industry Co.,Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "A Zhenda Brush é uma empresa chinesa reconhecida por sua expertise em design efabricacäo de equipamentos de limpeza"}, {"estande": "B1.60", "empresa": "\"ANTAI TECHNOLOGY CO,. LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G5.32", "empresa": "Revista Fotovolt", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R3.18", "empresa": "Eletricidade Moderna", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G3.61", "empresa": "Araxá Engenharia", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W3.80", "empresa": "ARCELORMITTAL BRASIL SA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B3.59", "empresa": "\"Arctech Solar Holding Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R7.56", "empresa": "ONG ALIMENTO SOLAR", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.51", "empresa": "Abracopel", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R7.55", "empresa": "ABEAMA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G3.34", "empresa": "ABSOLAR", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.57", "empresa": "ABEE-SP", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R6.56", "empresa": "ABGD", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B1.90", "empresa": "Associação Brasileira de Soluções de Armazenamento de Energia - ABSAE", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.40", "empresa": "Movimento Solar Livre -MSL", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R7.62", "empresa": "REDE PAULISTA DOS BANCOS COMUNITÁRIOS", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R7.58", "empresa": "Litro de Luz Brasil", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.93", "empresa": "ATI", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.32", "empresa": "ATK", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R5.51", "empresa": "Authomathika", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R5.80", "empresa": "AVT Distribuidora Solar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.11", "empresa": "AXIAL BRASIL", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.71", "empresa": "SANTANDER FINANCEIRA", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R6.30", "empresa": "Banco BTG Pactual", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.90", "empresa": "BANCO BV", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G3.109", "empresa": "Bao Contabililidade", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G6.34", "empresa": "BAYWA R.E. SOLAR SYSTEMS LTDA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.79", "empresa": "\"Beijing Energy Connecting International Exhibition Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B6.50", "empresa": "\"Beijing Energy Connecting International Exhibition Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G3.35", "empresa": "EPEVER", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R1.84", "empresa": "\"BEIJING SLC DIGITAL ENERGY CO.,LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W4.20", "empresa": "BelEnergy", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.80", "empresa": "BELMICRO ENERGY", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B4.70", "empresa": "BLUETTI ENERGY BRAZIL LTDA", "evento": "ees South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.41", "empresa": "Blutrafos Solar", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "W1.40", "empresa": "Bold Energy", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.21", "empresa": "BRAFER", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.88", "empresa": "BRAMETAL", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.31", "empresa": "BRASFORMER BRASPEL PRODUTOS ELETRICOS LTDA", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R7.60", "empresa": "Brazucah Produções Culturais", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G5.86", "empresa": "BRIGHT STRATEGIES", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B0.95", "empresa": "\"BSL NEW Energy Technology Co,, Ltd\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "W1.100", "empresa": "\"BTC SOLAR INDUSTRY CO.,LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"Construindo o compromisso, suporte solar, melhor para o cliente, sua melhor escolha para produtos de montagem solar\""}, {"estande": "R1.11", "empresa": "BUREAU VERITAS BRASIL", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W1.50", "empresa": "BYD DO BRASIL LTDA.", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R2.50", "empresa": "CABELAUTO CONDUTORES ELETRICOS LTDA", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R1.72", "empresa": "CaBR CABOS ESPECIAIS", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G4.70", "empresa": "CANADIAN SOLAR BRASIL", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G4.70", "empresa": "E-STORAGE", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R6.62", "empresa": "CANAL SOLAR", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R7.111", "empresa": "CCM ESTRUTURAS FOTOVOLTAICAS", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B0.90", "empresa": "CEGASA", "evento": "ees South America", "pais": "Espanha", "nota": ""}, {"estande": "B3.51", "empresa": "Grupo CESBE", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.71", "empresa": "SUNERGY", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R5.34", "empresa": "\"Chint New Energy Technology Co.,Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G3.15", "empresa": "Astronergy", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R5.34", "empresa": "\"CIEC HAIHUA International Exhibition Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B6.80", "empresa": "\"CIEC HAIHUA International Exhibition Co., Ltd.\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "R1.91", "empresa": "\"CIEC HAIHUA International Exhibition Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W6.80", "empresa": "\"CIEC HAIHUA International Exhibition Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W1.100", "empresa": "\"CIEC HAIHUA International Exhibition Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B6.60", "empresa": "\"CIEC HAIHUA International Exhibition Co., Ltd.\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "R6.38", "empresa": "CIEC HAIHUA", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G3.64", "empresa": "CLAMPER", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.56", "empresa": "Cobremack", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R1.31", "empresa": "CODEDATA AUTOMAÇÃO", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R0.11", "empresa": "COMKAP", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R1.34", "empresa": "CONDEX CABOS", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R5.55", "empresa": "CONDUMAX FIOS E CABOS ELÉTRICOS", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R3.38", "empresa": "CONDUTTI", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G3.105", "empresa": "Confiseg", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B3.70", "empresa": "\"CATL-Contemporary Amperex Technology Co., Limited\"", "evento": "ees South America", "pais": "China", "nota": "\"A Contemporary Amperex Technology Co., Limited (CATL) é líder global em novas tecnologias inovadoras de energia\""}, {"estande": "G4.40", "empresa": "VALMONT SOLAR", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B4.53", "empresa": "\"Coresun Drive Equipment Changzhou Co., Ltd.\"", "evento": "ees South America", "pais": "China", "nota": "Coresun is a professional slewing drive gear motor manufacturer for single and dual axis solar tracker system"}, {"estande": "R5.34", "empresa": "\"Cosin Solar Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R3.62", "empresa": "Cotran", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R2.34", "empresa": "Crossfox Comércio de Condutores Elétricos LTDA", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G3.80", "empresa": "ARCOL ESTRUTURAS", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.35", "empresa": "DAH Solar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B3.90", "empresa": "Winpower", "evento": "ees South America", "pais": "China", "nota": "\"A Winpower fabrica principalmente cabos solares, cabos de bateria, cabos de carregamento EV e chicotes de fios.\""}, {"estande": "W2.102", "empresa": "\"DAS SOLAR (Taizhou) CO., LTD.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R4.71", "empresa": "DATLAZ", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G6.86", "empresa": "Delfos", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R3.95", "empresa": "DELIXI ELECTRIC", "evento": "Intersolar South America", "pais": "China", "nota": "\"Delixi Electric, joint venture com a Schneider Electric, atua com inversores industriais, solares, PLCs e automação.\""}, {"estande": "G3.60", "empresa": "ALDO SOLAR", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G2.90", "empresa": "DIGITAL GRID", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G4.10", "empresa": "SOOLLAR DISTRIBUIDORA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.62", "empresa": "DNV", "evento": "Intersolar South America", "pais": "Espanha", "nota": ""}, {"estande": "B6.66", "empresa": "\"Dongguan Lithium Valley Energy Co., Ltd\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "R6.53", "empresa": "Slocable", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G6.40", "empresa": "EDELTEC", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G6.80", "empresa": "Dualbase", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R7.99", "empresa": "Dynamis Importadora", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W2.31", "empresa": "Dynamo Estruturas", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B3.64", "empresa": "\"Dyness Digital Energy Technology Co., LTD\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "B1.53", "empresa": "Award Hall of Fame", "evento": "Intersolar South America", "pais": "Alemanha", "nota": "Os Palcos de Inovações e Aplicações oferecem uma programação abrangente"}, {"estande": "G7.65", "empresa": "FIXUM", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R3.34", "empresa": "\"EAST GROUP CO., LTD.\"", "evento": "Eletrotec / EM-Power", "pais": "China", "nota": "EAST - Provedor global de soluções integradas para a indústria digital e energia inteligente"}, {"estande": "G1.36", "empresa": "Ebara", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.91", "empresa": "Ecco Cleaner", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G5.109", "empresa": "\"Econess Energy Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R4.96", "empresa": "Ecoprogetti", "evento": "Intersolar South America", "pais": "Itália", "nota": ""}, {"estande": "G3.41", "empresa": "Ecori Energia Solar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.82", "empresa": "SMART ROBOTICBR", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R2.70", "empresa": "kraper", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B5.59", "empresa": "EKT TECNOLOGIA SOUTH AMERICA", "evento": "ees South America", "pais": "Brasil", "nota": ""}, {"estande": "B2.20", "empresa": "Ozzies", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B6.80", "empresa": "ELB Energy Group (Shenzhen) Limited", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "R3.19", "empresa": "Sil Fios e Cabos Elétricos", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G7.87", "empresa": "Elétron Seguro Solar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R7.50", "empresa": "ELUM ENERGY", "evento": "Intersolar South America", "pais": "França", "nota": ""}, {"estande": "R4.39", "empresa": "EMBRASTEC", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W2.31", "empresa": "Energia Atual", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G5.38", "empresa": "Grupo Energia", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R3.37", "empresa": "(re)energisa", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R6.121", "empresa": "ENERGY INVERSORES", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G4.100", "empresa": "ENERSOLAR USINAS", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.91", "empresa": "Enertrack Technology Co..Ltd", "evento": "Intersolar South America", "pais": "China", "nota": "Líder global em soluções de sistemas de suporte para PV"}, {"estande": "G2.88", "empresa": "Ultravolt", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G2.104", "empresa": "ENERZEE", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G4.34", "empresa": "Bluesun do Brasil", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.29", "empresa": "EngePower", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G6.70", "empresa": "NEXT WAVE ENERGY MONITORING", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G5.66", "empresa": "EURO TUBOS", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W5.34", "empresa": "Sgv Solar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B6.80", "empresa": "\"EWAY ENERGY TECHNOLOGY (WUHAN) CO., LTD.\"", "evento": "ees South America", "pais": "China", "nota": "\"Fabricante de baterias de lítio, produtor de sistemas completos de armazenamento de energia\""}, {"estande": "G6.82", "empresa": "Ecco Soluções", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W1.34", "empresa": "FLUKE", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W2.60", "empresa": "FOCO ENERGIA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W1.100", "empresa": "\"Focusmain Intelligent Technology (Jiangsu) Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W4.65", "empresa": "FORTHE DISTRIBUIDORA SOLAR", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G4.80", "empresa": "Fortlev Solar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W1.70", "empresa": "FOTUS DISTRIBUIDORA SOLAR", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.79", "empresa": "Fox ESS", "evento": "Intersolar South America", "pais": "China", "nota": "\"Fundada em 2019, a Fox ESS é especializada em I&D, produção e venda de inversores de armazenamento de energia e sistemas\""}, {"estande": "R4.32", "empresa": "FRONTEC", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R1.60", "empresa": "FUPLASTIC", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B3.54", "empresa": "GameChange Solar", "evento": "Intersolar South America", "pais": "Estados Unidos da América", "nota": ""}, {"estande": "R5.53", "empresa": "GaZquez painéis elétricos", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "W5.30", "empresa": "\"GCL System Integration Technology (Suzhou) Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R5.122", "empresa": "GEECO Residential Solar Energy Ltd.", "evento": "Intersolar South America", "pais": "China", "nota": "\"GEECO Solar Energy – Plug & Play, Conforto que Permanece\""}, {"estande": "R1.102", "empresa": "GeoDesign Internacional", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G2.80", "empresa": "Gerar Serviços e Engenharia", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B1.54", "empresa": "GM Estrutura Metálica", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G3.19", "empresa": "Solis(Ginlong Technologies)", "evento": "Intersolar South America", "pais": "China", "nota": "\"Fundada em 2005, a Ginlong (Solis) é a terceira maior fabricante de inversores fotovoltaicos do mundo.\""}, {"estande": "G2.86", "empresa": "GIR", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G5.106", "empresa": "G SOLUÇÕES", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G3.40", "empresa": "\"GoodWe Technologies Co.,Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "A GoodWe é uma líder global em inversores fotovoltaicos e soluções de armazenamento de energia (ESS)"}, {"estande": "B1.64", "empresa": "Gotion Inc", "evento": "ees South America", "pais": "China", "nota": "\"A Gotion High-tech Co., Ltd. é um líder pioneiro na indústria de baterias de armazenamento de energia.\""}, {"estande": "B6.61", "empresa": "Radio Bandeirantes", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R2.30", "empresa": "UNITRAFO", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B6.60", "empresa": "\"Guangdong Gleemax Aluminium Co.,Ltd\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "B6.50", "empresa": "OMG' EV CABLE", "evento": "Intersolar South America", "pais": "China", "nota": "A OMG' é especializada em soluções de cabos EV para veículos eléctricos e dispositivos de armazenamento de energia"}, {"estande": "R2.81", "empresa": "\"GUANGDONG PATTERN NEW ENERGY CO., LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R6.119", "empresa": "Xindun Power", "evento": "Intersolar South America", "pais": "China", "nota": "\"Guangdong Xindun Power especializado na conceção, produção e venda de produtos de fornecimento de energia...\""}, {"estande": "B4.46", "empresa": "OMMO", "evento": "ees South America", "pais": "China", "nota": "Yongchao - Fornecedor profissional de soluções de armazenamento de energia residencial plug-and-play"}, {"estande": "W2.101", "empresa": "Anern", "evento": "Intersolar South America", "pais": "China", "nota": "\"Fundada em 2009, a Guangzhou Anern Energy Technology Co., Ltd. é a principal fornecedora mundial de produtos de energia\""}, {"estande": "B4.81", "empresa": "Felicity Solar", "evento": "ees South America", "pais": "China", "nota": "A Felicity Solar oferece soluções econômicas e de alta qualidade para as necessidades de energia limpa das residências"}, {"estande": "R5.74", "empresa": "Gokin Solar", "evento": "Intersolar South America", "pais": "China", "nota": "A Gokin Solar é uma fornecedora lider mundial de wafers monocristalinospainéis solares e solugóes de energia limpa"}, {"estande": "R1.79", "empresa": "BELTTT", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W1.20", "empresa": "SAJ&elekeeper", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W5.50", "empresa": "\"HANERSUN ENERGY CO., LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": "A Hanersun é uma empresa de energia limpa líder mundial e é classificada como fabricante de módulos fotovoltaicos Tier 1"}, {"estande": "R5.34", "empresa": "\"HANGZHOU FIRSTACK TECHNOLOGY CO.,LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B5.65", "empresa": "Gold Electronic", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "B3.89", "empresa": "\"HANGZHOU KAIGE NEW ENERGY TECHNOLOGY CO.,LTD\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "R5.34", "empresa": "Livoltek", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G4.60", "empresa": "Helius Sunlink PV", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R0.10", "empresa": "HellermannTyton", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B6.60", "empresa": "\"Henan Wenzhong Damper Co.,Ltd\"", "evento": "ees South America", "pais": "China", "nota": "\"WENZHONG, um fabricante de amortiguadores solares, rolamentos de plástico e montagens de plástico desde 2016.\""}, {"estande": "W5.64", "empresa": "\"Hengdian Group DMEGC Magnetics Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R3.91", "empresa": "\"HENGTONG OPTIC-ELECTRIC CO,, LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G3.110", "empresa": "Hitachi Energy", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R3.52", "empresa": "Kokusai Denki Electric Linear S.A.", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G1.84", "empresa": "HOPEWIND BRASIL", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R6.51", "empresa": "\"Hotek (Xiamen) technology Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"Hotek (XiaMen) Technology Co., Ltd. é um fornecedor de fixadores confiáveis, seguros e estáveis para todas as indústrias\""}, {"estande": "R5.100", "empresa": "Hoymiles", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B4.32", "empresa": "\"HUANGHUA ZHAOYUANLI HARDWARE PRODUCTS CO.,LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"especializa-se em suportes fotovoltaicos solares, parafusos de aterramento fotovoltaicos e acessórios fotovoltaicos.\""}, {"estande": "W4.70", "empresa": "TCL Solar", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G3.10", "empresa": "Huawei", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.15", "empresa": "HUBE ENERGY", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B3.556", "empresa": "\"Cjnoo Sustainable Energy Co., Ltd.\"", "evento": "ees South America", "pais": "China", "nota": "\"Cjnoo ofrece soluciones integrales de carga, intercambio, almacenamiento solar y nube para energía sostenible.\""}, {"estande": "B2.56", "empresa": "\"HY SOLAR Co.,Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B1.56", "empresa": "Hydro Extrusion", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B1.31", "empresa": "IBS ENERGIA SOLAR LTDA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R3.32", "empresa": "Inbrat", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R5.55", "empresa": "Incesa", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G5.105", "empresa": "Max Del", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R4.73", "empresa": "GRUPO GIMI", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "W4.40", "empresa": "Ingeteam", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G1.86", "empresa": "INOVAR SOLUTIONS", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G5.60", "empresa": "INOX-PAR", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R0.15", "empresa": "Instrutherm", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G4.30", "empresa": "INTELBRAS", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R4.33", "empresa": "GRUPO INTELLI", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R5.52", "empresa": "INTERBRASIL", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B2.59", "empresa": "ISES", "evento": "Intersolar South America", "pais": "Alemanha", "nota": ""}, {"estande": "B1.51", "empresa": "International Visitor and Delegation Lounge", "evento": "Intersolar South America", "pais": "Alemanha", "nota": "Os Palcos de Inovações e Aplicações oferecem uma programação abrangente"}, {"estande": "G6.30", "empresa": "ISOESTE METÁLICA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R0.17", "empresa": "ITB", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R1.33", "empresa": "I T I TRANSFORMADORES LTDA", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R7.75", "empresa": "HUKSEFLUX BRASIL", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.50", "empresa": "JA SOLAR", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G2.84", "empresa": "Jagualum", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B4.32", "empresa": "Jiangsu CCPIT International Conference & Exhibitions Co.Ltd.", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R4.81", "empresa": "\"JIANGSU EVERSHINE ENERGY TECHNOLOGY CO., LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G2.69", "empresa": "\"Jiangsu GNE New Energy Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": "A GNE é líder em alta tecnologia em otimizadores de energia fotovoltaica e uma empresa representativa no campo MLPE"}, {"estande": "B2.54", "empresa": "\"Jiangsu Guoqiang Singsun Energy Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B2.54", "empresa": "\"Jiangsu Guoyue New Energy Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B6.70", "empresa": "Kenano", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "W6.80", "empresa": "Masterwork Energy", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R1.30", "empresa": "MICOE", "evento": "Eletrotec / EM-Power", "pais": "China", "nota": ""}, {"estande": "B4.64", "empresa": "\"Jiangsu Oliter Energy Technology Co,Ltd.\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "W4.109", "empresa": "JIANGSU RIO SOLAR TECHNOLOGY CO. LTD(TSUN Power/TECH Estruturas)", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R5.114", "empresa": "SKYWORTH PV", "evento": "Intersolar South America", "pais": "China", "nota": "\"A Skyworth PV oferece soluções solares completas e de qualidade para residências, empresas e indústrias.\""}, {"estande": "B6.80", "empresa": "Jiangsu SOHO International Group Corporation", "evento": "ees South America", "pais": "China", "nota": "Fornecedofa de solucöes de energia fotovoltaica e armazenamento de energia como umagrande empresa comercial estatal"}, {"estande": "B4.56", "empresa": "\"Wuxi Tianyun New Energy Technology Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W2.70", "empresa": "\"JIANGSU YUMA ALUMINUM INDUSTRY CO.,LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W4.34", "empresa": "Jinko Solar Comércio do Brasil", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B4.32", "empresa": "JINERGY", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R4.61", "empresa": "Lekko Solucoes em Marketing e Tecnologia", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "W1.60", "empresa": "JNG", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.50", "empresa": "JR Paineis", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R5.58", "empresa": "JSolar", "evento": "Intersolar South America", "pais": "China", "nota": "\"JSolar, pioneiro de energia solar em rápido crescimento, especializada em rastreadores solares, com experiência de 10+GW\""}, {"estande": "R3.20", "empresa": "JUND TRAFO", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G2.67", "empresa": "Kamell Comercio Global", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.52", "empresa": "KANAFLEX", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B0.93", "empresa": "\"KIJO Power (Shenzhen) Co., Ltd.\"", "evento": "ees South America", "pais": "China", "nota": "KIJO Group - Fabricante profissional de baterias de lítio e VRLA há mais de 32 anos!"}, {"estande": "W2.90", "empresa": "KRJ", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.91", "empresa": "\"Kuna New Energy (Xiamen) Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R4.55", "empresa": "Lafeber Fios e Cabos", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R6.63", "empresa": "LEADER CABLE", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G3.70", "empresa": "\"Leapton Solar (Changshu) Co.,Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"Com sede em Kobe, Japão, a Leapton Energy Co., Ltd. foi fundada em 2012, uma empresa fotovoltaica integrada com\""}, {"estande": "R1.70", "empresa": "Sunrain", "evento": "Eletrotec / EM-Power", "pais": "China", "nota": "\"Sunrain é um fabricante especializado em caldeiras solares, bombas de calor, ESS e purificadores de água.\""}, {"estande": "B5.54", "empresa": "SAVBRASIL", "evento": "ees South America", "pais": "Brasil", "nota": ""}, {"estande": "G3.87", "empresa": "LIVOLTEK", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.60", "empresa": "LONGI", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G6.87", "empresa": "LUDUFIX", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R6.65", "empresa": "AIOT SOLUTIONS", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.81", "empresa": "BEDINSAT", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.37", "empresa": "MS Brazil", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R2.52", "empresa": "MANTEX SOLAR", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G2.66", "empresa": "\"Marsriva Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G3.67", "empresa": "Maxsul", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B4.32", "empresa": "\"Maywon PV Co.,Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R1.32", "empresa": "MEGA SOLUCOES TELECOM LTDA", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B0.85", "empresa": "MENRED ESS", "evento": "ees South America", "pais": "Alemanha", "nota": "Impulsionando um futuro sustentável com soluções inteligentes e confiáveis de armazenamento de energia"}, {"estande": "B1.40", "empresa": "METAL LIGHT", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B2.17", "empresa": "METALOGALVA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.90", "empresa": "MEU FINANCIAMENTO SOLAR", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W3.20", "empresa": "Mi Omega", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R4.37", "empresa": "MINIPA ELECTRIC", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B6.80", "empresa": "\"Minno Cooling Technology (Hainan) Co., Ltd.\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "G3.83", "empresa": "Modular Estruturas", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R2.36", "empresa": "MON TER", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R6.76", "empresa": "Mondragon Assembly", "evento": "Intersolar South America", "pais": "Espanha", "nota": ""}, {"estande": "R2.92", "empresa": "SOLARGENIC", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.20", "empresa": "Média Tensão", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G6.88", "empresa": "MTC Tools", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R2.90", "empresa": "MUST", "evento": "Intersolar South America", "pais": "China", "nota": "\"A MUST Energy é uma fabricante de inversores solares e baterias de lítio, com mais de 20 anos de experiência\""}, {"estande": "W5.68", "empresa": "Nansen Solar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W2.81", "empresa": "Grupo Santa Catarina - GSC", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.20", "empresa": "Neocable", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "W4.89", "empresa": "NeoSolar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.36", "empresa": "NEXANS", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B3.39", "empresa": "Nextracker", "evento": "Intersolar South America", "pais": "Estados Unidos da América", "nota": ""}, {"estande": "R1.13", "empresa": "NIEDAX BRASIL - SISTEMAS PARA INFRAESTRUTURAS ELETRICAS LTDA", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R0.13", "empresa": "Ningbo Bohui metal Technology Co.. LTD", "evento": "Eletrotec / EM-Power", "pais": "China", "nota": "\"Microinversor cenário compl, Bohui: antifluxo rev, impacto 0 na rede. Disjuntor conforme padröes BR.\""}, {"estande": "R5.91", "empresa": "Deye", "evento": "Intersolar South America", "pais": "China", "nota": "A Deye é uma fornecedora líder mundial de inversores fotovoltaicos e soluções Ess"}, {"estande": "R2.83", "empresa": "\"NINGBO KIBOR WIRE & CABLE CO.,LTD.\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"Kibor cable é uma fabricação de cabos PV, cabos ESS e cabos EV. Aprovado TÜV, UL, CSA, VDE, JET, DEKRA, CE.\" BB2.40 NingBo KMF Power2Drive South America"}, {"estande": "B6.50", "empresa": "KOSUN", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W1.16", "empresa": "OSDA", "evento": "Intersolar South America", "pais": "China", "nota": "\"Fundada em 2009 e sediada em Ningbo, Zhejiang, a OSDA Solar tem quatro bases de produção na China.\""}, {"estande": "R2.75", "empresa": "Ningbo Success Zhenye Luminaire Limited Liabilities Company（NSZ)", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W6.80", "empresa": "\"Ningbo Yiteng Electric Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R5.50", "empresa": "NEP", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R0.09", "empresa": "Seg Nova WS", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "W5.20", "empresa": "Odex Solar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.59", "empresa": "Volts and Bolts", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G1.80", "empresa": "MEGACOMM", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W6.81", "empresa": "OIW Telecom | Solar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G5.70", "empresa": "Sou Energy", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G1.90", "empresa": "Tigo Energy", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B3.40", "empresa": "Optimum Tracker", "evento": "Intersolar South America", "pais": "França", "nota": ""}, {"estande": "R5.33", "empresa": "Ormazabal do Brasil", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G4.20", "empresa": "Ourolux", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R2.94", "empresa": "Outflier", "evento": "Intersolar South America", "pais": "França", "nota": ""}, {"estande": "R1.71", "empresa": "The smarter E Innovation & Application Stage – Red Pavilion / Palco de Inovações e Aplicações The smarter E – Pavilhão Vermelho", "evento": "Intersolar South America", "pais": "Alemanha", "nota": ""}, {"estande": "B3.11", "empresa": "The smarter E Innovation & Application Stage – Blue Pavilion / Palco de Inovações e Aplicações The smarter E – Pavilhão Azul", "evento": "Intersolar South America", "pais": "Alemanha", "nota": ""}, {"estande": "W1.90", "empresa": "SOLARVIEW", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B5.37", "empresa": "Girassol Solar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W1.100", "empresa": "\"Pengyang Pump Taizhou Co., ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B1.39", "empresa": "PERFIMEC INDUSTRIA METALMECANICA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.40", "empresa": "PEXTRON", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G5.17", "empresa": "PHB SOLAR", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W1.80", "empresa": "Pieta.tech", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G4.105", "empresa": "Portal Eng. Solar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B2.80", "empresa": "Powersafe Baterias Especiais", "evento": "ees South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.64", "empresa": "Pratyc Indústria e Comércio de Alumínio LTDA.", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W1.84", "empresa": "NTC SOMAR", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G5.34", "empresa": "PROAUTO ELECTRIC LTD", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R3.30", "empresa": "Proyfe Brasil", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R3.56", "empresa": "Prysmian", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R1.35", "empresa": "Purisol Clean", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B3.53", "empresa": "PVH", "evento": "Intersolar South America", "pais": "Espanha", "nota": ""}, {"estande": "R5.60", "empresa": "pv magazine", "evento": "Intersolar South America", "pais": "Alemanha", "nota": ""}, {"estande": "G1.68", "empresa": "PV OPERATION", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G3.11", "empresa": "PVcase", "evento": "Intersolar South America", "pais": "Lituânia", "nota": ""}, {"estande": "B2.68", "empresa": "\"Pylon Technologies, Co. Ltd\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "R6.57", "empresa": "LUMIAX", "evento": "Intersolar South America", "pais": "China", "nota": "\"Lumiax foi criada em 2007, produz controladores e inversores solares, fabrica registradacom lS09001/14001.\""}, {"estande": "B2.58", "empresa": "WANGBAOQIANG", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G4.110", "empresa": "Rafitec", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.56", "empresa": "RatedPower", "evento": "Intersolar South America", "pais": "Espanha", "nota": ""}, {"estande": "R5.59", "empresa": "Reicon Condutores Elétricos", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "W5.88", "empresa": "RENAC POWER", "evento": "Intersolar South America", "pais": "China", "nota": "\"A Renac Power tem como objetivo se tornar líder global em soluções de microrredes PV, ESS e GD.\""}, {"estande": "B4.58", "empresa": "Reonic", "evento": "Intersolar South America", "pais": "Alemanha", "nota": "\"Reonic: plataforma 360° para integradores - captura leads, dimensiona módulos, gera propostas, controla obras & mais\""}, {"estande": "R7.54", "empresa": "Revolusolar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.103", "empresa": "\"Rida Pump CO.,LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"A Rida está se concentrando em bombas solares,\""}, {"estande": "R5.34", "empresa": "RIDA", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W4.30", "empresa": "RISEN", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B4.51", "empresa": "EcoFlow With Timber", "evento": "ees South America", "pais": "Brasil", "nota": ""}, {"estande": "G3.81", "empresa": "ROMIOTTO", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G5.64", "empresa": "Ronma Solar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B6.50", "empresa": "RSD SOLAR", "evento": "Intersolar South America", "pais": "China", "nota": "\"RSD Solar Technology Co., Ltd. é um fabricante de vidro fotovoltaico com capacidade de produção de 15 Gw.\""}, {"estande": "B4.85", "empresa": "SAGACITY", "evento": "ees South America", "pais": "Brasil", "nota": ""}, {"estande": "R6.54", "empresa": "Santiago & Cintra Geotecnologias", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B3.65", "empresa": "SEC Power", "evento": "ees South America", "pais": "Brasil", "nota": ""}, {"estande": "R2.40", "empresa": "GRUPO SETTA", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "W5.60", "empresa": "\"SHANGHAI CHINT POWER SYSTEMS CO., LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": "Chint Power fornece produtos e soluções de inversor PV completo do ESS para a nova indústria energética e energética"}, {"estande": "W6.80", "empresa": "\"Shanghai Kuka Special Cable Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"A KUKA CABLE é uma empresa de alta tecnologia certificada pelo estado, especializada em pesquisa e fabricação de cabos.\""}, {"estande": "R3.33", "empresa": "OSWELL E-GROUP LIMITED", "evento": "Eletrotec / EM-Power", "pais": "China", "nota": ""}, {"estande": "B5.70", "empresa": "\"PYTES (USA) Energy, INC\"", "evento": "ees South America", "pais": "China", "nota": "Pytes Energy: especialista em baterias UL9540 por 20 anos. Atendendo 60+ países com energia confiável"}, {"estande": "R2.79", "empresa": "\"Shanghai Solar Flare Technologies Co., Ltd (XINHUAN SHARE)\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R6.38", "empresa": "Shenzhen Ablee", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R6.38", "empresa": "SHENZHEN APOLLO ENERGY HOLDING LTDS", "evento": "Intersolar South America", "pais": "China", "nota": "\"Nossa equipe profissional de engenheiro de ID, MD para macio, hardware com serviço de parada única\""}, {"estande": "B2.65", "empresa": "\"Shenzhen ATESS Power Technology Co., Ltd\"", "evento": "ees South America", "pais": "China", "nota": "\"Fundada em 2017, a Shenzhen ATESS Power Technology Co., Ltd fornece soluções, incluindo inversores.\""}, {"estande": "B6.85", "empresa": "EENOVANCE", "evento": "ees South America", "pais": "China", "nota": "EENOVANCE - Ambicionando ser um fornecedor de soluções energéticas reconhecido mundialmente"}, {"estande": "R1.98", "empresa": "\"Gospower Electric Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"19 anos inovando em inversores solares e armazenamento. 4 fábricas, time 2400+, 40K+ inversores/mês. Suporte global.\""}, {"estande": "G3.49", "empresa": "Growatt", "evento": "Intersolar South America", "pais": "China", "nota": "\"A Growatt foi fundada em 2011 por pioneiros da energia solar, com a visão de um futuro mais verde e sustentável.\""}, {"estande": "B4.37", "empresa": "\"Shenzhen Homi Lighting Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B4.55", "empresa": "Infypower", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "B6.89", "empresa": "SOUOP", "evento": "ees South America", "pais": "China", "nota": "Fabricante OEM de central elétrica/gerador solar 300W-5000W"}, {"estande": "G5.87", "empresa": "\"Shenzhen KSTAR New Energy Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"Fundada em 1993 e listada em 2010, a KSTAR inova em soluções avançadas de energia solar e armazenamento.\""}, {"estande": "B5.53", "empresa": "\"Shenzhen Londian Wason Holdings Group Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"Londian,é uma líder globalmente reconhecida em soluções integradas de redes elétricas inteligentes de alta tecnologia\""}, {"estande": "B2.53", "empresa": "\"Shenzhen Longdian Areswatt New Energy Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"A Areswatt New Energy Inc. é uma empresa de alta tecnologia em sistemas de armazenamento, fornecendo soluções de P&D\""}, {"estande": "R3.99", "empresa": "LUXPOWERTEK", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R3.93", "empresa": "\"Shenzhen Megarevo Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R6.38", "empresa": "Manyu", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B4.43", "empresa": "PECRON", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "B0.91", "empresa": "Shenzhen Rising Co Ltd", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "R6.38", "empresa": "\"Shenzhen ShenShan Special Corporation Zone Vicfuse CO., LTD.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B3.81", "empresa": "SINEXCEL", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "W1.100", "empresa": "\"Shenzhen Sinexcel Isuna Energy Technology Co.,Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"Shenzhen Sinexcel Isuna Energy Technology Co.,Ltd\" BB2.10 Sinotek Power2Drive South America"}, {"estande": "R1.91", "empresa": "SINOVO", "evento": "Intersolar South America", "pais": "China", "nota": "\"A SINOVO, fundada em 2006, está comprometida em ser a fabricante líder global de automação industrial e novas energias.\""}, {"estande": "R6.38", "empresa": "\"SHENZHEN SMK NEW ENERGY TECHNOLOGY CO.,LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"SMK SOLAR é um fabricante profissional OEM/ODM de inversores solares, sistemas de energia TUDO EM UM e baterias de lítio\""}, {"estande": "R6.38", "empresa": "Sunfid", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R6.38", "empresa": "\"Shenzhen Tramsmart Technology Co., Limited\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B4.32", "empresa": "UPSEN", "evento": "Intersolar South America", "pais": "China", "nota": "\"A Shenzhen UPSEN Electronic CO., LTD. é uma subsidiária da UPSEN Holdings CO., LTD., fundada em 2012\""}, {"estande": "R6.38", "empresa": "\"Shenzhen Utran Energy Co.,Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B4.52", "empresa": "UUGreenPower", "evento": "ees South America", "pais": "China", "nota": "UUGreenPower é o fornecedor de soluções de carregamento rápido DC para cenários completos de EV"}, {"estande": "R6.38", "empresa": "\"Shenzhen VILVA Electronic Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "A Vilva Electronic é uma fabricante chinesa que produz e vende bancos de carga e equipamentos de teste desde 2010"}, {"estande": "B5.64", "empresa": "Winline Technology", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "R1.41", "empresa": "Shenzhen XiongYiHua Plastic insulation LTD", "evento": "Eletrotec / EM-Power", "pais": "China", "nota": ""}, {"estande": "B6.60", "empresa": "Universal Power Technology Company Limited", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "W2.66", "empresa": "SOFAR", "evento": "Intersolar South America", "pais": "China", "nota": "\"SOFAR, líder em energia solar e armazenamento, oferece soluções digitais inovadoras desde 2013.\""}, {"estande": "R6.38", "empresa": "\"Shenzhen Topway New Energy Co.,Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B3.80", "empresa": "\"Shuangdeng Group Co.,Ltd.\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "W1.30", "empresa": "\"Sigenergy Technology (Suzhou) Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W1.30", "empresa": "Sigenergy", "evento": "Intersolar South America", "pais": "Países Baixos", "nota": ""}, {"estande": "R1.60", "empresa": "Simelo Energia", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B3.31", "empresa": "SIMM EMPREENDIMENTOS S.A.", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R7.66", "empresa": "SINDIENERTGIA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R7.34", "empresa": "SINERGIA CONSULTORIA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G6.60", "empresa": "Sirius", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G6.20", "empresa": "SMA Brasil", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B3.60", "empresa": "SND IMPORTS", "evento": "ees South America", "pais": "Brasil", "nota": ""}, {"estande": "B4.39", "empresa": "\"Soeasy (Xiamen) Photovoltaic Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W1.10", "empresa": "SOL AGORA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G3.31", "empresa": "Sol+ Distribuidora", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G3.21", "empresa": "Solar Group", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B4.57", "empresa": "Green Hydrogen/Element 1 Pavilion", "evento": "ees South America", "pais": "Alemanha", "nota": ""}, {"estande": "B4.40", "empresa": "Solar Thermal Pavillion", "evento": "Intersolar South America", "pais": "Alemanha", "nota": ""}, {"estande": "W5.80", "empresa": "Exhibitor Marketing Lounge", "evento": "Intersolar South America", "pais": "Alemanha", "nota": ""}, {"estande": "G5.40", "empresa": "INOXPOWER", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.95", "empresa": "SolarEdge", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.78", "empresa": "Solarize Treinamentos Profissionais", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G4.104", "empresa": "SolarZ", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "W2.86", "empresa": "\"SolaX Power Network Technology (Zhejiang) Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G3.101", "empresa": "SOLFÁCIL", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R3.50", "empresa": "Solfi", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "G1.100", "empresa": "Soloz", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G6.10", "empresa": "Soltec", "evento": "Intersolar South America", "pais": "Espanha", "nota": ""}, {"estande": "G5.99", "empresa": "Soluções Usiminas", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B5.57", "empresa": "SOLUNA", "evento": "ees South America", "pais": "China", "nota": "\"Oferecemos energia limpa, acessível, confiável e independente para residências e comércios.\""}, {"estande": "G6.104", "empresa": "FOTOVOLTEC SOLAR INSTRUMENTS", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G6.84", "empresa": "Sosen Brasil", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.85", "empresa": "SOUFER", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W6.80", "empresa": "\"SRNE SOLAR Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G6.64", "empresa": "STÄUBLI", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G5.100", "empresa": "Array Brasil", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W6.60", "empresa": "\"SUNGROW FPV SCI. & TECH.CO., LTD.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W4.10", "empresa": "\"Sungrow Power Supply Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R4.59", "empresa": "Sunlucionar", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "W3.17", "empresa": "\"Sunova Solar Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"Fundada em 2016, somos uma empresa focada em soluções energéticas e no design e fabrico de componentes\""}, {"estande": "G1.68", "empresa": "Sunpure", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B3.69", "empresa": "SUNRED", "evento": "ees South America", "pais": "Brasil", "nota": ""}, {"estande": "B4.54", "empresa": "\"Sunwoda Energy Technology Co., LTD.\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "R5.34", "empresa": "\"SUPCON Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G3.71", "empresa": "SUZHOU HYPONTECH CO LTD", "evento": "Intersolar South America", "pais": "China", "nota": "\"A Hypontech é uma empresa líder em inovação técnica, especializada em inversores fotovoltaicos distribuídos e soluções i\""}, {"estande": "R6.61", "empresa": "\"Suzhou Jutracker Intelligent Technology Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W3.21", "empresa": "Talesun Solar", "evento": "Intersolar South America", "pais": "China", "nota": "\"A Talesun Solar foi fundada em 2009. Desde 2015, a Talesun consta na lista Tier 1 da BloombergNEF (BNEF).\" BB0.15 \"Suzhou Voltland New Energy TECH CO.,LTD\" Pow"}, {"estande": "B4.32", "empresa": "\"Taizhou Dongsheng New Energy Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W4.45", "empresa": "Haitai Solar", "evento": "Intersolar South America", "pais": "China", "nota": "A Haitai Solar é uma empresa de alta tecnologia especializada em energia verde"}, {"estande": "B1.50", "empresa": "\"TBEA Xi'an Electric Technology Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B4.31", "empresa": "TE Connectivity", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G4.64", "empresa": "TECHLUX DISTRIBUIDORA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R1.94", "empresa": "\"Techno Gear Bearings (Shanghai) Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "A Techno Gear Bearings é uma fabricante global de acionamentos giratórios para a indústria fotovoltaica há mais de25anos"}, {"estande": "B6.64", "empresa": "TechRad(Zhejiang) Automotive Thermal System Corp.", "evento": "ees South America", "pais": "China", "nota": "\"Fabricação de placas e sistemas de resfriamento líq., trocas de calor para armaz., estação de carreg. e CPS.\""}, {"estande": "R5.34", "empresa": "TechRad Thermal", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B6.81", "empresa": "Teplore", "evento": "ees South America", "pais": "China", "nota": "A visão da Teplore é acelerar a transição para a energia sustentável com produtos de armazenamento inovadores"}, {"estande": "R3.36", "empresa": "Termotécnica Para-raios e Aterramentos", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R4.31", "empresa": "TERRADRIL", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R5.76", "empresa": "Tessa Tecnologia e Desenvolvimento", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B4.41", "empresa": "Thunder Sky Winston Battery Inc.", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "W4.84", "empresa": "\"TONGWEI SOLAR (YANCHENG) CO., LTD.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G3.91", "empresa": "TRX Solar - TOREX DO BRASIL", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R7.30", "empresa": "Trael Transformadores Elétricos", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.19", "empresa": "Transformadores União", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B4.32", "empresa": "Trevni", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W4.31", "empresa": "Trinasolar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "W6.30", "empresa": "\"TSUNESS Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "A TSUNESS é uma líder global em soluções de microinversores fotovoltaicos"}, {"estande": "B4.65", "empresa": "TWS Technology (Anhui) Limited", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "G6.106", "empresa": "UL Solutions", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.64", "empresa": "UMBRIA PRIVATE", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R7.64", "empresa": "EMBRAPII CEAR/UFPB", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B4.42", "empresa": "ARKEEP", "evento": "ees South America", "pais": "China", "nota": "ARKEEP: Energia verde móvel e carregamento portátil. Tecnologia inteligente para vida sustentável. Global. Confiável"}, {"estande": "B1.80", "empresa": "UCB Power", "evento": "ees South America", "pais": "Brasil", "nota": ""}, {"estande": "W4.68", "empresa": "Vertys Energy Group", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.37", "empresa": "VR Painéis", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B4.36", "empresa": "ViaSol Energia Solar", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G1.104", "empresa": "Viener", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G7.89", "empresa": "VISUS ENGENHARIA E SERVIÇOS LTDA", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G6.89", "empresa": "voestalpine Meincol", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R6.50", "empresa": "VOLLUTO SOLUCOES TECNOLOGICAS", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B3.36", "empresa": "Voltalia Energia do Brasil Ltda", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "R5.35", "empresa": "WAGO Brasil", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "B0.86", "empresa": "StarCharge", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "R3.54", "empresa": "WASION ENERGIA", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "R2.32", "empresa": "Webdom Labs", "evento": "Intersolar South America", "pais": "Espanha", "nota": ""}, {"estande": "G3.30", "empresa": "WEG", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "G3.63", "empresa": "Weidmüller Brasil", "evento": "Intersolar South America", "pais": "Brasil", "nota": ""}, {"estande": "B4.35", "empresa": "WN ESTRUTURAS FOTOVOLTAICAS", "evento": "Eletrotec / EM-Power", "pais": "Brasil", "nota": ""}, {"estande": "W6.40", "empresa": "SUNTREE", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R5.34", "empresa": "\"Windey Energy Technology Group Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B5.64", "empresa": "\"Winline Technology (Changshu) Co., Ltd.\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "B4.32", "empresa": "\"WUXI HONGBA MECHANICAL ELECTRICAL EQUIPMENT CO., LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"Fabricação de atuador linear do rastreador solar, controlador de rastreamento PV, soluções de rastreador para rastreador\""}, {"estande": "R1.100", "empresa": "\"Wuxi Sunket New Energy Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R1.79", "empresa": "\"WUXI XINHONGYE WIRE&CABLE CO., LTD.\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"A Xinhongye é uma empresa listada que fabrica cabos solares, de bateria e para veículos elétricos.\""}, {"estande": "B5.30", "empresa": "\"Art sign, Aisinee\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B4.45", "empresa": "Eco-worthy", "evento": "ees South America", "pais": "China", "nota": "\"Eco-Worthy, especialista em ESS com foco na segurança, oferecendo a solução de fabricação mais econômica.\""}, {"estande": "R5.120", "empresa": "\"Xiamen EgretSolar New Energy Technology Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"A Xiamen Egret Solar New Energy Technology Co., Ltd fornece sistema de montagem de energia solar fotovoltaica.\""}, {"estande": "R2.82", "empresa": "\"Xiamen Grace Solar New Energy Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": "Grace Solar - Sua marca confiável para sistemas de montagem solar inteligente"}, {"estande": "R6.59", "empresa": "Grengy Solar", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B3.58", "empresa": "HiTHIUM", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "G3.65", "empresa": "\"Xiamen Huge Energy Stock Co.,Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "Xiamen Huge Energy é um fabricante de rastreadores solares e estruturas de montagem solar"}, {"estande": "G6.90", "empresa": "\"Xiamen Kehua Digital Energy Tech Co.,Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"Com 37 anos de experiência em eletrônica de potência, a Kehua oferece soluções em PV/ESS. Até 2024, 56GW de PV e 30GW/12\""}, {"estande": "R2.80", "empresa": "\"Xiamen Kseng Metal Tech. Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G2.89", "empresa": "MRac", "evento": "Intersolar South America", "pais": "China", "nota": "\"Mibet Energy é o principal fabricante de estruturas FV em telhado, solo, estacionamentos, rastreadores e flutuantes.\""}, {"estande": "W1.100", "empresa": "PANDA SOLAR", "evento": "Intersolar South America", "pais": "China", "nota": "\"PandaSolar oferece sistemas de fixacäo solar confiáveis com design, produgao epersonalizacäo especializados.\""}, {"estande": "R5.54", "empresa": "Photons Solar", "evento": "Intersolar South America", "pais": "China", "nota": "A Photons Solar é uma fornecedora profissional de soluções em sistemas de montagem solar na China"}, {"estande": "B3.83", "empresa": "\"XIAMEN POWEROAD IMPEX CO.,LTD.\"", "evento": "ees South America", "pais": "China", "nota": ""}, {"estande": "R3.98", "empresa": "\"Xiamen Rineng Solar Energy Technology Co.,Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"A Xiamen Rineng Solar Energy Technology Co., Ltd é especializada em projetar e fabricar estruturas de montagem solar.\""}, {"estande": "W1.100", "empresa": "\"Xiamen Sic New Energy Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": "A SIC Solar fornece soluções de montagem solar de alta qualidade e custo-benefício com presença global e certificações"}, {"estande": "R6.55", "empresa": "TBS", "evento": "Intersolar South America", "pais": "China", "nota": "\"Xiamen Top Best Tech Co.LTD,É um fabricante de sistemas de montagem solar e integrador de sistemas de energia solar\""}, {"estande": "B6.50", "empresa": "SPC", "evento": "Intersolar South America", "pais": "China", "nota": "\"Xiamen Top Best Tech Co.LTD,É um fabricante de sistemas de montagem solar e integrador de sistemas de energia solar\""}, {"estande": "B6.50", "empresa": "UI-NEWENERGY", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G5.91", "empresa": "Runda Solar", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G4.16", "empresa": "Yingli Solar", "evento": "Intersolar South America", "pais": "Espanha", "nota": ""}, {"estande": "B6.62", "empresa": "YONGJIA WELLDONE MACHINE CO..LTD", "evento": "ees South America", "pais": "China", "nota": "\"Fornecedor de GLP, GNC, GNL, COMBUSTÍVEL, DEF, CARREGADOR DE VE, BANCO DE ENERGIA Welldone\""}, {"estande": "W6.80", "empresa": "\"Yuens (Xiamen) New Material Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"Yuens é uma empresa profissional especializada em pesquisa, fabricação e comercialização de estruturas para energia sol\" BB2.10 \"Yueqing Dinghang Electronies C"}, {"estande": "R0.12", "empresa": "\"Yueqing GuoYu Electric Co., Ltd\"", "evento": "Eletrotec / EM-Power", "pais": "China", "nota": "\"Yueqing guoyu electric co., LTD foi fundada em 2021-04-28\" BB2.30 \"Zhangjiagang UCHEN New Energy Technology Co.,Ltd\" Power2Drive South America"}, {"estande": "R2.98", "empresa": "\"ZHEJIANG JODU PUMP TECHNOLOGY CO.,LTD.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R1.79", "empresa": "IDEEI", "evento": "Intersolar South America", "pais": "China", "nota": "17+ anos de experiência em fabricantes profissionais focados na produção de inversores de bombas solares e inversores so"}, {"estande": "R3.58", "empresa": "\"ZHEJIANG AITE ELECTRIC TECHNOLOGY CO., LTD\"", "evento": "Eletrotec / EM-Power", "pais": "China", "nota": "\"Sobre Zhejiang Aite Electric Technology Co., Ltd. é um fabricante líder para vários fusíveis DC ou AC de alta qualidade.\""}, {"estande": "G3.90", "empresa": "\"Zhejiang Benyi New Energy Co.,Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W5.61", "empresa": "ZHEJIANG ERA SOLAR TECHNOLOGY CO.LTD", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "G4.107", "empresa": "\"Zhejiang Fullwill Electric Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R5.34", "empresa": "fullwill", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R7.52", "empresa": "G&F Solar", "evento": "Intersolar South America", "pais": "China", "nota": "\"Fabricante profesional chino de paneles solares fuera de la red, paneles solares flexibles y bolsas de carga solar plega\""}, {"estande": "R4.79", "empresa": "HYXiPOWER", "evento": "Intersolar South America", "pais": "China", "nota": "\"HYXiPOWER - soluções inovadoras em energia solar e armazenamento com foco em qualidade, suporte e tecnologia.\""}, {"estande": "W6.80", "empresa": "\"Zhejiang Lever Technology Co.,Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R7.40", "empresa": "\"ZHEJIANG MEITONG CONDUCTOR TECHNOLOGY CO.,LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"A Zhejiang Meitong Conductor Technology Co.,Ltd. fabrica e exporta condutores metálicos e cabos de alta qualidade.\""}, {"estande": "B0.88", "empresa": "\"Zhejiang Narada Power Source Co., Ltd.\"", "evento": "ees South America", "pais": "China", "nota": "Narada Power Source Energia Inteligente Vida Melhor BloombergNEF Energy Storage Tier1"}, {"estande": "W1.100", "empresa": "\"ZHEJIANG REDBUD PUMP INDUSTRY CO.,LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R5.34", "empresa": "\"Zhejiang SolarQT Technology Co., Ltd.\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "B2.57", "empresa": "\"ZHEJIANG SPX ELECTRIC APPLIANCE CO., LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W6.20", "empresa": "SUNPRO POWER", "evento": "Intersolar South America", "pais": "China", "nota": "SUNPRO POWER é uma empresa de alta tecnologia com P&D e fabrico de energia fotovoltaica como o seu núcleo"}, {"estande": "R1.91", "empresa": "\"ZHEJIANG TAIFU PUMP CO.,LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W1.100", "empresa": "\"Zhejiang Wenzhong New Energy Co.,Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "R2.77", "empresa": "\"ZHEJIANG YRO NEW ENERGY CO.,LTD\"", "evento": "Intersolar South America", "pais": "China", "nota": "\"YRO é especializada em RSD, disjuntor, (DPS), Caixa Combinadora com certificações CE, TÜV e ETL. Oferecemos serviços OEM\" BB5.33 AUXUS Power2Drive South Americ"}, {"estande": "B6.68", "empresa": "INFINITE POWER", "evento": "ees South America", "pais": "China", "nota": "\"Fabricante de carregadores DCe AC para veiculos elétricosAC 7kW a 44kW/ DC 20kW a 320kWOCPP 1,6J/2,0\""}, {"estande": "B4.44", "empresa": "\"Zhongshan Neata New Energy Technology Co., Ltd\"", "evento": "ees South America", "pais": "China", "nota": "\"A Neata é uma empresa de alta tecnologia com foco em P&D, fabricacäo e vendas debaterias de chumbo-acido e baterias de l\""}, {"estande": "R1.96", "empresa": "\"Zhuhai Meixin Electronic Technology Co., Ltd\"", "evento": "Intersolar South America", "pais": "China", "nota": ""}, {"estande": "W4.61", "empresa": "ZNSHINE SOLAR", "evento": "Intersolar South America", "pais": "China", "nota": ""}];
+
+const PAV = {
+  R:{nome:'Pavilhão Vermelho', cor:0xC0392B, x:-46, z:-30, w:80, d:52},
+  G:{nome:'Pavilhão Verde',    cor:0x2E9E5B, x: 46, z:-30, w:80, d:52},
+  W:{nome:'Pavilhão Branco',   cor:0xD9DEE6, x:-46, z: 34, w:80, d:48},
+  B:{nome:'Pavilhão Azul',     cor:0x2C6FD1, x: 46, z: 34, w:80, d:48}
+};
+const EVENTOS = {
+  'Intersolar South America':{id:'solar', cor:0xE0603A, nome:'Intersolar South America'},
+  'ees South America':{id:'ees', cor:0x4A86E8, nome:'ees South America'},
+  'Eletrotec / EM-Power':{id:'eletro', cor:0x3FA796, nome:'Eletrotec / EM-Power'}
+};
+
+/* ============ CENA ============ */
+const stage = document.getElementById('stage');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0B0E14);
+scene.fog = new THREE.Fog(0x0B0E14, 190, 400);
+const camera = new THREE.PerspectiveCamera(46, 1, 0.5, 900);
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+stage.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0x9FB6D9, 0x0B0E14, 0.85));
+const key = new THREE.DirectionalLight(0xFFF3DC, 0.75); key.position.set(60,110,40); scene.add(key);
+const rim = new THREE.DirectionalLight(0x5A7FB8, 0.35); rim.position.set(-70,50,-60); scene.add(rim);
+
+const piso = new THREE.Mesh(new THREE.PlaneGeometry(360,300),
+  new THREE.MeshStandardMaterial({color:0x0F141D, roughness:1, metalness:0}));
+piso.rotation.x = -Math.PI/2; piso.position.y = -0.05; scene.add(piso);
+scene.add(new THREE.GridHelper(360, 72, 0x1B2432, 0x151C27));
+
+function rotulo(txt, sub, cor, x, y, z, esc){
+  const c = document.createElement('canvas'); c.width=512; c.height=160;
+  const g = c.getContext('2d');
+  g.fillStyle='#'+cor.toString(16).padStart(6,'0');
+  g.font='700 62px "Barlow Condensed", sans-serif';
+  g.textAlign='center'; g.fillText(txt.toUpperCase(),256,66);
+  if(sub){ g.fillStyle='#8A94A6'; g.font='400 26px "IBM Plex Mono", monospace'; g.fillText(sub,256,112); }
+  const t = new THREE.CanvasTexture(c); t.needsUpdate=true;
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({map:t, transparent:true, depthTest:false}));
+  s.position.set(x,y,z); s.scale.set(esc, esc*0.3125, 1); s.renderOrder=10;
+  scene.add(s); return s;
+}
+
+/* pisos dos pavilhões */
+Object.entries(PAV).forEach(([k,p])=>{
+  const base = new THREE.Mesh(new THREE.BoxGeometry(p.w, 0.35, p.d),
+    new THREE.MeshStandardMaterial({color:0x161E2B, roughness:.95}));
+  base.position.set(p.x, .17, p.z); scene.add(base);
+  const e = new THREE.LineSegments(
+    new THREE.EdgesGeometry(new THREE.BoxGeometry(p.w,0.36,p.d)),
+    new THREE.LineBasicMaterial({color:p.cor, transparent:true, opacity:.55}));
+  e.position.copy(base.position); scene.add(e);
+});
+
+rotulo('Entrada', 'credenciamento', 0xF2A81D, 0, 9, 74, 20);
+const seta = new THREE.Mesh(new THREE.ConeGeometry(2.2, 6, 4),
+  new THREE.MeshStandardMaterial({color:0xF2A81D, emissive:0xF2A81D, emissiveIntensity:.4}));
+seta.position.set(0,3,66); seta.rotation.x = Math.PI; scene.add(seta);
+const ENTRADA = new THREE.Vector3(0,0,66);
+
+/* ============ ESTANDES (posicionados pelo código real) ============ */
+const estandes = [];
+const geoStand = new THREE.BoxGeometry(1,1,1);
+
+// agrupar por pavilhão+rua
+const grupos = {};
+DATA.forEach(d=>{
+  const m = /^([RGWB])(\d{1,2})\.(\d{1,3})$/.exec(d.estande||'');
+  if(!m) return;
+  const chave = m[1]+m[2];
+  (grupos[chave] = grupos[chave] || []).push({...d, pav:m[1], rua:+m[2], slot:+m[3]});
+});
+Object.entries(grupos).forEach(([chave,items])=>{
+  const p = PAV[chave[0]]; if(!p) return;
+  const ruasDoPav = Object.keys(grupos).filter(c=>c[0]===chave[0]).map(c=>+c.slice(1));
+  const minRua = Math.min(...ruasDoPav), maxRua = Math.max(...ruasDoPav);
+  const rua = +chave.slice(1);
+  const zRua = p.z - p.d/2 + 4 + (rua - minRua)/(Math.max(1,maxRua-minRua)) * (p.d - 8);
+  items.sort((a,b)=>a.slot-b.slot);
+  items.forEach((d,i)=>{
+    const x = p.x - p.w/2 + 4 + (items.length===1 ? (p.w-8)/2 : i*(p.w-8)/(items.length-1));
+    const ev = EVENTOS[d.evento] || {cor:0x7D8CA3, nome:d.evento||'—', id:'outro'};
+    const alt = 1.6 + (d.slot%4===0 ? 1.0 : 0) + (d.slot%7===0 ? 1.6 : 0);
+    const m = new THREE.Mesh(geoStand, new THREE.MeshStandardMaterial({
+      color:ev.cor, roughness:.62, metalness:.14, transparent:true, opacity:.8}));
+    m.scale.set(3.4, alt, 2.9);
+    m.position.set(x, alt/2 + .35, zRua);
+    scene.add(m);
+    const reg = {mesh:m, codigo:d.estande, pav:chave[0], rua, empresa:d.empresa,
+      pais:d.pais, evento:ev, nota:d.nota||'', corBase:ev.cor, visivel:true};
+    m.userData.reg = reg;
+    estandes.push(reg);
+  });
+});
+document.getElementById('subCount').textContent = estandes.length;
+
+Object.entries(PAV).forEach(([k,p])=>{
+  const ruas = Object.keys(grupos).filter(c=>c[0]===k).map(c=>+c.slice(1));
+  rotulo(p.nome.replace('Pavilhão ',''), k+Math.min(...ruas)+'–'+k+Math.max(...ruas), p.cor, p.x, 15, p.z - p.d/2 - 3, 26);
+});
+
+/* feixes de rota */
+const feixes = new THREE.Group(); scene.add(feixes);
+const geoFeixe = new THREE.CylinderGeometry(.16,.16,30,6);
+const matFeixe = new THREE.MeshBasicMaterial({color:0xF2A81D, transparent:true, opacity:.42});
+
+/* ============ ESTADO ============ */
+let rota = [];
+let selecionado = null;
+let filtroEv = new Set();
+let filtroPav = new Set();
+
+function aplicarFiltros(){
+  estandes.forEach(e=>{
+    const okEv = !filtroEv.size || filtroEv.has(e.evento.id);
+    const okPav = !filtroPav.size || filtroPav.has(e.pav);
+    const on = okEv && okPav;
+    e.visivel = on;
+    const naRota = rota.includes(e);
+    e.mesh.material.opacity = on ? (naRota?.98:.8) : .05;
+    e.mesh.material.color.setHex(!on ? 0x2A3242 : naRota ? 0xF2A81D : e.corBase);
+  });
+  if(selecionado && selecionado.visivel){
+    selecionado.mesh.material.color.setHex(0xF2A81D);
+    selecionado.mesh.material.opacity = 1;
+  }
+  renderStats();
+}
+
+function renderFeixes(){
+  while(feixes.children.length) feixes.remove(feixes.children[0]);
+  rota.forEach(e=>{
+    const f = new THREE.Mesh(geoFeixe, matFeixe);
+    f.position.set(e.mesh.position.x, 15, e.mesh.position.z);
+    feixes.add(f);
+  });
+}
+
+/* ============ CÂMERA ORBITAL ============ */
+let alvo = new THREE.Vector3(0,0,4);
+let raio = 168, theta = -Math.PI/2, phi = 0.92;
+let arrastando=false, deslocando=false, lx=0, ly=0, moveu=0;
+function posCam(){
+  camera.position.set(
+    alvo.x + raio*Math.sin(phi)*Math.cos(theta),
+    alvo.y + raio*Math.cos(phi),
+    alvo.z + raio*Math.sin(phi)*Math.sin(theta));
+  camera.lookAt(alvo);
+}
+const cv = renderer.domElement;
+cv.addEventListener('contextmenu', e=>e.preventDefault());
+cv.addEventListener('pointerdown', e=>{
+  if(e.button===2){deslocando=true;} else {arrastando=true;}
+  lx=e.clientX; ly=e.clientY; moveu=0; cv.setPointerCapture(e.pointerId);
+});
+cv.addEventListener('pointermove', e=>{
+  if(!arrastando && !deslocando) return;
+  const dx=e.clientX-lx, dy=e.clientY-ly; lx=e.clientX; ly=e.clientY;
+  moveu += Math.abs(dx)+Math.abs(dy);
+  if(deslocando){
+    const k = raio*0.0016;
+    const dir = new THREE.Vector3().subVectors(camera.position, alvo).setY(0).normalize();
+    const lado = new THREE.Vector3(-dir.z,0,dir.x);
+    alvo.addScaledVector(lado, -dx*k); alvo.addScaledVector(dir, -dy*k);
+  } else {
+    theta -= dx*0.0055;
+    phi = Math.max(0.18, Math.min(1.42, phi - dy*0.0042));
+  }
+  posCam();
+});
+addEventListener('pointerup', ()=>{arrastando=false;deslocando=false;});
+cv.addEventListener('wheel', e=>{
+  e.preventDefault();
+  raio = Math.max(28, Math.min(300, raio * (1 + Math.sign(e.deltaY)*0.09)));
+  posCam();
+},{passive:false});
+
+function voarPara(e){
+  const alvoNovo = new THREE.Vector3(e.mesh.position.x, 0, e.mesh.position.z);
+  const rNovo = 44, pNovo = 0.78;
+  const a0 = alvo.clone(), r0 = raio, p0 = phi;
+  const t0 = performance.now(), dur = 620;
+  (function passo(){
+    const t = Math.min(1,(performance.now()-t0)/dur);
+    const k = 1-Math.pow(1-t,3);
+    alvo.lerpVectors(a0, alvoNovo, k);
+    raio = r0 + (rNovo-r0)*k;
+    phi  = p0 + (pNovo-p0)*k;
+    posCam();
+    if(t<1) requestAnimationFrame(passo);
+  })();
+}
+
+/* ============ SELEÇÃO ============ */
+const ray = new THREE.Raycaster(), mouse = new THREE.Vector2();
+cv.addEventListener('click', e=>{
+  if(moveu>6) return;
+  const r = cv.getBoundingClientRect();
+  mouse.x = ((e.clientX-r.left)/r.width)*2-1;
+  mouse.y = -((e.clientY-r.top)/r.height)*2+1;
+  ray.setFromCamera(mouse, camera);
+  const hits = ray.intersectObjects(estandes.filter(x=>x.visivel).map(x=>x.mesh));
+  if(hits.length) selecionar(hits[0].object.userData.reg);
+  else fecharCard();
+});
+
+const card = document.getElementById('card');
+function selecionar(e){
+  selecionado = e;
+  aplicarFiltros();
+  document.getElementById('cCode').textContent = e.codigo;
+  document.getElementById('cName').textContent = e.empresa;
+  document.getElementById('cTag').textContent = 'Lista oficial do portal';
+  document.getElementById('cMeta').innerHTML = [
+    ['Pavilhão', PAV[e.pav].nome],
+    ['Rua', e.pav + e.rua],
+    ['Evento', e.evento.nome],
+    e.pais ? ['País', e.pais] : null
+  ].filter(Boolean).map(([k,v])=>`<div><b>${k}</b>${v}</div>`).join('');
+  const btn = document.getElementById('cAdd');
+  btn.textContent = rota.includes(e) ? 'Tirar da rota' : 'Adicionar à rota';
+  card.dataset.on = '1';
+}
+function fecharCard(){ selecionado=null; card.dataset.on=''; aplicarFiltros(); }
+
+document.getElementById('cAdd').onclick = ()=>{
+  if(!selecionado) return;
+  const i = rota.indexOf(selecionado);
+  if(i>=0) rota.splice(i,1); else rota.push(selecionado);
+  renderRota(); renderFeixes(); selecionar(selecionado);
+};
+
+/* ============ PAINEL ============ */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.onclick = ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected', x===t));
+    document.querySelectorAll('.pane').forEach(p=>p.dataset.on = (p.dataset.name===t.dataset.pane)?'1':'');
+  };
+});
+
+const ec = document.getElementById('evChips');
+Object.values(EVENTOS).forEach(ev=>{
+  const b = document.createElement('button');
+  b.className='chip'; b.setAttribute('aria-pressed','false');
+  b.innerHTML = `<span class="swatch" style="background:#${ev.cor.toString(16).padStart(6,'0')}"></span>${ev.nome}`;
+  b.onclick = ()=>{
+    if(filtroEv.has(ev.id)) filtroEv.delete(ev.id); else filtroEv.add(ev.id);
+    b.setAttribute('aria-pressed', filtroEv.has(ev.id));
+    aplicarFiltros();
+  };
+  ec.appendChild(b);
+});
+const pc = document.getElementById('pavChips');
+Object.entries(PAV).forEach(([k,p])=>{
+  const b = document.createElement('button');
+  b.className='chip'; b.setAttribute('aria-pressed','false');
+  b.innerHTML = `<span class="swatch" style="background:#${p.cor.toString(16).padStart(6,'0')}"></span>${p.nome.replace('Pavilhão ','')}`;
+  b.onclick = ()=>{
+    if(filtroPav.has(k)) filtroPav.delete(k); else filtroPav.add(k);
+    b.setAttribute('aria-pressed', filtroPav.has(k));
+    aplicarFiltros();
+  };
+  pc.appendChild(b);
+});
+
+const q = document.getElementById('q'), hits = document.getElementById('hits');
+q.oninput = ()=>{
+  const s = q.value.trim().toLowerCase();
+  hits.innerHTML = '';
+  if(s.length<2) return;
+  const res = estandes.filter(e=>
+    e.empresa.toLowerCase().includes(s) ||
+    e.codigo.toLowerCase().includes(s) ||
+    (e.pais||'').toLowerCase().includes(s)
+  ).slice(0,10);
+  if(!res.length){ hits.innerHTML = '<div class="empty">Nada com esse termo na lista oficial.</div>'; return; }
+  res.forEach(e=>{
+    const d = document.createElement('div');
+    d.className='route-item'; d.style.cursor='pointer';
+    d.innerHTML = `<div class="route-b"><b>${e.empresa}</b>
+      <span>${e.codigo} · ${e.pais||''} · ${e.evento.nome}</span></div>`;
+    d.onclick = ()=>{ selecionar(e); voarPara(e); };
+    hits.appendChild(d);
+  });
+};
+
+function renderRota(){
+  const box = document.getElementById('routeList');
+  if(!rota.length){
+    box.innerHTML = '<div class="empty">Rota vazia. Clique num estande no mapa ou busque a empresa e use “Adicionar à rota”.</div>';
+    return;
+  }
+  box.innerHTML = '';
+  rota.forEach((e,i)=>{
+    const d = document.createElement('div');
+    d.className = 'route-item';
+    d.innerHTML = `<div class="route-n">${i+1}</div>
+      <div class="route-b"><b>${e.empresa}</b>
+      <span>${e.codigo} · ${PAV[e.pav].nome.replace('Pavilhão ','')}</span></div>
+      <button class="x" aria-label="Tirar da rota">×</button>`;
+    d.querySelector('.route-b').style.cursor='pointer';
+    d.querySelector('.route-b').onclick = ()=>{ selecionar(e); voarPara(e); };
+    d.querySelector('.x').onclick = ()=>{ rota.splice(i,1); renderRota(); renderFeixes(); aplicarFiltros(); };
+    box.appendChild(d);
+  });
+  const t = document.createElement('div');
+  t.className='stat'; t.style.marginTop='12px';
+  t.innerHTML = `<span>Caminhada estimada</span><b>${distanciaRota()} m</b>`;
+  box.appendChild(t);
+}
+function distanciaRota(){
+  let d = 0, ant = ENTRADA;
+  rota.forEach(e=>{ d += ant.distanceTo(e.mesh.position); ant = e.mesh.position; });
+  return Math.round(d*2.6);
+}
+document.getElementById('optRoute').onclick = ()=>{
+  if(rota.length<2) return;
+  const rest = rota.slice(), out = []; let cur = ENTRADA;
+  while(rest.length){
+    let bi=0, bd=Infinity;
+    rest.forEach((e,i)=>{ const d=cur.distanceTo(e.mesh.position); if(d<bd){bd=d;bi=i;} });
+    cur = rest[bi].mesh.position; out.push(rest.splice(bi,1)[0]);
+  }
+  rota = out; renderRota(); renderFeixes();
+};
+document.getElementById('clrRoute').onclick = ()=>{ rota=[]; renderRota(); renderFeixes(); aplicarFiltros(); };
+document.getElementById('csvRoute').onclick = ()=>{
+  if(!rota.length) return;
+  const linhas = ['ordem;empresa;estande;pavilhao;rua;evento;pais;contato;preco;moq;prazo;observacoes'];
+  rota.forEach((e,i)=>linhas.push([i+1, e.empresa, e.codigo, PAV[e.pav].nome,
+    e.pav+e.rua, e.evento.nome, e.pais||'', '','','','',''].join(';')));
+  const url = URL.createObjectURL(new Blob(['﻿'+linhas.join('\n')],{type:'text/csv;charset=utf-8'}));
+  const a = document.createElement('a');
+  a.href=url; a.download='rota-intersolar-2026.csv'; a.click(); URL.revokeObjectURL(url);
+};
+
+function renderStats(){
+  const box = document.getElementById('stats');
+  const visiveis = estandes.filter(e=>e.visivel).length;
+  const paises = new Set(estandes.map(e=>e.pais).filter(Boolean)).size;
+  box.innerHTML = [
+    ['Expositores na planta', estandes.length],
+    ['Países', paises],
+    ['Visíveis com os filtros', visiveis],
+    ['Na rota', rota.length]
+  ].map(([k,v])=>`<div class="stat"><span>${k}</span><b>${v}</b></div>`).join('');
+}
+
+/* ============ LOOP ============ */
+function resize(){
+  const w = stage.clientWidth, h = stage.clientHeight;
+  camera.aspect = w/h; camera.updateProjectionMatrix();
+  renderer.setSize(w,h);
+}
+addEventListener('resize', resize);
+resize(); posCam();
+
+let t0 = 0;
+(function loop(t){
+  requestAnimationFrame(loop);
+  const dt = (t-t0)/1000; t0 = t;
+  matFeixe.opacity = 0.34 + Math.sin(t/380)*0.13;
+  feixes.children.forEach(f=>f.rotation.y += dt*0.6);
+  seta.position.y = 3 + Math.sin(t/500)*0.5;
+  renderer.render(scene, camera);
+})(0);
+
+aplicarFiltros(); renderRota(); renderStats();
+document.getElementById('loading').style.display='none';
+})();
+</script>
+</body>
+</html>
