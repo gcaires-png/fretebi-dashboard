@@ -32,6 +32,9 @@ jobs:
           cp index.html _site/index.html
           cp moita-rev1.html _site/moita-rev1.html
           cp painel-gestao.html _site/painel-gestao.html
+          cp operacao-3d.html _site/operacao-3d.html
+          cp intersolar-mapa.html _site/intersolar-mapa.html
+          cp qr-intersolar.html _site/qr-intersolar.html
           cp insurance-rules.json _site/insurance-rules.json 2>/dev/null || true
           cp -r cte-drafts _site/cte-drafts 2>/dev/null || true
 
