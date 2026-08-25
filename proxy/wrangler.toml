@@ -7,6 +7,18 @@ compatibility_date = "2026-07-01"
 [vars]
 ALLOWED_ORIGINS = "https://gcaires-png.github.io,http://localhost:8080,http://127.0.0.1:5500"
 
+# Trava de gravação no Bsoft. Enquanto não for "true", a rota
+# /bsoft/cte-rascunho só monta o rascunho e devolve para conferência,
+# sem gravar nada. Emissão do documento é SEMPRE humana, em qualquer modo.
+BSOFT_HABILITADO = "false"
+
 # Segredos (NÃO colocar aqui). Configure com:
 #   npx wrangler secret put VIDEL_EMAIL
 #   npx wrangler secret put VIDEL_PASSWORD
+#   npx wrangler secret put QUALP_TOKEN
+#   npx wrangler secret put BSOFT_DOMINIO
+#   npx wrangler secret put BSOFT_USUARIO
+#   npx wrangler secret put BSOFT_SENHA
+#
+# Opcionais (só se os endpoints mudarem):
+#   QUALP_BASE, BSOFT_BASE, BSOFT_ROTA_LOGIN, BSOFT_ROTA_CTE

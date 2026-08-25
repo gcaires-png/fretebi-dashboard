@@ -1,0 +1,12 @@
+{
+  "name": "moita-api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Integracao Moita Rev1: piso ANTT, motor de cotacao, Qualp (rota/pedagio) e Bsoft (rascunho CT-e)",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "cotar": "node cotar.js",
+    "test": "node --test test/"
+  }
+}
