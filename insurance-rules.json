@@ -5,10 +5,19 @@
   "seguradora_cnpj": "61.383.493/0001-80",
   "corretora": "PAIVA SP Corretora de Seguros Ltda (SUSEP 92405)",
   "estipulante": "Videl Transporte e Logistica Ltda - CNPJ 63.147.064/0001-30",
+  "rntrc": "05863440",
+  "rntrc_nota": "RNTRC unico da empresa (ANTT registra o transportador pelo CNPJ raiz; matriz e filial SP 63.147.064/0002-10 usam o mesmo). Extraido do XML autorizado do CT-e 5 da filial SP (29/08/2026).",
+  "filial_sp": {
+    "cnpj": "63.147.064/0002-10",
+    "ie": "388187061112",
+    "endereco": "Rua Priscila Narcizo, 69 - sala 3, Jardim Italia, Itupeva/SP, CEP 13299-036"
+  },
   "cotacoes": {
     "rctrc_rcdc": "202500682528",
     "rcv": "202500682530",
-    "apolice_emitida": "PENDENTE - solicitar numero e vigencia a PAIVA SP"
+    "apolice_rcdc_emitida": "5500029014 - vigencia 24/10/2025 a 31/10/2026 (PDF 'DC - VIDEL TRANSPORTE.pdf' no Drive)",
+    "apolice_rctrc_emitida": "PENDENTE - solicitar numero e vigencia a PAIVA SP",
+    "apolice_rcv_emitida": "PENDENTE - solicitar numero e vigencia a PAIVA SP"
   },
   "averbacao": {
     "averbadora": "NDD Averba",
