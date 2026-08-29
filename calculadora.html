@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculadora de Frete — Videl T&L</title>
+<style>
+:root{--bg:#0a0e1a;--card:#111827;--card2:#1a2236;--border:#1e2d45;--accent:#00d4ff;--green:#00ff88;--orange:#ff6b35;--red:#ff3366;--text:#e2e8f0;--muted:#64748b;
+--seg1:#0090ba;--seg2:#ab68ec;--seg3:#d97514;--seg4:#7b8fd9;--seg5:#ff4757}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif;font-size:14px;min-height:100vh}
+a{color:var(--accent);text-decoration:none}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border);background:#0d1320;position:sticky;top:0;z-index:50;flex-wrap:wrap}
+.top h1{font-size:17px}
+.top p{font-size:11px;color:var(--muted)}
+.top-links{display:flex;gap:14px;font-size:12px;flex-wrap:wrap}
+.wrap{max-width:1180px;margin:0 auto;padding:18px 16px 60px}
+.grid{display:grid;grid-template-columns:390px 1fr;gap:16px;align-items:start}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px}
+.card h2{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.f{margin-bottom:11px}
+.f label{display:block;font-size:11px;color:var(--muted);margin-bottom:4px;font-weight:600}
+.f input,.f select{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:9px 10px;font-size:14px;font-family:inherit}
+.f input:focus,.f select:focus{outline:none;border-color:var(--accent)}
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.4}
+/* voz */
+.voice{display:flex;gap:12px;align-items:center;margin-bottom:14px}
+.mic{width:54px;height:54px;min-width:54px;border-radius:50%;border:2px solid var(--accent);background:rgba(0,212,255,.1);color:var(--accent);font-size:22px;cursor:pointer;transition:all .2s}
+.mic:hover{background:rgba(0,212,255,.22)}
+.mic.rec{background:var(--red);border-color:var(--red);color:#fff;animation:pulse 1.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,51,102,.5)}70%{box-shadow:0 0 0 14px rgba(255,51,102,0)}100%{box-shadow:0 0 0 0 rgba(255,51,102,0)}}
+.vtxt{flex:1;font-size:12px;color:var(--muted);line-height:1.5}
+.vtxt strong{color:var(--text)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chip{background:rgba(0,212,255,.12);color:var(--accent);border-radius:20px;padding:3px 10px;font-size:11px}
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.tile{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.tile .tl{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);font-weight:600;margin-bottom:6px}
+.tile .tv{font-size:22px;font-weight:700;line-height:1.1}
+.tile .ts{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.4}
+.tile.hero{border-color:rgba(0,255,136,.4)}
+.tile.hero .tv{color:var(--green);font-size:26px}
+.tile.piso .tv{color:var(--accent)}
+/* semáforo */
+.sema{display:flex;align-items:center;gap:10px;border-radius:10px;padding:11px 14px;margin-bottom:16px;font-size:13px;font-weight:600;border:1px solid}
+.sema .ic{font-size:17px}
+.s-ok{background:rgba(0,255,136,.08);border-color:rgba(0,255,136,.35);color:var(--green)}
+.s-meta{background:rgba(0,212,255,.08);border-color:rgba(0,212,255,.35);color:var(--accent)}
+.s-warn{background:rgba(255,107,53,.1);border-color:rgba(255,107,53,.4);color:var(--orange)}
+.s-crit{background:rgba(255,51,102,.1);border-color:rgba(255,51,102,.4);color:var(--red)}
+/* composição */
+.bar{display:flex;height:26px;border-radius:6px;overflow:hidden;gap:2px;background:var(--bg);margin-bottom:12px}
+.bar div{min-width:3px;transition:width .3s}
+.ctab{width:100%;border-collapse:collapse;font-size:12.5px}
+.ctab td{padding:6px 4px;border-bottom:1px solid var(--border)}
+.ctab tr:last-child td{border-bottom:none}
+.ctab td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.ctab .tot td{border-top:2px solid var(--border);font-weight:700;padding-top:8px}
+.sq{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:-1px}
+/* cenários */
+.cen{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+.cen .c{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px}
+.cen .c h3{font-size:12px;margin-bottom:6px}
+.cen .c .p{font-size:18px;font-weight:700;color:var(--accent)}
+.cen .c .m{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}
+/* detalhes/params */
+details{margin-top:14px}
+summary{cursor:pointer;font-size:12px;color:var(--muted);font-weight:600;padding:6px 0;user-select:none;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary:hover{color:var(--accent)}
+.ptab{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.ptab th,.ptab td{padding:5px 6px;border-bottom:1px solid var(--border);text-align:left}
+.ptab input{width:88px;background:var(--card2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:4px 6px;font-size:12px}
+.badge-v{color:var(--green);font-size:10px}
+.badge-e{color:var(--orange);font-size:10px}
+.btn{background:rgba(0,212,255,.12);color:var(--accent);border:1px solid rgba(0,212,255,.4);border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:rgba(0,212,255,.22)}
+.btn.ghost{background:transparent;border-color:var(--border);color:var(--muted)}
+.aviso{font-size:11px;color:var(--muted);line-height:1.6;background:var(--card2);border-left:3px solid var(--orange);border-radius:6px;padding:10px 12px;margin-top:14px}
+.mercado{font-size:12px;color:var(--muted);line-height:1.6;margin-top:10px}
+.mercado strong{color:var(--text)}
+</style>
+</head>
+<body data-palette="#0090ba,#ab68ec,#d97514,#7b8fd9,#ff4757">
+
+<div class="top">
+  <div><h1>🧮 Calculadora de Frete — Videl T&amp;L</h1><p>Piso ANTT · custo real · preço na meta 60–62% · em tempo real</p></div>
+  <div class="top-links">
+    <a href="index.html">← FreteBI</a>
+    <a href="moita-rev1.html">🤖 Moita Rev1</a>
+    <a href="https://calculadorafrete.antt.gov.br" target="_blank" rel="noopener">⚖️ Calculadora oficial ANTT</a>
+  </div>
+</div>
+
+<div class="wrap">
+<div class="grid">
+
+<!-- ============ ENTRADA ============ -->
+<div>
+  <div class="card">
+    <h2>🎤 Fale ou digite</h2>
+    <div class="voice">
+      <button class="mic" id="micBtn" title="Falar">🎤</button>
+      <div class="vtxt" id="vtxt">Toque no microfone e fale, ex.: <strong>"São Paulo para Curitiba, carreta, carga geral, nota de 250 mil"</strong> — ou preencha abaixo.</div>
+    </div>
+    <div class="chips" id="chips"></div>
+
+    <div class="f" style="margin-top:14px">
+      <label>Rota conhecida (preenche a distância)</label>
+      <select id="rota"><option value="">— digitar distância manualmente —</option></select>
+    </div>
+    <div class="f2">
+      <div class="f"><label>Distância (km)</label><input type="number" id="km" min="1" placeholder="ex.: 580" inputmode="numeric"></div>
+      <div class="f"><label>Valor da NF (R$)</label><input type="number" id="nf" min="0" placeholder="ex.: 280000" inputmode="numeric"></div>
+    </div>
+    <div class="f2">
+      <div class="f"><label>Veículo</label><select id="vei"></select></div>
+      <div class="f"><label>Tipo de carga</label><select id="carga"></select></div>
+    </div>
+
+    <details>
+      <summary>▸ Ajustes opcionais (pedágio, descarga, retorno, preço do comercial…)</summary>
+      <div class="f2" style="margin-top:8px">
+        <div class="f"><label>Pedágio (R$) — vazio = estimar</label><input type="number" id="ped" min="0" placeholder="auto"></div>
+        <div class="f"><label>Taxa de descarga (R$)</label><input type="number" id="desc" min="0" placeholder="0"></div>
+      </div>
+      <div class="f2">
+        <div class="f"><label>Km de retorno vazio</label><input type="number" id="kmVazio" min="0" placeholder="0"><div class="hint">Cobrado a 60% do custo/km (estimativa Videl)</div></div>
+        <div class="f"><label>Custo motorista (R$) — vazio = estimar</label><input type="number" id="motOver" min="0" placeholder="auto"></div>
+      </div>
+      <div class="f">
+        <label>Preço sugerido pelo comercial (R$) — opcional</label>
+        <input type="number" id="pCom" min="0" placeholder="para avaliar no semáforo 60–62%">
+      </div>
+    </details>
+
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button class="btn" id="btnEx">▶ Exemplo (SP→MG, carreta, NF 280 mil)</button>
+      <button class="btn ghost" id="btnLimpar">Limpar</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h2>⚙️ Parâmetros (ANTT · diesel · taxas)</h2>
+    <p class="hint" style="margin-bottom:8px">Editáveis — ficam salvos neste dispositivo. Atualize quando a ANTT ou a ANP mudarem.</p>
+    <div class="f2">
+      <div class="f"><label>Diesel S10 (R$/L) — ANP</label><input type="number" step="0.01" id="pDiesel"></div>
+      <div class="f"><label>Pedágio (R$/eixo·km)</label><input type="number" step="0.01" id="pPedKm"></div>
+    </div>
+    <div class="f2">
+      <div class="f"><label>GRIS (% da NF)</label><input type="number" step="0.05" id="pGris"></div>
+      <div class="f"><label>Ad valorem (% da NF)</label><input type="number" step="0.05" id="pAdv"></div>
+    </div>
+    <div class="f2">
+      <div class="f"><label>Overhead (% do custo)</label><input type="number" step="0.5" id="pOver"></div>
+      <div class="f"><label>Impostos (% da receita)</label><input type="number" step="0.01" id="pImp"></div>
+    </div>
+    <details>
+      <summary>▸ Coeficientes ANTT — Tabela A, carga geral (Res. 6.084/2026)</summary>
+      <table class="ptab" id="anttTab"><thead><tr><th>Eixos</th><th>CCD R$/km</th><th>CC R$</th><th></th></tr></thead><tbody></tbody></table>
+      <p class="hint" style="margin-top:6px">✓ = valor oficial verificado · ≈ = estimado a partir dos oficiais — confira na <a href="https://calculadorafrete.antt.gov.br" target="_blank" rel="noopener">calculadora ANTT</a> antes de fechar.</p>
+    </details>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn" id="btnSalvar">💾 Salvar parâmetros</button>
+      <button class="btn ghost" id="btnReset">Restaurar padrão</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ RESULTADO ============ -->
+<div id="resWrap">
+  <div class="tiles">
+    <div class="tile piso"><div class="tl">⚖️ Piso ANTT (mínimo legal)</div><div class="tv" id="tPiso">—</div><div class="ts" id="tPisoS">preencha distância e veículo</div></div>
+    <div class="tile"><div class="tl">🚛 Custo motorista (a negociar)</div><div class="tv" id="tMot">—</div><div class="ts" id="tMotS">—</div></div>
+    <div class="tile hero"><div class="tl">💰 Preço de venda — meta 60–62%</div><div class="tv" id="tPreco">—</div><div class="ts" id="tPrecoS">—</div></div>
+    <div class="tile"><div class="tl">📈 R$/km resultante</div><div class="tv" id="tKm">—</div><div class="ts" id="tKmS">—</div></div>
+  </div>
+
+  <div class="sema s-meta" id="sema"><span class="ic">ℹ️</span><span id="semaTxt">Preencha os dados — o semáforo avalia a regra de ouro (custo do caminhão entre 60% e 62% do valor da operação).</span></div>
+
+  <div class="card">
+    <h2>🧾 Composição do custo</h2>
+    <div class="bar" id="bar"></div>
+    <table class="ctab" id="comp"></table>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <h2>🎯 Cenários de venda (margem G9)</h2>
+    <div class="cen" id="cen"></div>
+    <div class="mercado" id="mkt"></div>
+  </div>
+
+  <div class="aviso" id="aviso">
+    <strong>Base regulatória:</strong> piso mínimo pela Res. ANTT 5.867/2020 com coeficientes da Res. 6.076/2026 reajustados pela <strong>Res. 6.084/2026 (vigente desde 17/07/2026)</strong> — fórmula piso = km × CCD + CC, Tabela A (lotação). Alguns coeficientes intermediários são estimados (marcados ≈) — confirme na <a href="https://calculadorafrete.antt.gov.br" target="_blank" rel="noopener">calculadora oficial</a> antes de fechar contrato. Diesel de referência: ANP. GRIS/ad valorem/impostos conforme prática Videl (G9). Esta ferramenta apoia a decisão; o piso ANTT é lei (multa por descumprimento).
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+/* ================= PARÂMETROS (padrão — editáveis na tela, salvos em localStorage) ================= */
+const DEFAULTS={
+  versao:'2026-08-29',
+  diesel:6.91,          // ANP bomba ago/2026 (resolução 6.084 usou 6,97)
+  dieselBase:6.89,      // base da tabela custo/km G9 (mar/2026)
+  pedagioEixoKm:0.13,   // R$/eixo·km — calibrado no ex. G9 (Fernão Dias 580km carreta = ~R$380)
+  gris:0.30, adv:0.15,  // % da NF (G9; alto valor: subir GRIS p/ 0,5–1,0)
+  rcdc:0.018,           // % da NF — seguro RCDC (insurance-rules.json Allianz)
+  overhead:10,          // % do custo direto (G9: 8–12)
+  impostos:12.33,       // % da receita (ISS+PIS/COFINS+IRPJ/CSLL — G9)
+  metaMin:60, metaMax:62,
+  // ANTT Tabela A — carga geral (Res. 6.084/2026). v=true: oficial verificado; v=false: estimado.
+  antt:{
+    2:{ccd:3.9826,cc:451.84,v:true},
+    3:{ccd:5.14,  cc:516.34,v:false},
+    4:{ccd:5.94,  cc:580.83,v:false},
+    5:{ccd:6.67,  cc:645.33,v:false},
+    6:{ccd:7.37,  cc:709.83,v:false},
+    7:{ccd:8.11,  cc:774.33,v:false},
+    9:{ccd:9.2027,cc:903.32,v:true}
+  }
+};
+// multiplicadores por tipo de carga sobre a Tabela A carga geral (estimativas de mercado — editar qdo tiver a tabela oficial completa)
+const CARGAS=[
+  {k:'geral',lab:'Carga geral',m:1.00,gris:null},
+  {k:'contein',lab:'Conteinerizada',m:1.00,gris:null},
+  {k:'granel_s',lab:'Granel sólido',m:0.98,gris:null},
+  {k:'neogranel',lab:'Neogranel',m:0.97,gris:null},
+  {k:'granel_l',lab:'Granel líquido',m:1.06,gris:null},
+  {k:'frigo',lab:'Frigorificada',m:1.22,gris:0.40},
+  {k:'perigosa',lab:'Perigosa (geral)',m:1.17,gris:0.50},
+  {k:'alto_valor',lab:'Alto valor (eletrônicos/solar)',m:1.00,gris:0.60}
+];
+const VEICULOS=[
+  {k:'vuc',lab:'VUC (3/4) — 2 eixos',eixos:2,ckm:4.00},
+  {k:'toco',lab:'Toco — 2 eixos',eixos:2,ckm:5.00},
+  {k:'truck',lab:'Truck — 3 eixos',eixos:3,ckm:6.25},
+  {k:'carreta5',lab:'Carreta — 5 eixos',eixos:5,ckm:7.50},
+  {k:'carreta6',lab:'Carreta LS — 6 eixos',eixos:6,ckm:8.30},
+  {k:'bitrem',lab:'Bitrem — 7 eixos',eixos:7,ckm:9.25},
+  {k:'rodotrem',lab:'Rodotrem — 9 eixos',eixos:9,ckm:10.50}
+];
+// rotas Videl (tabela FreteBI) — km + R$/km mercado
+const ROTAS=[
+  {lab:'São Paulo SP → Curitiba PR',km:400,mkt:9.80},
+  {lab:'Curitiba/Cascavel PR → Santos SP',km:490,mkt:11.50},
+  {lab:'Belo Horizonte MG → São Paulo SP',km:580,mkt:12.20},
+  {lab:'Chapecó SC → São Paulo SP',km:710,mkt:14.20},
+  {lab:'Rio de Janeiro RJ → Belo Horizonte MG',km:434,mkt:7.40},
+  {lab:'São Paulo SP → Porto Alegre RS',km:1090,mkt:10.30},
+  {lab:'Rondonópolis MT → Santos SP',km:1580,mkt:13.00},
+  {lab:'Goiânia GO → São Paulo SP',km:900,mkt:9.20},
+  {lab:'Jaraguá do Sul SC → Porto de Itajaí SC',km:100,mkt:8.50},
+  {lab:'Itupeva SP → Rosário MA',km:2500,mkt:10.00}
+];
+const SAZONAL=[0.90,0.92,1.00,1.05,1.05,1.00,0.98,1.10,1.10,1.12,1.18,1.20];
+const MESES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const CENARIOS=[
+  {lab:'⚡ Spot',m:0.325,d:'frete avulso · validade 48h'},
+  {lab:'📄 Contrato 6M',m:0.265,d:'volume comprometido · reajuste IPCA+diesel'},
+  {lab:'🔒 Dedicado 12M',m:0.235,d:'veículo fixo · alto volume'}
+];
+
+let P=loadParams();
+function loadParams(){
+  try{const s=localStorage.getItem('MOITA_CALC_PARAMS');if(s){const p=JSON.parse(s);if(p.versao===DEFAULTS.versao)return p;}}catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULTS));
+}
+function saveParams(){try{localStorage.setItem('MOITA_CALC_PARAMS',JSON.stringify(P));}catch(e){}}
+
+/* ================= HELPERS ================= */
+const $=id=>document.getElementById(id);
+const fmt=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+const fmt2=v=>v.toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:2,maximumFractionDigits:2});
+const num=id=>{const v=parseFloat($(id).value);return isFinite(v)&&v>0?v:0;};
+
+/* ================= UI INIT ================= */
+VEICULOS.forEach((v,i)=>$('vei').add(new Option(v.lab,v.k,false,v.k==='carreta5')));
+CARGAS.forEach(c=>$('carga').add(new Option(c.lab,c.k)));
+ROTAS.forEach((r,i)=>$('rota').add(new Option(r.lab+' ('+r.km+' km)',i)));
+$('rota').onchange=()=>{const r=ROTAS[$('rota').value];if(r){$('km').value=r.km;}calc();};
+
+function fillParamsUI(){
+  $('pDiesel').value=P.diesel;$('pPedKm').value=P.pedagioEixoKm;$('pGris').value=P.gris;
+  $('pAdv').value=P.adv;$('pOver').value=P.overhead;$('pImp').value=P.impostos;
+  const tb=$('anttTab').querySelector('tbody');tb.innerHTML='';
+  Object.keys(P.antt).forEach(e=>{
+    const a=P.antt[e];
+    tb.insertAdjacentHTML('beforeend',`<tr><td>${e}</td>
+      <td><input type="number" step="0.0001" data-antt="${e}" data-f="ccd" value="${a.ccd}"></td>
+      <td><input type="number" step="0.01" data-antt="${e}" data-f="cc" value="${a.cc}"></td>
+      <td>${a.v?'<span class="badge-v">✓ oficial</span>':'<span class="badge-e">≈ estimado</span>'}</td></tr>`);
+  });
+  tb.querySelectorAll('input').forEach(i=>i.oninput=()=>{P.antt[i.dataset.antt][i.dataset.f]=parseFloat(i.value)||0;calc();});
+}
+fillParamsUI();
+['pDiesel','pPedKm','pGris','pAdv','pOver','pImp'].forEach(id=>$(id).oninput=()=>{
+  P.diesel=num('pDiesel')||P.diesel;P.pedagioEixoKm=parseFloat($('pPedKm').value)||P.pedagioEixoKm;
+  P.gris=parseFloat($('pGris').value)||0;P.adv=parseFloat($('pAdv').value)||0;
+  P.overhead=parseFloat($('pOver').value)||0;P.impostos=parseFloat($('pImp').value)||0;calc();
+});
+$('btnSalvar').onclick=()=>{saveParams();$('btnSalvar').textContent='✅ Salvo!';setTimeout(()=>$('btnSalvar').textContent='💾 Salvar parâmetros',1500);};
+$('btnReset').onclick=()=>{P=JSON.parse(JSON.stringify(DEFAULTS));saveParams();fillParamsUI();calc();};
+$('btnEx').onclick=()=>{$('rota').value=2;$('km').value=580;$('nf').value=280000;$('vei').value='carreta5';$('carga').value='alto_valor';$('desc').value=250;calc();};
+$('btnLimpar').onclick=()=>{['km','nf','ped','desc','kmVazio','motOver','pCom'].forEach(id=>$(id).value='');$('rota').value='';$('chips').innerHTML='';calc();};
+['km','nf','ped','desc','kmVazio','motOver','pCom'].forEach(id=>$(id).oninput=calc);
+$('vei').onchange=calc;$('carga').onchange=calc;
+
+/* ================= CÁLCULO ================= */
+function anttFor(eixos){
+  if(P.antt[eixos])return P.antt[eixos];
+  const ks=Object.keys(P.antt).map(Number).sort((a,b)=>a-b);
+  let lo=ks[0],hi=ks[ks.length-1];
+  ks.forEach(k=>{if(k<=eixos&&k>lo)lo=k;if(k>=eixos&&k<hi)hi=k;});
+  const a=P.antt[lo],b=P.antt[hi],t=(eixos-lo)/((hi-lo)||1);
+  return {ccd:a.ccd+(b.ccd-a.ccd)*t,cc:a.cc+(b.cc-a.cc)*t,v:false};
+}
+function calc(){
+  const km=num('km'),nf=num('nf');
+  const vei=VEICULOS.find(v=>v.k===$('vei').value)||VEICULOS[3];
+  const carga=CARGAS.find(c=>c.k===$('carga').value)||CARGAS[0];
+  if(!km){renderEmpty();return;}
+
+  // 1) piso ANTT: km × CCD + CC (Tabela A carga geral × multiplicador do tipo de carga)
+  const a=anttFor(vei.eixos);
+  const piso=km*a.ccd*carga.m + a.cc*carga.m;
+
+  // 2) custo motorista: custo/km (ajustado pelo diesel atual — diesel ≈ 40% do custo) × km + retorno vazio a 60%
+  const ckmAdj=vei.ckm*(1+0.40*(P.diesel/P.dieselBase-1));
+  const kmVazio=num('kmVazio');
+  let motEst=km*ckmAdj + kmVazio*ckmAdj*0.60;
+  motEst=Math.max(motEst,piso);               // lei: nunca abaixo do piso
+  const motOver=num('motOver');
+  const mot=motOver||motEst;
+  const abaixoPiso=motOver>0&&motOver<piso;
+
+  // 3) composição de custo (metodologia G9)
+  const ped=num('ped')||km*vei.eixos*P.pedagioEixoKm;
+  const grisPct=carga.gris!=null?carga.gris:P.gris;
+  const gris=nf*grisPct/100, adv=nf*P.adv/100, rcdc=nf*P.rcdc/100;
+  const desc=num('desc');
+  const custoDireto=mot+ped+gris+adv+rcdc+desc;
+  const over=custoDireto*P.overhead/100;
+  const custoTotal=custoDireto+over;
+
+  // 4) preço pela regra de ouro (custo caminhão = 60–62% da operação → usar 61%)
+  const metaMid=(P.metaMin+P.metaMax)/2/100;
+  const precoMeta=mot/metaMid;
+  // piso comercial: preço tem que cobrir custo total + impostos com lucro
+  const precoMinViavel=custoTotal/(1-P.impostos/100-0.05); // 5% líquido mínimo de segurança
+  const preco=Math.max(precoMeta,precoMinViavel);
+  const imp=preco*P.impostos/100;
+  const liq=preco-custoTotal-imp;
+  const mLiq=preco>0?liq/preco*100:0;
+
+  // tiles
+  $('tPiso').textContent=fmt(piso);
+  $('tPisoS').innerHTML=`${vei.eixos} eixos · ${carga.lab} · CCD ${a.ccd.toFixed(4).replace('.',',')} ${a.v?'<span class="badge-v">✓</span>':'<span class="badge-e">≈</span>'} — <strong>não fechar abaixo</strong>`;
+  $('tMot').textContent=fmt(mot);
+  $('tMotS').textContent=motOver?'informado por você'+(abaixoPiso?' ⚠️ ABAIXO DO PISO LEGAL':'')
+    :`estimado: ${km} km × ${fmt2(ckmAdj)}/km${kmVazio?` + ${kmVazio} km vazio`:''} (diesel ${fmt2(P.diesel)}/L)`;
+  $('tPreco').textContent=fmt(preco);
+  $('tPrecoS').textContent=preco>precoMeta?'elevado p/ cobrir custos + impostos':`motorista ÷ ${(metaMid*100).toFixed(0)}% · líquido ${mLiq.toFixed(1)}%`;
+  $('tKm').textContent=fmt2(preco/km)+'/km';
+  const r=ROTAS[$('rota').value];
+  $('tKmS').textContent=r?`mercado na rota: ${fmt2(r.mkt)}/km (${preco/km>r.mkt?'+':''}${((preco/km/r.mkt-1)*100).toFixed(1)}%)`:'sem rota de referência';
+
+  // semáforo — usa preço do comercial se informado, senão o preço sugerido
+  const pCom=num('pCom');
+  const pAval=pCom||preco;
+  const pct=pAval>0?mot/pAval*100:0;
+  const s=$('sema');
+  let cls,ic,txt;
+  const alvo=pCom?`preço do comercial ${fmt(pCom)}`:`preço sugerido`;
+  if(abaixoPiso){cls='s-crit';ic='⛔';txt=`Motorista ${fmt(mot)} está ABAIXO do piso ANTT ${fmt(piso)} — ilegal, ajuste o valor.`;}
+  else if(pct<P.metaMin){cls='s-ok';ic='✅';txt=`Custo do caminhão = ${pct.toFixed(1)}% do ${alvo} — margem excelente (abaixo de ${P.metaMin}%). Sinalizar ao comercial.`;}
+  else if(pct<=P.metaMax){cls='s-meta';ic='🎯';txt=`Custo do caminhão = ${pct.toFixed(1)}% do ${alvo} — dentro da meta ${P.metaMin}–${P.metaMax}%. Pode prosseguir.`;}
+  else if(pct<=65){cls='s-warn';ic='⚠️';txt=`Custo do caminhão = ${pct.toFixed(1)}% do ${alvo} — atenção: buscar motorista mais barato ou renegociar.`;}
+  else{cls='s-crit';ic='🚨';txt=`Custo do caminhão = ${pct.toFixed(1)}% do ${alvo} — CRÍTICO (>65%). Buscar alternativas ou escalar.`;}
+  s.className='sema '+cls;s.innerHTML=`<span class="ic">${ic}</span><span>${txt}</span>`;
+
+  // composição — barra + tabela (paleta validada; gaps 2px + rótulos diretos)
+  const segs=[
+    {lab:'Motorista',v:mot,c:'var(--seg1)'},
+    {lab:'Pedágio'+(num('ped')?'':' (estimado)'),v:ped,c:'var(--seg2)'},
+    {lab:`GRIS ${grisPct.toFixed(2).replace('.',',')}% + Ad valorem + RCDC`,v:gris+adv+rcdc,c:'var(--seg3)'},
+    {lab:'Descarga + Overhead '+P.overhead+'%',v:desc+over,c:'var(--seg4)'},
+    {lab:'Impostos '+P.impostos.toFixed(2).replace('.',',')+'% (no preço sugerido)',v:imp,c:'var(--seg5)'}
+  ];
+  const tot=segs.reduce((s,x)=>s+x.v,0);
+  $('bar').innerHTML=segs.filter(x=>x.v>0).map(x=>`<div style="width:${(x.v/tot*100).toFixed(2)}%;background:${x.c}" title="${x.lab}: ${fmt(x.v)}"></div>`).join('');
+  $('comp').innerHTML=segs.map(x=>`<tr><td><span class="sq" style="background:${x.c}"></span>${x.lab}</td><td>${fmt2(x.v)}</td></tr>`).join('')
+    +`<tr class="tot"><td>Custo total (com overhead)</td><td>${fmt2(custoTotal)}</td></tr>`
+    +`<tr class="tot"><td>💵 Lucro líquido no preço sugerido</td><td style="color:var(--green)">${fmt2(liq)} (${mLiq.toFixed(1)}%)</td></tr>`;
+
+  // cenários
+  $('cen').innerHTML=CENARIOS.map(c=>{
+    const p=Math.max(custoTotal/(1-c.m),piso);
+    const i2=p*P.impostos/100,l2=p-custoTotal-i2;
+    return `<div class="c"><h3>${c.lab}</h3><div class="p">${fmt(p)}</div><div class="m">margem bruta ${(c.m*100).toFixed(1)}% · líquido ${fmt(l2)} (${(l2/p*100).toFixed(1)}%)<br>${c.d}</div></div>`;
+  }).join('');
+
+  // mercado + sazonalidade
+  const mes=new Date().getMonth(),fs=SAZONAL[mes];
+  $('mkt').innerHTML=`📅 Sazonalidade de <strong>${MESES[mes]}</strong>: fator <strong>${fs.toFixed(2).replace('.',',')}x</strong> → preço ajustado sugerido: <strong>${fmt(preco*fs)}</strong>`
+    +(r?`<br>📊 Mercado na rota (FreteBI): <strong>${fmt2(r.mkt)}/km</strong> ≈ ${fmt(r.mkt*km)} — negocie o motorista mirando ${fmt(preco*metaMid)} (${(metaMid*100).toFixed(0)}%)`:'' );
+}
+function renderEmpty(){
+  ['tPiso','tMot','tPreco','tKm'].forEach(id=>$(id).textContent='—');
+  $('tPisoS').textContent='preencha distância e veículo';$('tMotS').textContent='—';$('tPrecoS').textContent='—';$('tKmS').textContent='—';
+  $('bar').innerHTML='';$('comp').innerHTML='';$('cen').innerHTML='';$('mkt').innerHTML='';
+  const s=$('sema');s.className='sema s-meta';s.innerHTML='<span class="ic">ℹ️</span><span>Preencha os dados — o semáforo avalia a regra de ouro (custo do caminhão entre 60% e 62% do valor da operação).</span>';
+}
+
+/* ================= VOZ (Web Speech API pt-BR) ================= */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){$('micBtn').disabled=true;$('micBtn').style.opacity=.35;$('vtxt').innerHTML='Reconhecimento de voz indisponível neste navegador (use <strong>Chrome</strong> ou <strong>Edge</strong>). Preencha os campos abaixo.';}
+else{
+  const rec=new SR();rec.lang='pt-BR';rec.interimResults=false;rec.maxAlternatives=1;
+  let on=false;
+  $('micBtn').onclick=()=>{if(on){rec.stop();return;}try{rec.start();}catch(e){}};
+  rec.onstart=()=>{on=true;$('micBtn').classList.add('rec');$('vtxt').innerHTML='<strong>🔴 Ouvindo…</strong> fale a operação.';};
+  rec.onend=()=>{on=false;$('micBtn').classList.remove('rec');};
+  rec.onerror=e=>{on=false;$('micBtn').classList.remove('rec');$('vtxt').innerHTML='Erro no microfone ('+e.error+'). Verifique a permissão e tente de novo.';};
+  rec.onresult=e=>{
+    const t=e.results[0][0].transcript;
+    $('vtxt').innerHTML='Você disse: <strong>"'+t+'"</strong>';
+    parseVoz(t.toLowerCase());
+  };
+}
+function parseVoz(t){
+  const chips=[];
+  // distância: "580 km" / "580 quilômetros"
+  const mKm=t.match(/(\d+(?:[.,]\d+)?)\s*(?:km|quil[oô]metros?)/);
+  if(mKm){$('km').value=Math.round(parseFloat(mKm[1].replace(',','.')));chips.push('📏 '+$('km').value+' km');}
+  // valor NF: "nota de 250 mil" / "valor 1 milhão" / "nf de 80000"
+  const mNf=t.match(/(?:nota|nf|valor|mercadoria|carga de)[^\d]*(\d+(?:[.,]\d+)?)\s*(mil|milh[aã]o|milh[oõ]es)?/);
+  if(mNf){let v=parseFloat(mNf[1].replace(/\./g,'').replace(',','.'));
+    if(mNf[2]==='mil')v*=1000;else if(mNf[2])v*=1e6;
+    if(v>0){$('nf').value=Math.round(v);chips.push('📄 NF '+fmt(v));}}
+  // veículo
+  const veiMap=[['rodotrem','rodotrem'],['bitrem','bitrem'],['carreta ls','carreta6'],['carreta 6','carreta6'],['carreta','carreta5'],['truck','truck'],['truque','truck'],['toco','toco'],['vuc','vuc'],['tr[eê]s quartos','vuc']];
+  for(const [re,k] of veiMap){if(new RegExp(re).test(t)){$('vei').value=k;chips.push('🚛 '+VEICULOS.find(v=>v.k===k).lab.split(' — ')[0]);break;}}
+  // carga
+  const carMap=[['frigor|refriger|congelad','frigo'],['perigos|qu[ií]mic','perigosa'],['cont[eê]iner','contein'],['granel l[ií]quido|l[ií]quido','granel_l'],['neogranel','neogranel'],['granel','granel_s'],['solar|eletr[oô]nic|alto valor','alto_valor'],['carga geral|geral','geral']];
+  for(const [re,k] of carMap){if(new RegExp(re).test(t)){$('carga').value=k;chips.push('📦 '+CARGAS.find(c=>c.k===k).lab);break;}}
+  // rota: "de X para/pra Y" — casa com rotas conhecidas
+  const mR=t.match(/(?:de\s+)?([a-zà-ú\s]+?)\s+(?:para|pra|até)\s+([a-zà-ú\s]+)/);
+  if(mR){
+    const o=mR[1].trim(),d=mR[2].trim();
+    const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+    const idx=ROTAS.findIndex(r=>{const L=norm(r.lab);return L.includes(norm(o).slice(0,8))&&L.includes(norm(d).slice(0,8));});
+    if(idx>=0){$('rota').value=idx;$('km').value=ROTAS[idx].km;chips.push('🗺️ '+ROTAS[idx].lab);}
+    else chips.push('🗺️ '+o+' → '+d+' (informe os km)');
+  }
+  $('chips').innerHTML=chips.map(c=>`<span class="chip">${c}</span>`).join('');
+  calc();
+}
+
+calc();
+</script>
+</body>
+</html>
