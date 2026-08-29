@@ -86,8 +86,11 @@
   },
 
   "valores_frete": {
-    "valor_frete": "PREENCHER - valor negociado da prestação",
-    "nota": "Definir valor do frete desta entrega no rateio do lote Itapevi -> região de Goiânia"
+    "valor_frete": 2788.07,
+    "rateio": "27,07% do frete total do lote (R$ 10.300,00), proporcional ao peso bruto (8.156 kg de 30.130,8 kg)",
+    "frete_total_lote": 10300.00,
+    "custo_motorista_lote": 8000.00,
+    "kpi_custo": "ALERTA CRITICO: custo motorista = 77,67% do frete (meta 60-62%, critico > 65%)"
   },
 
   "checagem_seguro": {
