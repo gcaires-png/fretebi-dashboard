@@ -25,13 +25,14 @@
 'use strict';
 
 const CONFIG = {
-  baseUrl: process.env.NDD_AVERBA_BASE_URL || '',
+  baseUrl: process.env.NDD_AVERBA_BASE_URL || 'https://reader.nddaverba.com.br',
   email: process.env.NDD_AVERBA_EMAIL || '',
   senha: process.env.NDD_AVERBA_SENHA || '',
-  // Caminhos padrão conforme manual "APIs de Integração" da NDD Averba.
-  // Se o Swagger oficial indicar caminhos diferentes, sobrescrever via env
-  // sem precisar alterar o código.
-  pathAuth: process.env.NDD_AVERBA_PATH_AUTH || '/api/usuario/auth',
+  // Endpoint de autenticação conforme manual "Obtendo o token de autenticação"
+  // da NDD Averba: POST https://reader.nddaverba.com.br/api/auth/login
+  // O caminho de averbação deve ser confirmado no Swagger do helpcenter;
+  // ambos podem ser sobrescritos via env sem alterar o código.
+  pathAuth: process.env.NDD_AVERBA_PATH_AUTH || '/api/auth/login',
   pathAverbar: process.env.NDD_AVERBA_PATH_AVERBAR || '/api/averbacao/cte',
   // margem de segurança: renova o token 5 min antes de expirar (validade 60 min)
   tokenTtlMs: 55 * 60 * 1000,
