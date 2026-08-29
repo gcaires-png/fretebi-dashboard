@@ -1,8 +1,29 @@
 {
-  "version": "1.0",
-  "atualizado_em": "2026-07-09",
-  "seguradora": "Allianz Seguros S.A.",
-  "estipulante": "Videl T&I Transportes - CNPJ 63.147.064/0001-30",
+  "version": "1.1",
+  "atualizado_em": "2026-08-29",
+  "seguradora": "SOMPO SEGUROS S/A",
+  "seguradora_cnpj": "61.383.493/0001-80",
+  "corretora": "PAIVA SP Corretora de Seguros Ltda (SUSEP 92405)",
+  "estipulante": "Videl Transporte e Logistica Ltda - CNPJ 63.147.064/0001-30",
+  "cotacoes": {
+    "rctrc_rcdc": "202500682528",
+    "rcv": "202500682530",
+    "apolice_emitida": "PENDENTE - solicitar numero e vigencia a PAIVA SP"
+  },
+  "averbacao": {
+    "averbadora": "NDD Averba",
+    "modo": "eletronica via API NDD (integracao/ndd-averba/), fora do Bsoft (sem integracao nativa)",
+    "regra": "Averbar ANTES da saida do veiculo - CT-e em sequencia numerica rigorosa",
+    "fallback_email": "faturamentotransp@sompo.com.br",
+    "email_sinistro_coleta": "sinistromercadoria@sompo.com.br (ate 24h)",
+    "sos_sinistro": "S.O.S. Cargas Sompo - 0800 723",
+    "bsoft_cadastro_seguro": {
+      "responsavel_pelo_seguro": "Empresa",
+      "documento_tomador": "63.147.064/0001-30",
+      "nome_seguradora": "SOMPO SEGUROS S/A",
+      "numero_apolice": "PENDENTE"
+    }
+  },
   "coberturas": {
     "RCDC": {
       "nome": "Responsabilidade Civil Desaparecimento de Carga",
@@ -16,16 +37,17 @@
       "taxa": 0.00018,
       "premio_minimo_mensal": 500,
       "vigencia": "12 meses",
-      "cobertura": "Desaparecimento total da carga durante transporte rodoviário"
+      "cobertura": "Desaparecimento total ou parcial da carga (roubo, furto, apropriação indébita, estelionato, extorsão) durante transporte rodoviário"
     },
     "RCV": {
       "nome": "Responsabilidade Civil Veicular",
       "apolice": "RC-V",
       "limites": {
         "por_veiculo_viagem": 550000,
-        "danos_corporais": "incluso no LMG",
-        "danos_materiais": "incluso no LMG"
+        "danos_corporais": 350000,
+        "danos_materiais": 200000
       },
+      "premio_minimo_mensal": 350,
       "premio_por_viagem": {
         "ate_400km": 10.00,
         "acima_400km": "proporcional"
