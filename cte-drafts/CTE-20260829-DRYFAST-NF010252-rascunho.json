@@ -1,0 +1,110 @@
+{
+  "rascunho": true,
+  "gerado_por": "Moita Rev1",
+  "gerado_em": "2026-08-29",
+  "operacao": "Itapevi/SP → Aparecida de Goiânia/GO",
+  "status": "RASCUNHO - AGUARDANDO REVISÃO HUMANA",
+  "observacao_bsoft": "Integração API Bsoft ainda bloqueada (DEV-02, aguardando credencial de integração). Rascunho pronto para digitação/importação no Bsoft (cte.bsoft.app).",
+
+  "identificacao": {
+    "tipo_cte": "ORIGINAL",
+    "modal": "RODOVIARIO",
+    "tipo_servico": "NORMAL",
+    "cfop": "6353",
+    "cfop_descricao": "Prestação de serviço de transporte interestadual (SP → GO) — conferir 6352 se tomador for estabelecimento industrial",
+    "natureza_operacao": "PRESTACAO DE SERVICO DE TRANSPORTE",
+    "data_emissao_prevista": "2026-08-29"
+  },
+
+  "emitente": {
+    "razao_social": "VIDEL TRANSPORTE E LOGISTICA LTDA",
+    "cnpj": "63.147.064/0001-30",
+    "ie": "129273392",
+    "cidade": "Itupeva",
+    "uf": "SP"
+  },
+
+  "remetente": {
+    "razao_social": "B & P RESINAS E MASSAS ESPECIAIS LTDA",
+    "cnpj": "17.433.294/0001-48",
+    "ie": "373069271110",
+    "endereco": "R. Antonio Gonçalo da Costa, 56",
+    "bairro": "Vila Nova",
+    "cidade": "Itapevi",
+    "uf": "SP",
+    "cep": "06693-090",
+    "telefone": "(11) 4773-9970"
+  },
+
+  "destinatario": {
+    "razao_social": "DRYFAST SISTEMAS CONSTRUTIVOS SECO LTDA",
+    "cnpj": "54.337.242/0001-02",
+    "ie": "201305372",
+    "endereco": "Av. Rio Verde, S/N - Quadra 28 Lote 10",
+    "bairro": "Vila Rosa",
+    "cidade": "Aparecida de Goiânia",
+    "uf": "GO",
+    "cep": "74935-851",
+    "telefone": "(62) 9679-8557",
+    "contato_pedido": "Everson"
+  },
+
+  "tomador_servico": {
+    "tipo": "REMETENTE",
+    "justificativa": "NF-e indica 'Frete por conta: 0 - Remetente' (CIF) — tomador B & P Resinas",
+    "nota": "CONFIRMAR com o comercial antes de emitir"
+  },
+
+  "nfe_referenciada": [
+    {
+      "numero": "010.252",
+      "serie": "1",
+      "chave_acesso": "35260817433294000148550010000102521904598587",
+      "data_emissao": "2026-08-27",
+      "valor_total": 37950.00,
+      "pedido": "157",
+      "produtos": "DL Construcril MAX8 BLD 25kg (600) + Base Coat Ultrafino saco 20kg (150)"
+    }
+  ],
+
+  "carga": {
+    "valor_mercadoria": 37950.00,
+    "produto_predominante": "ARGAMASSAS E MASSAS PARA CONSTRUCAO (NCM 32141010)",
+    "peso_bruto_kg": 18060.000,
+    "peso_liquido_kg": 18000.000,
+    "volumes": 750,
+    "especie": "BALDES/SACOS"
+  },
+
+  "valores": {
+    "valor_frete": "A_DEFINIR - aguardando negociação com motorista (meta 60-62% do valor da operação)",
+    "valor_pedagio": "A_CALCULAR (rota Itapevi/SP → Aparecida de Goiânia/GO, ~920 km)",
+    "valor_seguro": "A_CALCULAR sobre R$ 37.950,00"
+  },
+
+  "icms": {
+    "cst": "00",
+    "aliquota_percentual": 7.0,
+    "aliquota_justificativa": "Interestadual SP (Sudeste) → GO (Centro-Oeste) = 7% (Resolução Senado 22/89)",
+    "valor_icms": "7% sobre o valor do frete (a definir)"
+  },
+
+  "motorista": { "status": "A_CONTRATAR" },
+  "veiculo": { "status": "A_DEFINIR", "sugestao": "Carga total das 4 NF-e do dia ≈ 30.131 kg — compatível com carreta (consolidar com CT-e Mix Perfis e GM, mesma rota)" },
+
+  "rota": {
+    "origem": "Itapevi/SP",
+    "destino": "Aparecida de Goiânia/GO",
+    "distancia_estimada_km": 920
+  },
+
+  "pendencias_restantes": [
+    "1. DEFINIR valor do frete (negociação motorista, meta 60-62%)",
+    "2. CONTRATAR motorista e preencher CPF/CNH/RNTRC e veículo/placa",
+    "3. CONFIRMAR tomador (NF-e indica remetente/CIF)",
+    "4. CONFIRMAR CFOP 6353 vs 6352 (perfil do tomador)",
+    "5. CALCULAR pedágio e seguro",
+    "6. NUMERAÇÃO do CT-e conforme talão Bsoft",
+    "7. AVERBAR seguro antes do embarque"
+  ]
+}

@@ -1,0 +1,111 @@
+{
+  "rascunho": true,
+  "gerado_por": "Moita Rev1",
+  "gerado_em": "2026-08-29",
+  "operacao": "Itapevi/SP → Goiânia/GO",
+  "status": "RASCUNHO - AGUARDANDO REVISÃO HUMANA",
+  "observacao_bsoft": "Integração API Bsoft ainda bloqueada (DEV-02, aguardando credencial de integração). Rascunho pronto para digitação/importação no Bsoft (cte.bsoft.app).",
+
+  "identificacao": {
+    "tipo_cte": "ORIGINAL",
+    "modal": "RODOVIARIO",
+    "tipo_servico": "NORMAL",
+    "cfop": "6352",
+    "cfop_descricao": "Prestação de serviço de transporte interestadual a estabelecimento industrial (SP → GO) — Mix Perfis é indústria; conferir",
+    "natureza_operacao": "PRESTACAO DE SERVICO DE TRANSPORTE",
+    "data_emissao_prevista": "2026-08-29"
+  },
+
+  "emitente": {
+    "razao_social": "VIDEL TRANSPORTE E LOGISTICA LTDA",
+    "cnpj": "63.147.064/0001-30",
+    "ie": "129273392",
+    "cidade": "Itupeva",
+    "uf": "SP"
+  },
+
+  "remetente": {
+    "razao_social": "CONSTRUCRIL INDUSTRIA E COMERCIO LTDA SP",
+    "cnpj": "10.503.914/0002-00",
+    "ie": "373124031119",
+    "endereco": "R. Sargento Antonio Vieira Noia, 233",
+    "bairro": "Cidade da Saúde",
+    "cidade": "Itapevi",
+    "uf": "SP",
+    "cep": "06693-080",
+    "telefone": "(11) 4141-8203"
+  },
+
+  "destinatario": {
+    "razao_social": "MIX PERFIS DRYWALL IND E COM EIRELI-ME",
+    "cnpj": "17.979.411/0001-73",
+    "ie": "105654787",
+    "endereco": "R. Americano do Brasil, 1325 - Quadra 56 Lote 07",
+    "bairro": "Prq Oeste Industrial",
+    "cidade": "Goiânia",
+    "uf": "GO",
+    "cep": "74935-851",
+    "cep_nota": "CONFERIR CEP: DANFE traz 74935-851 (faixa de Aparecida de Goiânia) com município Goiânia — validar no cadastro",
+    "telefone": "(62) 3587-3003",
+    "contato_pedido": "Gabriela"
+  },
+
+  "tomador_servico": {
+    "tipo": "DESTINATARIO",
+    "justificativa": "NF-e indica 'Frete por conta: 1 - Destinatário' (FOB) — tomador Mix Perfis",
+    "nota": "CONFIRMAR com o comercial antes de emitir"
+  },
+
+  "nfe_referenciada": [
+    {
+      "numero": "018.591",
+      "serie": "1",
+      "chave_acesso": "35260810503914000200550010000185911059978944",
+      "data_emissao": "2026-08-28",
+      "valor_total": 16102.64,
+      "pedido": "21828",
+      "produtos": "DL Construcril MAX8 balde 15kg (48) + MAX8 BLD 25kg (216) + Base Coat Ultrafino saco 20kg (100)"
+    }
+  ],
+
+  "carga": {
+    "valor_mercadoria": 16102.64,
+    "produto_predominante": "ARGAMASSAS E MASSAS PARA CONSTRUCAO (NCM 32141010)",
+    "peso_bruto_kg": 8156.000,
+    "peso_liquido_kg": 8120.000,
+    "volumes": 364,
+    "especie": "BALDES/SACOS"
+  },
+
+  "valores": {
+    "valor_frete": "A_DEFINIR - aguardando negociação com motorista (meta 60-62% do valor da operação)",
+    "valor_pedagio": "A_CALCULAR (rota Itapevi/SP → Goiânia/GO, ~910 km)",
+    "valor_seguro": "A_CALCULAR sobre R$ 16.102,64"
+  },
+
+  "icms": {
+    "cst": "00",
+    "aliquota_percentual": 7.0,
+    "aliquota_justificativa": "Interestadual SP (Sudeste) → GO (Centro-Oeste) = 7% (Resolução Senado 22/89)",
+    "valor_icms": "7% sobre o valor do frete (a definir)"
+  },
+
+  "motorista": { "status": "A_CONTRATAR" },
+  "veiculo": { "status": "A_DEFINIR", "sugestao": "Consolidar com CT-e Dryfast e GM (mesma rota SP→GO, carga total ≈ 30.131 kg)" },
+
+  "rota": {
+    "origem": "Itapevi/SP",
+    "destino": "Goiânia/GO",
+    "distancia_estimada_km": 910
+  },
+
+  "pendencias_restantes": [
+    "1. DEFINIR valor do frete (negociação motorista, meta 60-62%)",
+    "2. CONTRATAR motorista e preencher CPF/CNH/RNTRC e veículo/placa",
+    "3. CONFIRMAR tomador (NF-e indica destinatário/FOB)",
+    "4. CONFERIR CEP do destinatário (74935-851 vs município Goiânia)",
+    "5. CALCULAR pedágio e seguro",
+    "6. NUMERAÇÃO do CT-e conforme talão Bsoft",
+    "7. AVERBAR seguro antes do embarque"
+  ]
+}

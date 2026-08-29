@@ -1,0 +1,122 @@
+{
+  "rascunho": true,
+  "gerado_por": "Moita Rev1",
+  "gerado_em": "2026-08-29",
+  "operacao": "Itapevi/SP → Goiânia/GO",
+  "status": "RASCUNHO - AGUARDANDO REVISÃO HUMANA",
+  "observacao_bsoft": "Integração API Bsoft ainda bloqueada (DEV-02, aguardando credencial de integração). Rascunho pronto para digitação/importação no Bsoft (cte.bsoft.app).",
+  "nota_agrupamento": "Um único CT-e referenciando as duas NF-e (018.592 venda + 018.593 bonificação): mesmo remetente, mesmo destinatário, mesma data e mesma rota. Se o cliente exigir CT-e separado por NF-e, desmembrar.",
+
+  "identificacao": {
+    "tipo_cte": "ORIGINAL",
+    "modal": "RODOVIARIO",
+    "tipo_servico": "NORMAL",
+    "cfop": "6353",
+    "cfop_descricao": "Prestação de serviço de transporte interestadual a estabelecimento comercial (SP → GO)",
+    "natureza_operacao": "PRESTACAO DE SERVICO DE TRANSPORTE",
+    "data_emissao_prevista": "2026-08-29"
+  },
+
+  "emitente": {
+    "razao_social": "VIDEL TRANSPORTE E LOGISTICA LTDA",
+    "cnpj": "63.147.064/0001-30",
+    "ie": "129273392",
+    "cidade": "Itupeva",
+    "uf": "SP"
+  },
+
+  "remetente": {
+    "razao_social": "CONSTRUCRIL INDUSTRIA E COMERCIO LTDA SP",
+    "cnpj": "10.503.914/0002-00",
+    "ie": "373124031119",
+    "endereco": "R. Sargento Antonio Vieira Noia, 233",
+    "bairro": "Cidade da Saúde",
+    "cidade": "Itapevi",
+    "uf": "SP",
+    "cep": "06693-080",
+    "telefone": "(11) 4141-8203"
+  },
+
+  "destinatario": {
+    "razao_social": "GM COMERCIO DE DIVISORIAS E FORROS LTDA",
+    "cnpj": "34.064.474/0001-19",
+    "ie": "107663031",
+    "endereco": "Tv. Imbé, 59 - Quadra 122 Lote 21",
+    "bairro": "Prq Oeste Industrial",
+    "cidade": "Goiânia",
+    "uf": "GO",
+    "cep": "74375-130",
+    "telefone": "(62) 6296-4156",
+    "contato_pedido": "Leandro"
+  },
+
+  "tomador_servico": {
+    "tipo": "DESTINATARIO",
+    "justificativa": "NF-e indica 'Frete por conta: 1 - Destinatário' (FOB) — tomador GM Comércio",
+    "nota": "CONFIRMAR com o comercial antes de emitir"
+  },
+
+  "nfe_referenciada": [
+    {
+      "numero": "018.592",
+      "serie": "1",
+      "chave_acesso": "35260810503914000200550010000185921059997571",
+      "data_emissao": "2026-08-28",
+      "valor_total": 6829.04,
+      "pedido": "21805",
+      "produtos": "DL Construcril MAX8 BLD 25kg (144) + Base Coat Ultrafino saco 20kg (10)"
+    },
+    {
+      "numero": "018.593",
+      "serie": "1",
+      "chave_acesso": "35260810503914000200550010000185931060016209",
+      "data_emissao": "2026-08-28",
+      "valor_total": 193.48,
+      "pedido": "21836",
+      "natureza": "BONIFICACAO",
+      "produtos": "DL Construcril MAX8 BLD 25kg (4)"
+    }
+  ],
+
+  "carga": {
+    "valor_mercadoria": 7022.52,
+    "valor_mercadoria_detalhe": "NF 018.592: R$ 6.829,04 + NF 018.593 (bonificação): R$ 193,48",
+    "produto_predominante": "ARGAMASSAS E MASSAS PARA CONSTRUCAO (NCM 32141010)",
+    "peso_bruto_kg": 3914.800,
+    "peso_liquido_kg": 3900.000,
+    "volumes": 158,
+    "especie": "BALDES/SACOS"
+  },
+
+  "valores": {
+    "valor_frete": "A_DEFINIR - aguardando negociação com motorista (meta 60-62% do valor da operação)",
+    "valor_pedagio": "A_CALCULAR (rota Itapevi/SP → Goiânia/GO, ~910 km)",
+    "valor_seguro": "A_CALCULAR sobre R$ 7.022,52"
+  },
+
+  "icms": {
+    "cst": "00",
+    "aliquota_percentual": 7.0,
+    "aliquota_justificativa": "Interestadual SP (Sudeste) → GO (Centro-Oeste) = 7% (Resolução Senado 22/89)",
+    "valor_icms": "7% sobre o valor do frete (a definir)"
+  },
+
+  "motorista": { "status": "A_CONTRATAR" },
+  "veiculo": { "status": "A_DEFINIR", "sugestao": "Consolidar com CT-e Dryfast e Mix Perfis (mesma rota SP→GO, carga total ≈ 30.131 kg)" },
+
+  "rota": {
+    "origem": "Itapevi/SP",
+    "destino": "Goiânia/GO",
+    "distancia_estimada_km": 910
+  },
+
+  "pendencias_restantes": [
+    "1. DEFINIR valor do frete (negociação motorista, meta 60-62%)",
+    "2. CONTRATAR motorista e preencher CPF/CNH/RNTRC e veículo/placa",
+    "3. CONFIRMAR tomador (NF-e indica destinatário/FOB)",
+    "4. CONFIRMAR agrupamento das 2 NF-e em 1 CT-e",
+    "5. CALCULAR pedágio e seguro",
+    "6. NUMERAÇÃO do CT-e conforme talão Bsoft",
+    "7. AVERBAR seguro antes do embarque"
+  ]
+}
