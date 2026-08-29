@@ -1,0 +1,98 @@
+{
+  "rascunho": true,
+  "gerado_por": "Moita Rev1",
+  "gerado_em": "2026-08-29",
+  "lote": "LOTE-CONSTRUCRIL-2026-08-29 (CT-e 2 de 3)",
+  "status": "RASCUNHO - AGUARDANDO REVISÃO E EMISSÃO HUMANA NO BSOFT (FILIAL SP)",
+
+  "identificacao": {
+    "tipo_cte": "ORIGINAL",
+    "modal": "RODOVIARIO",
+    "tipo_servico": "NORMAL",
+    "cfop": "6353",
+    "cfop_descricao": "Prestação de serviço de transporte interestadual (SP → GO) a estabelecimento comercial",
+    "natureza_operacao": "PRESTACAO DE SERVICO DE TRANSPORTE",
+    "uf_inicio": "SP",
+    "municipio_inicio": "Itapevi",
+    "uf_fim": "GO",
+    "municipio_fim": "Goiânia"
+  },
+
+  "emitente": {
+    "razao_social": "VIDEL TRANSPORTE E LOGISTICA LTDA - FILIAL SP",
+    "cnpj": "CONFIRMAR CNPJ DA FILIAL SP NO BSOFT (matriz: 63.147.064/0001-30, IE SP 129273392)",
+    "uf": "SP",
+    "nota": "Usuário determinou emissão pela FILIAL SP. Selecionar a filial correta no Bsoft antes de emitir."
+  },
+
+  "remetente": {
+    "razao_social": "CONSTRUCRIL INDUSTRIA E COMERCIO LTDA SP",
+    "cnpj": "10.503.914/0002-00",
+    "ie": "373124031119",
+    "endereco": "R Sargento Antonio Vieira Noia, 233",
+    "bairro": "Cidade da Saúde",
+    "cidade": "Itapevi",
+    "uf": "SP",
+    "cep": "06693-080",
+    "telefone": "(11) 4141-8203"
+  },
+
+  "destinatario": {
+    "razao_social": "MIX PERFIS DRYWALL IND E COM EIRELI-ME",
+    "cnpj": "17.979.411/0001-73",
+    "ie": "105654787",
+    "endereco": "R Americano do Brasil, 1325 - Quadra 56 - Lote 07",
+    "bairro": "Prq Oeste Industrial",
+    "cidade": "Goiânia",
+    "uf": "GO",
+    "cep": "74935-851",
+    "telefone": "(62) 3587-3003",
+    "contato_pedido": "Gabriela (pedido 21828)"
+  },
+
+  "tomador_servico": {
+    "tipo": "CONFIRMAR",
+    "nota": "NF-e indica frete por conta 1-Destinatário. Confirmar se o tomador junto à Videl é a Mix Perfis ou a Construcril (contratante do lote)."
+  },
+
+  "nfe_referenciada": [
+    {
+      "chave_acesso": "35260810503914000200550010000185911059978944",
+      "numero": "018.591",
+      "serie": "1",
+      "data_emissao": "2026-08-28",
+      "valor_total_nfe": 16102.64,
+      "volumes": 364,
+      "peso_bruto_kg": 8156.0,
+      "peso_liquido_kg": 8120.0,
+      "produtos": "DL Construcril MAX8 balde 15kg (48) + MAX8 BLD 25kg (216) + Base Coat Ultrafino saco 20kg (100)",
+      "protocolo_autorizacao": "135263565413695 28/08/2026 10:57:14"
+    }
+  ],
+
+  "carga": {
+    "valor_carga": 16102.64,
+    "produto_predominante": "Massas para construção a seco (drywall)",
+    "peso_bruto_kg": 8156.0,
+    "volumes": 364
+  },
+
+  "seguro": {
+    "responsavel_pelo_seguro": "Empresa",
+    "documento_tomador": "63.147.064/0001-30",
+    "nome_seguradora": "SOMPO SEGUROS S/A",
+    "numero_apolice": "PENDENTE - solicitar à PAIVA SP",
+    "averbacao": "NDD Averba - averbar o CT-e autorizado ANTES da saída do veículo (usuário: kcosta@videltel.com.br)"
+  },
+
+  "valores_frete": {
+    "valor_frete": "PREENCHER - valor negociado da prestação",
+    "nota": "Definir valor do frete desta entrega no rateio do lote Itapevi -> região de Goiânia"
+  },
+
+  "checagem_seguro": {
+    "carga_excluida": false,
+    "valor_dentro_limite": true,
+    "nota": "Valor total do lote no veículo R$ 61.075,16 < limite R$ 550.000/veículo. Produto não consta na lista de exclusões Sompo."
+  }
+}

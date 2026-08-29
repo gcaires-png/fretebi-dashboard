@@ -1,0 +1,98 @@
+{
+  "rascunho": true,
+  "gerado_por": "Moita Rev1",
+  "gerado_em": "2026-08-29",
+  "lote": "LOTE-CONSTRUCRIL-2026-08-29 (CT-e 1 de 3)",
+  "status": "RASCUNHO - AGUARDANDO REVISÃO E EMISSÃO HUMANA NO BSOFT (FILIAL SP)",
+
+  "identificacao": {
+    "tipo_cte": "ORIGINAL",
+    "modal": "RODOVIARIO",
+    "tipo_servico": "NORMAL",
+    "cfop": "6353",
+    "cfop_descricao": "Prestação de serviço de transporte interestadual (SP → GO) a estabelecimento comercial",
+    "natureza_operacao": "PRESTACAO DE SERVICO DE TRANSPORTE",
+    "uf_inicio": "SP",
+    "municipio_inicio": "Itapevi",
+    "uf_fim": "GO",
+    "municipio_fim": "Aparecida de Goiânia"
+  },
+
+  "emitente": {
+    "razao_social": "VIDEL TRANSPORTE E LOGISTICA LTDA - FILIAL SP",
+    "cnpj": "CONFIRMAR CNPJ DA FILIAL SP NO BSOFT (matriz: 63.147.064/0001-30, IE SP 129273392)",
+    "uf": "SP",
+    "nota": "Usuário determinou emissão pela FILIAL SP. Selecionar a filial correta no Bsoft antes de emitir."
+  },
+
+  "remetente": {
+    "razao_social": "B & P RESINAS E MASSAS ESPECIAIS LTDA",
+    "cnpj": "17.433.294/0001-48",
+    "ie": "373069271110",
+    "endereco": "Antonio Gonçalo da Costa, 56",
+    "bairro": "Vila Nova",
+    "cidade": "Itapevi",
+    "uf": "SP",
+    "cep": "06693-090",
+    "telefone": "(11) 4773-9970"
+  },
+
+  "destinatario": {
+    "razao_social": "DRYFAST SISTEMAS CONSTRUTIVOS SECO LTDA",
+    "cnpj": "54.337.242/0001-02",
+    "ie": "201305372",
+    "endereco": "Av Rio Verde, S/N - Quadra 28 Lote 10",
+    "bairro": "Vila Rosa",
+    "cidade": "Aparecida de Goiânia",
+    "uf": "GO",
+    "cep": "74935-851",
+    "telefone": "(62) 9679-8557",
+    "contato_pedido": "Everson (pedido 157)"
+  },
+
+  "tomador_servico": {
+    "tipo": "CONFIRMAR",
+    "nota": "NF-e indica frete por conta 0-Remetente (B&P). Confirmar se o tomador do frete junto à Videl é a B&P/Construcril."
+  },
+
+  "nfe_referenciada": [
+    {
+      "chave_acesso": "35260817433294000148550010000102521904598587",
+      "numero": "010.252",
+      "serie": "1",
+      "data_emissao": "2026-08-27",
+      "valor_total_nfe": 37950.00,
+      "volumes": 750,
+      "peso_bruto_kg": 18060.0,
+      "peso_liquido_kg": 18000.0,
+      "produtos": "DL Construcril MAX8 BLD 25kg (600) + Base Coat Ultrafino saco 20kg (150) - massas p/ construção a seco",
+      "protocolo_autorizacao": "135263554238469 27/08/2026 16:41:13"
+    }
+  ],
+
+  "carga": {
+    "valor_carga": 37950.00,
+    "produto_predominante": "Massas e resinas para construção a seco (drywall)",
+    "peso_bruto_kg": 18060.0,
+    "volumes": 750
+  },
+
+  "seguro": {
+    "responsavel_pelo_seguro": "Empresa",
+    "documento_tomador": "63.147.064/0001-30",
+    "nome_seguradora": "SOMPO SEGUROS S/A",
+    "numero_apolice": "PENDENTE - solicitar à PAIVA SP",
+    "averbacao": "NDD Averba - averbar o CT-e autorizado ANTES da saída do veículo (usuário: kcosta@videltel.com.br)"
+  },
+
+  "valores_frete": {
+    "valor_frete": "PREENCHER - valor negociado da prestação",
+    "nota": "Definir valor do frete desta entrega no rateio do lote Itapevi -> região de Goiânia"
+  },
+
+  "checagem_seguro": {
+    "carga_excluida": false,
+    "valor_dentro_limite": true,
+    "nota": "Valor total do lote no veículo R$ 61.075,16 < limite R$ 550.000/veículo. Produto não consta na lista de exclusões Sompo."
+  }
+}
