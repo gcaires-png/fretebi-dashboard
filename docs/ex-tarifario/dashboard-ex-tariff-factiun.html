@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factiun Ex-Tariff Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* ============================================================
+   HOW TO UPDATE THIS PAGE  (Factiun)
+   Scroll to the <script> block at the bottom and edit CONFIG:
+     - CONFIG.currentStage  -> one of the stage ids listed there
+     - CONFIG.lastUpdated   -> date of the update
+     - CONFIG.processes[].sei -> paste the SEI process number once filed
+     - CONFIG.stages[].start / .end -> adjust dates as MDIC moves
+     - CONFIG.stages[].note -> free text shown under the stage
+   Nothing else needs editing. Open the file in any browser.
+   ============================================================ */
+:root{
+  --bg:#F2F4F6; --surface:#FFFFFF; --surface-2:#E9EDF1; --line:#D3DAE1;
+  --ink:#152029; --ink-2:#4A5A68; --ink-3:#7B8A97;
+  --accent:#0E4F63; --accent-ink:#FFFFFF; --accent-soft:#D9EAEF;
+  --good:#1D7A4C; --good-soft:#DCF1E5;
+  --warn:#9A6B0F; --warn-soft:#FBEFD0;
+  --crit:#B3261E; --crit-soft:#F9DEDC;
+  --neutral:#7B8A97; --neutral-soft:#E9EDF1;
+  --shadow:0 1px 2px rgba(21,32,41,.06), 0 8px 24px -12px rgba(21,32,41,.18);
+  --radius:6px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1519; --surface:#171F26; --surface-2:#1F2931; --line:#2C3842;
+    --ink:#E7ECF0; --ink-2:#AEBAC5; --ink-3:#7F8D99;
+    --accent:#5FB8CC; --accent-ink:#0F1519; --accent-soft:#163540;
+    --good:#5CC48E; --good-soft:#153826;
+    --warn:#E3B04B; --warn-soft:#3A2D0E;
+    --crit:#F28B82; --crit-soft:#46201E;
+    --neutral:#8A98A4; --neutral-soft:#1F2931;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1519; --surface:#171F26; --surface-2:#1F2931; --line:#2C3842;
+  --ink:#E7ECF0; --ink-2:#AEBAC5; --ink-3:#7F8D99;
+  --accent:#5FB8CC; --accent-ink:#0F1519; --accent-soft:#163540;
+  --good:#5CC48E; --good-soft:#153826;
+  --warn:#E3B04B; --warn-soft:#3A2D0E;
+  --crit:#F28B82; --crit-soft:#46201E;
+  --neutral:#8A98A4; --neutral-soft:#1F2931;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+html{color-scheme:light dark}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;font-weight:600;letter-spacing:-.01em;margin:0;text-wrap:balance}
+h1{font-size:1.75rem;line-height:1.15}
+h2{font-size:1.1rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2);font-weight:500;font-size:.8rem}
+h3{font-size:1rem}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+a{color:var(--accent)}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 24px 56px}
+/* top bar */
+.top{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:flex-end;justify-content:space-between;padding-bottom:18px;border-bottom:2px solid var(--ink)}
+.top .eyebrow{font-family:"IBM Plex Sans Condensed",sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:.72rem;color:var(--ink-2);font-weight:600}
+.top .meta{display:flex;flex-wrap:wrap;gap:6px 22px;font-size:.85rem;color:var(--ink-2)}
+.top .meta b{color:var(--ink);font-weight:500}
+/* status band */
+.band{display:grid;grid-template-columns:minmax(260px,1.4fr) repeat(3,minmax(150px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:22px;border-radius:var(--radius);overflow:hidden}
+.band > div{background:var(--surface);padding:16px 18px}
+.band .label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:600;font-family:"IBM Plex Sans Condensed",sans-serif}
+.band .value{font-size:1.15rem;font-weight:600;margin-top:4px;line-height:1.25}
+.band .sub{font-size:.82rem;color:var(--ink-2);margin-top:4px}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:4px 10px 4px 8px;border-radius:999px;font-size:.8rem;font-weight:600;line-height:1.2;border:1px solid transparent}
+.pill::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+.pill.good{color:var(--good);background:var(--good-soft)}
+.pill.warn{color:var(--warn);background:var(--warn-soft)}
+.pill.crit{color:var(--crit);background:var(--crit-soft)}
+.pill.neutral{color:var(--neutral);background:var(--neutral-soft)}
+.pill.active{color:var(--accent);background:var(--accent-soft)}
+/* layout */
+.grid{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(300px,1fr);gap:26px;margin-top:26px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:1fr}.band{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.band{grid-template-columns:1fr}}
+section{margin-top:0}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px}
+.sec-head .hint{font-size:.8rem;color:var(--ink-3)}
+/* timeline */
+.tl{list-style:none;margin:0;padding:0;border-left:2px solid var(--line);margin-left:14px}
+.tl li{position:relative;padding:0 0 22px 26px}
+.tl li:last-child{padding-bottom:4px}
+.tl .dot{position:absolute;left:-9px;top:6px;width:16px;height:16px;border-radius:50%;background:var(--surface);border:2px solid var(--neutral);display:grid;place-items:center}
+.tl .dot svg{width:9px;height:9px;display:none}
+.tl li.done .dot{border-color:var(--good);background:var(--good)}
+.tl li.done .dot svg{display:block;color:#fff}
+.tl li.active .dot{border-color:var(--accent);background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.tl li.risk .dot{border-color:var(--crit);background:var(--crit-soft)}
+.tl .row{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}
+.tl .num{font-family:"IBM Plex Mono",monospace;font-size:.75rem;color:var(--ink-3)}
+.tl .title{font-weight:600;font-size:1rem}
+.tl .when{font-family:"IBM Plex Mono",monospace;font-size:.8rem;color:var(--ink-2);margin-left:auto}
+.tl .desc{color:var(--ink-2);font-size:.9rem;margin-top:3px;max-width:62ch}
+.tl .note{margin-top:8px;font-size:.85rem;padding:8px 12px;border-left:3px solid var(--warn);background:var(--warn-soft);color:var(--ink);border-radius:0 4px 4px 0;max-width:62ch}
+.tl li.risk .note{border-left-color:var(--crit);background:var(--crit-soft)}
+.tl .owner{font-size:.78rem;color:var(--ink-3);margin-top:4px}
+/* progress bar */
+.prog{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;margin:0 0 18px}
+.prog span{height:6px;border-radius:2px;background:var(--surface-2);border:1px solid var(--line)}
+.prog span.done{background:var(--good);border-color:var(--good)}
+.prog span.active{background:var(--accent);border-color:var(--accent)}
+.prog span.risk{background:var(--crit-soft);border-color:var(--crit)}
+/* cards / tables */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px}
+.card + .card{margin-top:18px}
+.side > section + section{margin-top:22px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:600;font-family:"IBM Plex Sans Condensed",sans-serif}
+tr:last-child td{border-bottom:none}
+.tbl-wrap{overflow-x:auto}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.88rem}
+.kv dt{color:var(--ink-3)}
+.kv dd{margin:0}
+/* links & docs */
+.links{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.links li{display:flex;gap:10px;align-items:baseline;font-size:.9rem}
+.links .tag{font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);min-width:64px;font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:600}
+.docs{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.docs li{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--line);border-radius:4px;background:var(--surface)}
+.docs .name{flex:1;font-size:.88rem;min-width:0}
+.docs .name small{display:block;color:var(--ink-3);font-family:"IBM Plex Mono",monospace;font-size:.72rem;overflow-wrap:anywhere}
+.btn{font:inherit;font-size:.8rem;font-weight:600;padding:6px 10px;border-radius:4px;border:1px solid var(--accent);background:var(--surface);color:var(--accent);cursor:pointer;white-space:nowrap}
+.btn:hover{background:var(--accent-soft)}
+.btn:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn[disabled]{border-color:var(--line);color:var(--ink-3);cursor:not-allowed;background:var(--surface-2)}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:6px;font-size:.85rem;box-shadow:var(--shadow);max-width:min(92vw,520px);text-align:center}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:.78rem;color:var(--ink-2);margin-top:14px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block;border:2px solid var(--neutral);background:var(--surface)}
+.legend i.done{background:var(--good);border-color:var(--good)}
+.legend i.active{background:var(--accent);border-color:var(--accent)}
+.legend i.risk{background:var(--crit-soft);border-color:var(--crit)}
+.howto{margin-top:30px;padding:16px 18px;border:1px dashed var(--line);border-radius:var(--radius);color:var(--ink-2);font-size:.85rem}
+.howto code{font-family:"IBM Plex Mono",monospace;background:var(--surface-2);padding:1px 5px;border-radius:3px;color:var(--ink)}
+footer{margin-top:26px;font-size:.78rem;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:6px 20px}
+@media (prefers-reduced-motion:no-preference){.tl li.active .dot{animation:pulse 2.4s ease-in-out infinite}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px var(--accent-soft)}50%{box-shadow:0 0 0 8px var(--accent-soft)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">Factiun Sun BR · MDIC / Gecex · Res. 512/2023</div>
+      <h1>Ex-Tariff Petition Tracker</h1>
+    </div>
+    <div class="meta">
+      <span>Petitioner <b>Factiun Sun BR Ltda · CNPJ 64.947.469/0001-15</b></span>
+      <span>Filed by <b>Gearlison Caires (Videl T&amp;L), power of attorney 21 Aug 2026</b></span>
+      <span>Last updated <b class="mono" id="lastUpdated"></b></span>
+    </div>
+  </header>
+
+  <div class="band" role="region" aria-label="Current status">
+    <div>
+      <div class="label">Current status</div>
+      <div class="value" id="statusValue"></div>
+      <div class="sub" id="statusSub"></div>
+    </div>
+    <div>
+      <div class="label">Next milestone</div>
+      <div class="value mono" id="nextDate"></div>
+      <div class="sub" id="nextLabel"></div>
+    </div>
+    <div>
+      <div class="label">Processes in wave 1</div>
+      <div class="value">2</div>
+      <div class="sub">Dampers · TCU (one process per NCM)</div>
+    </div>
+    <div>
+      <div class="label">Decision window</div>
+      <div class="value mono">Dec 2026 – Feb 2027</div>
+      <div class="sub">Gecex resolution published in the DOU</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <main>
+      <section class="card">
+        <div class="sec-head">
+          <h2>Timeline</h2>
+          <span class="hint">Stages follow the MDIC rite; dates are estimates from the 1 Sep 2026 analysis</span>
+        </div>
+        <div class="prog" id="prog" aria-hidden="true"></div>
+        <ol class="tl" id="timeline"></ol>
+        <div class="legend">
+          <span><i class="done"></i>Completed</span>
+          <span><i class="active"></i>In progress</span>
+          <span><i></i>Upcoming</span>
+          <span><i class="risk"></i>Duty-risk alert</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="sec-head"><h2>Petitions</h2><span class="hint">Paste the SEI process numbers here once filed</span></div>
+        <div class="tbl-wrap">
+        <table id="procTable">
+          <thead><tr><th>Process</th><th>NCM</th><th>Category · duty</th><th>Requested</th><th>SEI process nº</th><th>Status</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        </div>
+        <p style="font-size:.82rem;color:var(--ink-3);margin:10px 0 0">* TCU stays in NCM 8479.90.90 (precedent Ex 403) unless the customs broker's classification opinion points to 8517.62.59 (BIT, 20%). Whatever the outcome, every document in the process must carry the same NCM.</p>
+      </section>
+
+      <section class="card">
+        <div class="sec-head"><h2>Documents (wave 1 package)</h2><span class="hint">Generated by Videl on 2 Sep 2026 · symbolic download buttons</span></div>
+        <ul class="docs" id="docs"></ul>
+      </section>
+    </main>
+
+    <aside class="side">
+      <section class="card">
+        <h2>Key facts</h2>
+        <dl class="kv" style="margin-top:10px">
+          <dt>Filing window</dt><dd class="mono">10 – 15 Sep 2026</dd>
+          <dt>Public consultation</dt><dd>30 calendar days; reply to any objection within 10 business days, only via "Peticionamento Intercorrente"</dd>
+          <dt>Gecex cycle (2026)</dt><dd>~4 months from filing (CP 08/2026: 24 Feb → DOU 12 Jun)</dd>
+          <dt>Effect</dt><dd>Only for import declarations (DI) registered <b>after</b> DOU publication. No retroactivity.</dd>
+          <dt>Re-filing lock</dt><dd>A rejected petition can only be re-filed after 1 year</dd>
+          <dt>End user</dt><dd>BCP Energy S/A · Boa Hora PV plant, Tacaimbó-PE · 150.014 MWp · 1,709 trackers</dd>
+          <dt>Yield gain</dt><dd class="mono">1,539 → 1,998 kWh/kWp/yr (+29.8%) · PVsyst</dd>
+        </dl>
+      </section>
+
+      <section class="card">
+        <h2>Useful links</h2>
+        <ul class="links" style="margin-top:10px">
+          <li><span class="tag">Filing</span><a href="https://colaboragov.sei.gov.br" target="_blank" rel="noopener">SEI / ColaboraGov (external user)</a></li>
+          <li><span class="tag">Models</span><a href="https://www.gov.br/mdic/pt-br/assuntos/sdic/ex-tarifario/encaminhar-pleito" target="_blank" rel="noopener">MDIC — how to file an Ex-tariff petition</a></li>
+          <li><span class="tag">Consult.</span><a href="https://www.gov.br/mdic/pt-br/assuntos/sdic/ex-tarifario" target="_blank" rel="noopener">MDIC Ex-tariff portal · public consultation panel</a></li>
+          <li><span class="tag">Rite</span><a href="mailto:extarifario@mdic.gov.br">extarifario@mdic.gov.br</a></li>
+          <li><span class="tag">Consult.</span><a href="mailto:sdp.extarifario@mdic.gov.br">sdp.extarifario@mdic.gov.br</a></li>
+          <li><span class="tag">SEI reg.</span><a href="mailto:sei@gestao.gov.br">sei@gestao.gov.br</a></li>
+          <li><span class="tag">Tracker</span><span>fretebi-dashboard/docs/ex-tarifario-factiun-acompanhamento.xlsx</span></li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Contacts</h2>
+        <dl class="kv" style="margin-top:10px">
+          <dt>Videl · SEI</dt><dd>Gearlison Caires · gcaires@videltel.com.br · +55 11 94376-0266</dd>
+          <dt>Videl · process</dt><dd>José Adailton Santos · jadam@videltel.com.br</dd>
+          <dt>Brokers</dt><dd>Raimundo Nascimento (Marear) · Emerson Oliveira (PlanetaComex)</dd>
+          <dt>Factiun</dt><dd>Tony Lamenha (legal rep.) · Iñigo Bonilla, Johana Alcalde (docs) · Nathalyn Teiche (engineering)</dd>
+        </dl>
+      </section>
+
+      <section class="card">
+        <h2>Pending on Factiun</h2>
+        <div class="tbl-wrap">
+        <table id="pendTable"><thead><tr><th>Item</th><th>Due</th></tr></thead><tbody></tbody></table>
+        </div>
+      </section>
+    </aside>
+  </div>
+
+  <div class="howto">
+    <b>How Factiun updates this page.</b> Open the file in a text editor, find <code>const CONFIG</code> near the end, and change <code>currentStage</code> (allowed values are listed next to it), <code>lastUpdated</code>, and the <code>sei</code> number of each process. Save and reopen in the browser. Dates in <code>stages</code> can be edited the same way when MDIC publishes a schedule.
+  </div>
+  <footer>
+    <span>Source: Videl T&amp;L analysis report, 1 Sep 2026</span>
+    <span>Legal basis: Res. Gecex 512/2023 · Decree 11.428/2023 · Gecex 760/2025 · Gecex 852/853/2026</span>
+    <span>Duties shown are the current BK rate (14%); the petition requests 0%.</span>
+  </footer>
+</div>
+
+<script>
+/* ===================== EDIT HERE ===================== */
+const CONFIG = {
+  // One of: "sei_registration" | "corrections" | "filing" | "mdic_review" | "public_consultation" | "gecex_decision" | "shipment"
+  currentStage: "sei_registration",
+  lastUpdated: "2026-09-02",
+  processes: [
+    { id: "AMORT", name: "1 · Hydraulic dampers", ncm: "8479.90.90", cat: "BK · 14%", req: "0%", sei: "", status: "Documents in correction" },
+    { id: "TCU",   name: "2 · Tracker control units (TCU)", ncm: "8479.90.90 *", cat: "BK · 14%", req: "0%", sei: "", status: "Awaiting broker NCM opinion" }
+  ],
+  stages: [
+    { id: "sei_registration", title: "SEI external-user registration", start: "2026-09-02", end: "2026-09-09",
+      desc: "Gearlison Caires registers as external user on SEI/ColaboraGov (MGI), body MDIC. Personal e-mail required; release takes 3–5 business days.", owner: "Videl" },
+    { id: "corrections", title: "Document corrections", start: "2026-09-02", end: "2026-09-09",
+      desc: "New pro-formas in Factiun Sun BR's name, manufacturer catalogues, corporate amendments, BCP-signed end-user declarations with PVsyst, re-signed justification letters.", owner: "Factiun + Videl" },
+    { id: "filing", title: "Filing — 2 processes (dampers, TCU)", start: "2026-09-10", end: "2026-09-15",
+      desc: "One petition per NCM. Electronic form inside SEI, attachments uploaded within the 1-hour window, receipt saved.", owner: "Videl + broker" },
+    { id: "mdic_review", title: "MDIC document review", start: "2026-09-16", end: "2026-10-13",
+      desc: "1 to 4 weeks. Any request for information must be answered within 10 business days via Peticionamento Intercorrente.", owner: "MDIC" },
+    { id: "public_consultation", title: "Public consultation", start: "2026-10", end: "+30 days",
+      desc: "30 calendar days on the MDIC panel. A domestic manufacturer may object; reply kit (point-by-point comparison, ABIMAQ certificate, CREA report) must be ready.", owner: "MDIC / Videl" },
+    { id: "gecex_decision", title: "Gecex decision + DOU publication", start: "2026-12", end: "2027-02",
+      desc: "Observed 2026 cycle: ~4 months after filing. The Ex-tariff is valid only for import declarations registered after publication.", owner: "Gecex" },
+    { id: "shipment", title: "Planned shipment", start: "2026-11", end: "2027-02", risk: true,
+      desc: "Shanghai / Valencia → Recife. Assembly at Boa Hora from Dec 2026 to Dec 2027.", owner: "Factiun / BCP",
+      note: "Duty-risk alert: a November 2026 shipment arrives before the Gecex decision and pays the full 14% duty. Decide by 9 Sep: postpone the first lot until after DOU publication, or absorb the full duty on it." }
+  ],
+  pending: [
+    ["Corporate amendments 1 & 2 (JUCEMG) + CNPJ card (Salvador)", "05 Sep"],
+    ["Quantities per tracker (dampers, TCU) for pro-formas", "05 Sep"],
+    ["Manufacturer catalogues: XSD, IED (translated), Sunpro, Youju", "08 Sep"],
+    ["New pro-formas in Factiun Sun BR's name, destination Brazil", "08 Sep"],
+    ["Full PVsyst report; settle MWh/yr figures", "08 Sep"],
+    ["Re-sign justification letters (Tony)", "08 Sep"],
+    ["BCP signature on end-user declarations", "09 Sep"],
+    ["Decision on first shipment vs. DOU date", "09 Sep"],
+    ["Consulting agreement v2.0 signature", "10 Sep"]
+  ],
+  documents: [
+    ["00 Petition form (content for the SEI form)", "amortecedor/00-formulario-pleito · tcu/00-formulario-pleito"],
+    ["01 Manufacturer catalogue — instructions", "…/01-catalogo-fabricante-INSTRUCOES"],
+    ["03 Pro-forma invoice — model with correct importer data", "…/03-proforma-MODELO"],
+    ["04 · 04b · 04c Power of attorney, bylaws, CNPJ card — checklists", "comum/04-*, 04b-*, 04c-*"],
+    ["05 Technical descriptive memorandum (no trademarks)", "…/05-memoria-descritiva-tecnica"],
+    ["06 Investment project (single PDF for all processes)", "comum/06-projeto-de-investimento"],
+    ["07 End-user declaration (BCP Energy) + PVsyst annex", "…/07-declaracao-usuario-final"],
+    ["08 Justification letter (TEC-standard text)", "…/08-carta-justificativa"],
+    ["ABIMAQ certificate request · CREA report ToR · domestic-supplier enquiries", "comum/10-*, 11-*, 12-*"],
+    ["Filing guide for brokers (PDF / Word)", "substancia-checklist-protocolo-sei"]
+  ]
+};
+/* =================== END OF EDIT AREA =================== */
+
+(function(){
+  const $ = s => document.querySelector(s);
+  const fmt = d => {
+    if(!d) return "";
+    if(/^\+/.test(d)) return d;
+    const m = d.match(/^(\d{4})-(\d{2})(?:-(\d{2}))?$/); if(!m) return d;
+    const mon = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m[2]-1];
+    return (m[3]? (+m[3])+" " : "") + mon + " " + m[1];
+  };
+  const idx = CONFIG.stages.findIndex(s => s.id === CONFIG.currentStage);
+  const cur = CONFIG.stages[idx] || CONFIG.stages[0];
+  $("#lastUpdated").textContent = fmt(CONFIG.lastUpdated);
+
+  const statusText = {
+    sei_registration:"Awaiting SEI registration", corrections:"Corrections in progress", filing:"Filing in progress",
+    mdic_review:"Under MDIC document review", public_consultation:"In public consultation", gecex_decision:"Awaiting Gecex decision", shipment:"Shipment stage"
+  }[cur.id] || cur.title;
+  const cls = cur.risk ? "crit" : (cur.id === "gecex_decision" ? "warn" : "active");
+  $("#statusValue").innerHTML = '<span class="pill '+cls+'">'+statusText+'</span>';
+  $("#statusSub").textContent = cur.title + " · " + fmt(cur.start) + (cur.end ? " – " + fmt(cur.end) : "");
+
+  const nxt = CONFIG.stages[idx+1];
+  $("#nextDate").textContent = nxt ? fmt(nxt.start) : "—";
+  $("#nextLabel").textContent = nxt ? nxt.title : "Process complete";
+
+  // timeline
+  const ol = $("#timeline"), prog = $("#prog");
+  CONFIG.stages.forEach((s,i) => {
+    const state = i < idx ? "done" : i === idx ? "active" : (s.risk ? "risk" : "upcoming");
+    const li = document.createElement("li"); li.className = state;
+    li.innerHTML =
+      '<span class="dot"><svg viewBox="0 0 10 10" aria-hidden="true"><path d="M1.5 5.5l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+      '<div class="row"><span class="num">'+String(i+1).padStart(2,"0")+'</span><span class="title">'+s.title+'</span>' +
+      '<span class="when">'+fmt(s.start)+(s.end?' – '+fmt(s.end):'')+'</span></div>' +
+      '<div class="desc">'+s.desc+'</div>' +
+      (s.note ? '<div class="note">'+s.note+'</div>' : '') +
+      '<div class="owner">Owner: '+s.owner+' · '+({done:"Completed",active:"In progress",upcoming:"Upcoming",risk:"Upcoming · duty-risk"}[state])+'</div>';
+    ol.appendChild(li);
+    const bar = document.createElement("span"); bar.className = state; prog.appendChild(bar);
+  });
+
+  // processes
+  const tb = $("#procTable tbody");
+  CONFIG.processes.forEach(p => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = '<td><b>'+p.name+'</b></td><td class="mono">'+p.ncm+'</td><td>'+p.cat+'</td><td class="mono">'+p.req+'</td>' +
+      '<td class="mono">'+(p.sei || '<span style="color:var(--ink-3)">[not filed yet]</span>')+'</td>' +
+      '<td><span class="pill '+(p.sei?'good':'warn')+'">'+p.status+'</span></td>';
+    tb.appendChild(tr);
+  });
+
+  // pending
+  const pt = $("#pendTable tbody");
+  CONFIG.pending.forEach(([t,d]) => { const tr=document.createElement("tr"); tr.innerHTML='<td>'+t+'</td><td class="mono" style="white-space:nowrap">'+d+'</td>'; pt.appendChild(tr); });
+
+  // docs
+  const dl = $("#docs");
+  CONFIG.documents.forEach(([name,path]) => {
+    const li = document.createElement("li");
+    li.innerHTML = '<div class="name">'+name+'<small>docs/ex-tarifario/'+path+'</small></div><button class="btn" type="button">Download</button>';
+    li.querySelector("button").addEventListener("click", () => toast("Draft held by Videl T&L. Request the file from gcaires@videltel.com.br — the final PDFs are released after signature."));
+    dl.appendChild(li);
+  });
+
+  let t; function toast(msg){ clearTimeout(t); let el=$("#toast"); if(!el){el=document.createElement("div");el.id="toast";el.className="toast";el.setAttribute("role","status");document.body.appendChild(el);} el.textContent=msg; el.hidden=false; t=setTimeout(()=>{el.hidden=true;},4200); }
+})();
+</script>
+</body>
+</html>
