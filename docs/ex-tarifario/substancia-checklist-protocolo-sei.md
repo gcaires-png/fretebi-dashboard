@@ -128,6 +128,6 @@ Montar **duas pastas** (`AMORT` e `TCU`) com os PDFs abaixo, nomeados conforme o
 | Processo | NCM | Categoria | II | Pleito | Descrição (Ex pretendido) | Nº do processo SEI |
 |---|---|---|---|---|---|---|
 | 1 — Amortecedor | 8479.90.90 | BK | 14% | 0% | Amortecedores hidráulicos para seguidores solares fotovoltaicos, força 3.300–8.650 N, curso 381 mm, tração ≥ 20 kN, -20 a +60 °C, ASTM B117 | [ ] |
-| 2 — TCU | 8479.90.90* | BK | 14% | 0% | Unidades eletrônicas de controle de seguidores solares, rastreamento e backtracking, Zigbee/BLE/RS485, OTA, IP65/NEMA 3R, IEC 62817 | [ ] |
+| 2 — TCU | 8479.90.90 (*) | BK | 14% | 0% | Unidades eletrônicas de controle de seguidores solares, rastreamento e backtracking, Zigbee/BLE/RS485, OTA, IP65/NEMA 3R, IEC 62817 | [ ] |
 
-\* Salvo parecer de classificação contrário do despachante (alternativa 8517.62.59, BIT, 20%). Seja qual for, **a mesma NCM em todos os documentos do processo**.
+(*) Salvo parecer de classificação contrário do despachante (alternativa 8517.62.59, BIT, 20%). Seja qual for, **a mesma NCM em todos os documentos do processo**.

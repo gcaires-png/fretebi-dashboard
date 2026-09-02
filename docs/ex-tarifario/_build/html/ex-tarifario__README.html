@@ -1,0 +1,46 @@
+<!doctype html><html><head><meta charset='utf-8'><title>Ex-Tarifário Factiun Sun BR — Pacote de protocolo (1ª onda)</title><style>
+@page{size:A4;margin:18mm 16mm}
+body{font-family:'IBM Plex Sans','Segoe UI',Calibri,Arial,sans-serif;font-size:10.5pt;line-height:1.45;color:#152029}
+h1{font-size:18pt;color:#0E4F63;margin:0 0 6pt;line-height:1.2}
+h2{font-size:13pt;color:#0E4F63;margin:16pt 0 6pt;border-bottom:1px solid #D3DAE1;padding-bottom:2pt}
+h3{font-size:11pt;margin:12pt 0 4pt}
+table{border-collapse:collapse;width:100%;font-size:9pt;margin:6pt 0 10pt;page-break-inside:auto}
+th,td{border:1px solid #C9D1D9;padding:4pt 5pt;vertical-align:top;text-align:left}
+th{background:#E9EDF1}
+tr{page-break-inside:avoid}
+blockquote{margin:6pt 0;padding:6pt 10pt;border-left:3px solid #0E4F63;background:#F2F4F6;color:#4A5A68}
+code{font-family:Consolas,Menlo,monospace;font-size:9pt;background:#F2F4F6;padding:0 3px}
+pre{font-family:Consolas,Menlo,monospace;font-size:8.5pt;background:#F2F4F6;padding:8pt;white-space:pre-wrap}
+hr{border:0;border-top:1px solid #D3DAE1;margin:12pt 0}
+li{margin:2pt 0}
+.foot{position:fixed;bottom:0;font-size:8pt;color:#7B8A97}
+</style></head><body>
+<h1>Ex-Tarifário Factiun Sun BR — Pacote de protocolo (1ª onda)</h1>
+<p><b>Pleiteante:</b> Factiun Sun BR Ltda · CNPJ 64.947.469/0001-15 <b>Consultora / procurador SEI:</b> Videl T&amp;L · Gearlison da Silva Caires <b>Base:</b> <code>docs/ex-tarifario-factiun-relatorio-2026-09-01.md</code> (relatório de análise de 01/09/2026) <b>Gerado em:</b> 02/09/2026</p>
+<h2>Estrutura</h2>
+<table><thead><tr><th>Pasta / arquivo</th><th>Conteúdo</th></tr></thead><tbody>
+<tr><td><code>amortecedor/</code></td><td>Processo 1 — Amortecedores hidráulicos, NCM 8479.90.90 (BK, II 14%)</td></tr>
+<tr><td><code>tcu/</code></td><td>Processo 2 — Unidades de controle de seguidores (TCU), NCM 8479.90.90 (BK, II 14%), salvo parecer contrário do despachante</td></tr>
+<tr><td><code>comum/</code></td><td>Documentos idênticos nos dois processos (procuração, societário, CNPJ, projeto de investimento, PVsyst, ABIMAQ, laudo CREA, consultas a fabricantes)</td></tr>
+<tr><td><code>substancia-checklist-protocolo-sei.md</code> (+ .docx / .pdf)</td><td>Guia passo a passo para os despachantes (Marear / PlanetaComex) protocolarem no SEI/ColaboraGov</td></tr>
+<tr><td><code>memorando-factiun-2026-09-02.md</code> (+ .docx / .pdf)</td><td>Ofício à Factiun com as correções aplicadas e as pendências com prazo</td></tr>
+<tr><td><code>dashboard-ex-tariff-factiun.html</code></td><td>Painel em inglês para a Factiun acompanhar o processo (abre em qualquer navegador)</td></tr>
+<tr><td><code>_build/build_docs.py</code></td><td>Regera os .docx e .pdf a partir dos .md</td></tr>
+</tbody></table>
+<h2>Regras que valem para todos os arquivos</h2>
+<ol><li><b>Um processo por NCM.</b> Amortecedor e TCU são dois peticionamentos separados, cada um com seu conjunto completo de anexos.</li><li><b>Um PDF por documento</b>, pesquisável (texto selecionável), sem comentários ou controle de alterações, ≤ 30 MB, em português (documento estrangeiro acompanhado de tradução simples).</li><li><b>O catálogo do fabricante vai sozinho</b> no campo próprio: ele é publicado na íntegra na consulta pública. Nunca juntar proforma, contrato social ou projeto de investimento no mesmo PDF do catálogo.</li><li><b>Mesma NCM em todos os documentos do processo</b> (ficha, memória, carta, declaração de usuário final, proforma, formulário eletrônico).</li><li><b>Sem marca ou modelo</b> na descrição do Ex pretendido. Plural, parâmetros numéricos verificáveis no catálogo.</li><li>Campos entre colchetes <code>[ ]</code> são lacunas que dependem de informação ainda não recebida (quantidades das proformas, número do processo, datas de assinatura). Não protocolar com colchetes.</li></ol>
+<h2>Nomenclatura dos PDFs finais (para upload no SEI)</h2>
+<pre>&lt;processo&gt;_00_Formulario_Pleito_FactiunSunBR.pdf        (referência; o formulário real é preenchido dentro do SEI)
+&lt;processo&gt;_01_Catalogo_Fabricante.pdf                    (anexo separado)
+&lt;processo&gt;_03_Fatura_Proforma_e_Traducao.pdf
+&lt;processo&gt;_04_Procuracao.pdf
+&lt;processo&gt;_04b_Contrato_Social_Consolidado.pdf
+&lt;processo&gt;_04c_Cartao_CNPJ.pdf
+&lt;processo&gt;_05_Memoria_Descritiva_Tecnica.pdf
+&lt;processo&gt;_06_Projeto_de_Investimento.pdf
+&lt;processo&gt;_07_Declaracao_Usuario_Final_e_Anexo_PVsyst.pdf
+&lt;processo&gt;_08_Carta_Justificativa.pdf
+&lt;processo&gt;_10_Atestado_ABIMAQ.pdf                        (se obtido antes do protocolo)
+&lt;processo&gt;_11_Laudo_Tecnico_CREA.pdf                     (recomendado; pode ser juntado por intercorrente antes da CP)</pre>
+<p><code>&lt;processo&gt;</code> = <code>AMORT</code> ou <code>TCU</code>.</p>
+</body></html>

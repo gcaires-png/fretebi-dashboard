@@ -1,0 +1,40 @@
+<!doctype html><html><head><meta charset='utf-8'><title>03 — Fatura proforma — modelo com os dados corretos (para a IED emitir)</title><style>
+@page{size:A4;margin:18mm 16mm}
+body{font-family:'IBM Plex Sans','Segoe UI',Calibri,Arial,sans-serif;font-size:10.5pt;line-height:1.45;color:#152029}
+h1{font-size:18pt;color:#0E4F63;margin:0 0 6pt;line-height:1.2}
+h2{font-size:13pt;color:#0E4F63;margin:16pt 0 6pt;border-bottom:1px solid #D3DAE1;padding-bottom:2pt}
+h3{font-size:11pt;margin:12pt 0 4pt}
+table{border-collapse:collapse;width:100%;font-size:9pt;margin:6pt 0 10pt;page-break-inside:auto}
+th,td{border:1px solid #C9D1D9;padding:4pt 5pt;vertical-align:top;text-align:left}
+th{background:#E9EDF1}
+tr{page-break-inside:avoid}
+blockquote{margin:6pt 0;padding:6pt 10pt;border-left:3px solid #0E4F63;background:#F2F4F6;color:#4A5A68}
+code{font-family:Consolas,Menlo,monospace;font-size:9pt;background:#F2F4F6;padding:0 3px}
+pre{font-family:Consolas,Menlo,monospace;font-size:8.5pt;background:#F2F4F6;padding:8pt;white-space:pre-wrap}
+hr{border:0;border-top:1px solid #D3DAE1;margin:12pt 0}
+li{margin:2pt 0}
+.foot{position:fixed;bottom:0;font-size:8pt;color:#7B8A97}
+</style></head><body>
+<h1>03 — Fatura proforma — modelo com os dados corretos (para a IED emitir)</h1>
+<p><b>Problema no dossiê atual:</b> o arquivo &quot;proforma&quot; da TCU é a <b>fatura real nº SI26-0666</b>, de <b>2 unidades</b>, EXW Navarra, com <b>IVA espanhol de 21%</b>, emitida para a Factiun Sun S.L. Representa uma venda concluída na Espanha, não a importação brasileira. Será devolvida.</p>
+<h2>Dados que a nova proforma precisa conter</h2>
+<table><thead><tr><th>Campo</th><th>Conteúdo</th></tr></thead><tbody>
+<tr><td>Emitente</td><td>IED — [razão social completa, endereço, Navarra, Espanha]</td></tr>
+<tr><td>Comprador / importador (<b>Buyer / Consignee</b>)</td><td><b>Factiun Sun BR Ltda</b> — CNPJ 64.947.469/0001-15 — Rua dos Franciscanos, Galpão 8, Loteamento Dom Avelar, Pirajá, Salvador-BA, CEP 41.315-000, Brasil</td></tr>
+<tr><td>Destino</td><td>Brasil — porto de Recife (alternativa: Salvador)</td></tr>
+<tr><td>Incoterm</td><td>FOB Valência (ou o Incoterm da operação real) — <b>sem IVA</b> (exportação)</td></tr>
+<tr><td>Descrição da mercadoria</td><td>Electronic control units for photovoltaic solar trackers, with integrated sun-tracking and backtracking algorithms for sloped terrain, Zigbee and Bluetooth Low Energy wireless and RS485 serial communication, over-the-air firmware update, IP65/NEMA 3R protection, per IEC 62817</td></tr>
+<tr><td>Código HS</td><td>8479.90 (NCM brasileira 8479.90.90) — <i>ajustar para 8517.62 apenas se o parecer do despachante mudar a NCM</i></td></tr>
+<tr><td>Modelo do fabricante</td><td>[código IED] (pode constar na proforma)</td></tr>
+<tr><td>Quantidade</td><td>[unidades do projeto Boa Hora — 1.709 seguidores × TCUs por seguidor]</td></tr>
+<tr><td>Preço unitário e total</td><td>[EUR/USD] — referência do projeto: R$ 2,76 mi no ano 1</td></tr>
+<tr><td>Prazo de embarque</td><td>[11/2026 a 02/2027, conforme decisão da Factiun sobre o 1º embarque]</td></tr>
+<tr><td>Condições de pagamento</td><td>[conforme negociação]</td></tr>
+<tr><td>Validade da proforma</td><td>≥ 6 meses</td></tr>
+<tr><td>Data e assinatura do fornecedor</td><td>[ ]</td></tr>
+</tbody></table>
+<h2>Tradução</h2>
+<p>Proforma em inglês ou espanhol exige tradução simples para o português no mesmo PDF: <code>TCU_03_Fatura_Proforma_e_Traducao.pdf</code>.</p>
+<h2>Conferência antes do upload</h2>
+<ul><li>[ ] Comprador = Factiun Sun BR Ltda (nunca Factiun Sun S.L.)</li><li>[ ] Destino Brasil; sem IVA</li><li>[ ] É <b>proforma</b> (não a fatura SI26-0666)</li><li>[ ] Quantidade compatível com o projeto (não 2 unidades)</li><li>[ ] HS/NCM igual ao dos demais documentos do processo</li></ul>
+</body></html>

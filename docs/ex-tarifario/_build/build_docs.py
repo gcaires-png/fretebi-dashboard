@@ -11,7 +11,7 @@ from docx.oxml.ns import qn
 from docx.oxml import OxmlElement
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-PDF_DEFAULT = {"substancia-checklist-protocolo-sei.md", "memorando-factiun-2026-09-02.md"}
+PDF_DEFAULT = {"substancia-checklist-protocolo-sei.md", "memorando-factiun-2026-09-02.md", "contrato-videl-planetacomex-ex-tarifario.md", "nda-videl-planetacomex.md"}
 
 # ---------- tiny markdown block parser ----------
 def parse(md):
@@ -173,13 +173,15 @@ const { chromium } = require('playwright');
     subprocess.run(["node", str(tmp), json.dumps(pairs)], check=True, env=env); tmp.unlink()
 
 def main():
-    pdf_all = "--pdf-all" in sys.argv
+    pdf_all = "--pdf-all" in sys.argv; keep_html = "--keep-html" in sys.argv
     pairs = []
+    if keep_html: (ROOT / "_build" / "html").mkdir(exist_ok=True)
     for md in sorted(ROOT.rglob("*.md")):
         if md.name == "README.md" and md.parent != ROOT: pass
         blocks = parse(md.read_text(encoding="utf-8"))
         title = next((b[2] for b in blocks if b[0] == "h"), md.stem)
         to_docx(blocks, md.with_suffix(".docx"))
+        if keep_html: (ROOT / "_build" / "html" / (md.parent.name + "__" + md.stem + ".html")).write_text(to_html(blocks, title), encoding="utf-8")
         if pdf_all or md.name in PDF_DEFAULT:
             hp = ROOT / "_build" / (md.stem + ".html"); hp.write_text(to_html(blocks, title), encoding="utf-8")
             pairs.append([str(hp), str(md.with_suffix(".pdf"))])
