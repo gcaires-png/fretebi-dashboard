@@ -1,0 +1,59 @@
+1
+00:00:01,000 --> 00:00:07,200
+Videl Transporte & Logística: logística asset-light com cobertura nacional e uma torre de controle operada por inteligência artificial.
+
+2
+00:00:08,500 --> 00:00:14,000
+A Videl opera fretes rodoviários em todo o Brasil, com transporte dedicado e spot, sem fronteira de estado.
+
+3
+00:00:14,200 --> 00:00:19,400
+Modelo asset-light: rede qualificada de motoristas agregados, contratação ágil e acompanhamento de ponta a ponta.
+
+4
+00:00:20,500 --> 00:00:26,500
+Nas últimas semanas, kits solares saíram de Nova Odessa para Curitiba, de Itaquaquecetuba para Trindade, em Goiás, e carga geral de Aguaí para Irecê, na Bahia.
+
+5
+00:00:26,800 --> 00:00:32,400
+Mais de oito estados atendidos, cem por cento das operações com CT-e e seguro averbado, e vinte e quatro horas da cotação à contratação do veículo.
+
+6
+00:00:33,500 --> 00:00:39,500
+Do porto à usina, porta a porta: cadeia solar completa, coleta e entrega com ajudantes, carga segurada com apólice RCV e RCDC.
+
+7
+00:00:39,700 --> 00:00:43,400
+Cotação em vinte e quatro horas, com composição de custo aberta e frete-teste sem compromisso.
+
+8
+00:00:44,500 --> 00:00:48,400
+Agora, a tecnologia: uma torre de controle com IA de verdade, com um humano aprovando cada passo crítico.
+
+9
+00:00:49,500 --> 00:00:56,500
+O Moita Rev1 é o maestro da operação. Ele captura a cotação, analisa o custo contra a meta de sessenta a sessenta e dois por cento e encontra o motorista certo por geolocalização.
+
+10
+00:00:56,700 --> 00:01:02,400
+Preenche a plataforma, informa o cliente, prepara o CT-e em rascunho no Bsoft e envia a operação diária para a equipe. Ele nunca emite documento sozinho.
+
+11
+00:01:03,500 --> 00:01:10,500
+A stack é própria e integrada: Plataforma Videl, FreteBI com preço de frete em tempo real, painel operacional do Moita e emissão fiscal via API do Bsoft.
+
+12
+00:01:10,700 --> 00:01:17,400
+Controle de atividades ao vivo a partir do Google Sheets, proxy seguro na Cloudflare, motor de e-mails comercial com gate de seguro e integrações com Gmail, Drive, WhatsApp e Telegram.
+
+13
+00:01:18,500 --> 00:01:27,400
+Ao lado da equipe, uma diretoria virtual de agentes de IA: operações, marketing, dados, controladoria, compliance, comercial, vendas e preços. Todos respondem ao CEO.
+
+14
+00:01:28,500 --> 00:01:36,400
+Por trás de tudo, gente de logística: Gearlison Caires, Adam, Anderson e Hudson, com pontes comerciais entre Brasil, China, Europa e África.
+
+15
+00:01:37,500 --> 00:01:44,500
+Sua carga merece uma logística à altura. Cotação em até vinte e quatro horas e frete-teste sem compromisso. Videl Transporte e Logística: videltel.com.br.

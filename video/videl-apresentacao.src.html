@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Videl T&L — Apresentação institucional + Tecnologia</title>
+<style>
+/*__FONTS__*/
+:root{--bg:#0B0E14;--panel:#121826;--panel2:#171F30;--border:#243350;--text:#EEF1F6;--muted:#98A0B3;--red:#E03A3C;--cyan:#00D4FF;--green:#22D38A;--orange:#FF8A3D;--vio:#9B7BFF;--yel:#FFD166}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#000;width:1920px;height:1080px;overflow:hidden}
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased}
+#stage{position:relative;width:1920px;height:1080px;overflow:hidden;background:var(--bg)}
+.bg-grid{position:absolute;inset:-200px;background-image:linear-gradient(rgba(255,255,255,.032) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.032) 1px,transparent 1px);background-size:80px 80px;animation:drift 120s linear both}
+@keyframes drift{from{transform:translate(0,0)}to{transform:translate(-160px,-160px)}}
+.glow{position:absolute;border-radius:50%;filter:blur(130px);opacity:.55;pointer-events:none}
+.glow.r{width:1000px;height:1000px;left:-350px;top:-350px;background:radial-gradient(circle,rgba(224,58,60,.38),transparent 62%)}
+.glow.c{width:1100px;height:1100px;right:-400px;bottom:-450px;background:radial-gradient(circle,rgba(0,212,255,.24),transparent 62%)}
+.vignette{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%);pointer-events:none}
+
+.scene{position:absolute;inset:0;opacity:0;animation:sIn .9s ease-out both,sOut .8s ease-in forwards;animation-delay:var(--in),var(--out)}
+@keyframes sIn{from{opacity:0}to{opacity:1}}
+@keyframes sOut{from{opacity:1}to{opacity:0}}
+.r{animation:up .9s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--in) + var(--d,0s))}
+@keyframes up{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+.pop{animation:pop .7s cubic-bezier(.2,.9,.3,1.3) both;animation-delay:calc(var(--in) + var(--d,0s))}
+@keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
+.draw{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.3s ease-in-out both;animation-delay:calc(var(--in) + var(--d,0s))}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.wipe{transform-origin:left center;animation:wipe 1s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--in) + var(--d,0s))}
+@keyframes wipe{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+.pad{position:absolute;left:120px;right:120px;top:100px;bottom:100px}
+.eyebrow{font-size:22px;font-weight:800;letter-spacing:6px;text-transform:uppercase;color:var(--red);display:flex;align-items:center;gap:16px}
+.eyebrow::before{content:'';width:46px;height:4px;background:currentColor;border-radius:2px}
+.eyebrow.c{color:var(--cyan)}
+h1{font-size:84px;font-weight:900;letter-spacing:-2.5px;line-height:1.04;margin-top:26px}
+h1 em{font-style:normal;color:var(--red)}
+h1 em.c{color:var(--cyan)}
+.lead{font-size:30px;line-height:1.45;color:var(--muted);margin-top:26px;max-width:900px}
+.lead b{color:var(--text);font-weight:600}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));border:1px solid var(--border);border-radius:22px;padding:34px 36px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;left:0;top:0;right:0;height:4px;background:var(--acc,var(--red))}
+.card .ic{font-size:44px;line-height:1;margin-bottom:22px}
+.card h3{font-size:30px;font-weight:800;letter-spacing:-.5px;margin-bottom:12px}
+.card p{font-size:21px;line-height:1.45;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:12px;padding:12px 22px;border-radius:999px;border:1px solid var(--border);background:rgba(255,255,255,.03);font-size:22px;font-weight:600;color:var(--text)}
+.chip i{width:12px;height:12px;border-radius:50%;background:var(--acc,var(--red));display:inline-block}
+.prog{position:absolute;left:0;bottom:0;height:6px;background:linear-gradient(90deg,var(--red),#ff6f70);width:0;animation:prog 106s linear both;z-index:50}
+@keyframes prog{to{width:1920px}}
+.wm{position:absolute;left:80px;top:52px;display:flex;align-items:center;gap:14px;font-size:22px;font-weight:800;letter-spacing:2px;opacity:0;animation:sIn .8s both;animation-delay:8s;z-index:40}
+.wm i{width:14px;height:14px;background:var(--red);border-radius:3px;transform:rotate(45deg)}
+.wm span{color:var(--muted);font-weight:500;letter-spacing:1px}
+.foot{position:absolute;right:80px;top:56px;font-size:18px;color:var(--muted);letter-spacing:1px;opacity:0;animation:sIn .8s both;animation-delay:8s;z-index:40}
+
+/* S1 */
+.s1 .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.mark{font-size:230px;font-weight:900;letter-spacing:-12px;line-height:1;display:flex;align-items:baseline}
+.mark b{color:var(--red);font-weight:900}
+.mark-sub{font-size:34px;font-weight:700;letter-spacing:16px;text-transform:uppercase;color:var(--text);margin-top:14px;padding-left:16px}
+.mark-line{width:220px;height:6px;background:var(--red);border-radius:3px;margin:38px auto 30px}
+.s1 .tag{font-size:34px;color:var(--muted);font-weight:500;max-width:1100px;line-height:1.4}
+.s1 .tag b{color:var(--text);font-weight:700}
+.s1 .bottom{position:absolute;bottom:80px;left:0;right:0;text-align:center;font-size:20px;letter-spacing:4px;text-transform:uppercase;color:var(--muted)}
+.s1 svg.lines{position:absolute;inset:0;width:1920px;height:1080px;opacity:.55}
+
+/* S2 */
+.s2 .cols{display:grid;grid-template-columns:1fr 760px;gap:60px;height:100%;align-items:center}
+.s2 .chips{display:flex;flex-direction:column;gap:18px;margin-top:44px;align-items:flex-start}
+.s2 .chip{font-size:24px;padding:16px 26px}
+.s2 .chip small{color:var(--muted);font-weight:500}
+.truckbox{position:relative;height:520px}
+.truckbox svg{position:absolute;inset:0;width:100%;height:100%}
+.road{stroke:#2A3650;stroke-width:6}
+.roadline{stroke:var(--yel);stroke-width:4;stroke-dasharray:40 30;animation:roadmove 1.2s linear infinite;animation-delay:var(--in)}
+@keyframes roadmove{to{stroke-dashoffset:-70}}
+.truck{animation:bob .8s ease-in-out infinite alternate;animation-delay:var(--in)}
+@keyframes bob{from{transform:translateY(0)}to{transform:translateY(-4px)}}
+.wheel{animation:spin 1s linear infinite;animation-delay:var(--in);transform-box:fill-box;transform-origin:center}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* S3 */
+.s3 .cols{display:grid;grid-template-columns:820px 1fr;gap:60px;height:100%;align-items:center}
+.mapwrap{position:relative;width:780px;height:780px}
+.mapwrap svg{position:absolute;inset:0;width:780px;height:780px;overflow:visible}
+.br{fill:rgba(255,255,255,.045);stroke:#3A4A6A;stroke-width:2;stroke-linejoin:round}
+.route{fill:none;stroke-width:4;stroke-linecap:round}
+.city{fill:var(--text)}
+.cityl{font-size:15px;font-weight:600;fill:var(--muted);letter-spacing:.3px}
+.mv{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:#fff;box-shadow:0 0 0 6px rgba(255,255,255,.18),0 0 24px var(--c,#fff);offset-rotate:0deg;animation:mv 3.2s ease-in-out both;animation-delay:calc(var(--in) + var(--d,0s))}
+@keyframes mv{0%{offset-distance:0%;opacity:0}8%{opacity:1}92%{opacity:1}100%{offset-distance:100%;opacity:0}}
+.routes{display:flex;flex-direction:column;gap:14px;margin-top:36px}
+.rt{display:grid;grid-template-columns:1fr auto;align-items:center;gap:20px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:16px;padding:16px 24px;font-size:23px;font-weight:600}
+.rt span{color:var(--muted);font-weight:500}
+.rt .arrow{color:var(--red);margin:0 10px}
+.bdg{font-size:15px;font-weight:800;letter-spacing:1.5px;padding:7px 14px;border-radius:999px;background:rgba(34,211,138,.15);color:var(--green)}
+.bdg.o{background:rgba(255,138,61,.15);color:var(--orange)}
+.bdg.b{background:rgba(0,212,255,.15);color:var(--cyan)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:34px}
+.st{border-left:4px solid var(--acc,var(--red));padding:6px 0 6px 22px}
+.st b{display:block;font-size:56px;font-weight:900;letter-spacing:-2px;line-height:1}
+.st span{display:block;font-size:19px;color:var(--muted);margin-top:8px;line-height:1.3}
+
+/* S4 */
+.s4 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:54px}
+.s4 .segs{display:flex;gap:16px;flex-wrap:wrap;margin-top:50px}
+.s4 .segs .chip{font-size:21px}
+
+/* S5 */
+.s5 .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.s5 h1{font-size:112px;max-width:1500px}
+.s5 .lead{text-align:center;max-width:1200px;font-size:32px}
+.s5 .num{font-size:24px;letter-spacing:8px;text-transform:uppercase;color:var(--cyan);font-weight:800;margin-bottom:10px}
+.ring{position:absolute;left:50%;top:50%;width:1300px;height:1300px;margin:-650px 0 0 -650px;border-radius:50%;border:2px solid rgba(0,212,255,.12);animation:ringspin 40s linear infinite both;animation-delay:var(--in)}
+.ring::before{content:'';position:absolute;left:50%;top:-8px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 30px var(--cyan)}
+.ring.b{width:900px;height:900px;margin:-450px 0 0 -450px;animation-direction:reverse;animation-duration:28s;border-color:rgba(0,212,255,.18)}
+@keyframes ringspin{to{transform:rotate(360deg)}}
+
+/* S6 */
+.s6 .head{display:grid;grid-template-columns:1fr auto;align-items:end;gap:40px}
+.moita{display:flex;align-items:center;gap:24px;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.35);border-radius:22px;padding:22px 30px}
+.moita .av{width:92px;height:92px;border-radius:24px;background:linear-gradient(135deg,var(--cyan),#0077B6);display:flex;align-items:center;justify-content:center;font-size:48px;box-shadow:0 0 40px rgba(0,212,255,.35)}
+.moita b{display:block;font-size:30px;font-weight:900;letter-spacing:-.5px}
+.moita span{font-size:19px;color:var(--muted)}
+.flow{position:relative;margin-top:70px;height:360px}
+.flow .line{position:absolute;left:60px;right:60px;top:52px;height:4px;background:rgba(255,255,255,.08);border-radius:2px}
+.flow .line i{display:block;height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:2px}
+.steps{position:absolute;inset:0;display:grid;grid-template-columns:repeat(7,1fr);gap:18px}
+.step{text-align:center;padding:0 6px}
+.step .n{width:108px;height:108px;margin:0 auto;border-radius:50%;background:var(--panel);border:3px solid var(--cyan);display:flex;align-items:center;justify-content:center;font-size:44px;box-shadow:0 0 0 10px rgba(0,212,255,.08)}
+.step h4{font-size:23px;font-weight:800;margin-top:22px;line-height:1.2}
+.step p{font-size:19px;color:var(--muted);line-height:1.4;margin-top:12px}
+.s6 .foot2{display:grid;grid-template-columns:1fr 640px;gap:40px;align-items:center;margin-top:40px}
+.note{font-size:24px;line-height:1.45;color:var(--muted);border-left:4px solid var(--red);padding-left:22px}
+.note b{color:var(--text)}
+.gauge{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:18px;padding:22px 26px}
+.gauge .t{display:flex;justify-content:space-between;font-size:18px;color:var(--muted);font-weight:600;margin-bottom:12px}
+.gauge .t b{color:var(--text)}
+.bar{position:relative;height:22px;border-radius:11px;background:linear-gradient(90deg,var(--green) 0%,var(--green) 44%,var(--orange) 60%,var(--red) 100%);overflow:visible}
+.bar .zone{position:absolute;left:44%;width:12%;top:-6px;bottom:-6px;border:3px solid #fff;border-radius:8px;box-shadow:0 0 22px rgba(255,255,255,.35)}
+.bar .mk{position:absolute;top:-16px;width:6px;height:54px;background:#fff;border-radius:3px;left:0;animation:mk 2.4s cubic-bezier(.2,.7,.2,1) both;animation-delay:calc(var(--in) + var(--d,0s))}
+@keyframes mk{from{left:82%}to{left:49%}}
+.bar .lbl{position:absolute;top:44px;font-size:16px;color:var(--muted);font-weight:600;transform:translateX(-50%)}
+
+/* S7 */
+.arch{position:absolute;left:0;right:0;top:230px;bottom:0}
+.arch svg{position:absolute;inset:0;width:1920px;height:850px;overflow:visible}
+.node{position:absolute;width:340px;transform:translate(-50%,-50%);background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:18px 22px;display:grid;grid-template-columns:52px 1fr;gap:14px;align-items:center}
+.node .ic{font-size:34px}
+.node b{display:block;font-size:22px;font-weight:800;letter-spacing:-.3px}
+.node span{display:block;font-size:16px;color:var(--muted);line-height:1.3;margin-top:3px}
+.node.pop{animation-name:popc}
+@keyframes popc{from{opacity:0;transform:translate(-50%,-50%) scale(.6)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.core{position:absolute;left:960px;top:425px;width:250px;height:250px;margin:-125px 0 0 -125px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#12324A,#0B1C2B);border:3px solid var(--cyan);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 18px rgba(0,212,255,.07),0 0 80px rgba(0,212,255,.35)}
+.core .ic{font-size:64px}
+.core b{font-size:26px;font-weight:900;margin-top:6px}
+.core span{font-size:15px;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;font-weight:700}
+.core.pop{animation-name:pop}
+.aline{fill:none;stroke:rgba(0,212,255,.55);stroke-width:3}
+
+/* S8 */
+.agents{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:54px}
+.ag{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:18px;padding:34px 28px;min-height:170px;display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
+.ag .g{font-size:22px;font-weight:900;letter-spacing:1px;color:#000;background:var(--acc,var(--cyan));border-radius:12px;padding:10px 12px;min-width:72px;text-align:center}
+.ag b{display:block;font-size:26px;font-weight:800;letter-spacing:-.3px}
+.ag span{display:block;font-size:19px;color:var(--muted);line-height:1.3;margin-top:4px}
+.ag.h{border-color:rgba(224,58,60,.6);background:rgba(224,58,60,.08)}
+.ag.h .g{background:var(--red);color:#fff}
+
+/* S9 */
+.team{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:50px}
+.tm{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:22px;padding:48px 30px;text-align:center}
+.tm .av{width:118px;height:118px;border-radius:50%;margin:0 auto 22px;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--red),#8f1e20);box-shadow:0 0 0 8px rgba(224,58,60,.12)}
+.tm b{display:block;font-size:26px;font-weight:800;letter-spacing:-.3px}
+.tm span{display:block;font-size:20px;color:var(--muted);margin-top:8px;line-height:1.3}
+.world{display:flex;gap:18px;margin-top:64px}
+.world .chip{flex:1;justify-content:center;font-size:23px;padding:18px 20px}
+.world .chip em{font-style:normal;font-size:30px}
+.world .chip span{color:var(--muted);font-weight:500}
+
+/* S10 */
+.s10 .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.s10 h1{font-size:96px;max-width:1500px}
+.s10 .cta{display:flex;gap:18px;margin-top:44px}
+.s10 .cta .chip{font-size:24px;padding:16px 28px}
+.s10 .contact{margin-top:60px;display:grid;grid-template-columns:repeat(3,auto);gap:70px;font-size:26px;font-weight:600}
+.s10 .contact small{display:block;font-size:16px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:700}
+.s10 .cnpj{position:absolute;bottom:70px;left:0;right:0;text-align:center;font-size:18px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
+.s10 .mark{font-size:140px;letter-spacing:-7px;margin-top:80px}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="bg-grid"></div>
+  <div class="glow r"></div>
+  <div class="glow c"></div>
+
+  <!-- ===== S1 · Abertura ===== -->
+  <section class="scene s1" style="--in:0s;--out:7.6s">
+    <svg class="lines" viewBox="0 0 1920 1080">
+      <path class="draw" style="--d:.3s" d="M-50 820 C 400 700, 700 900, 1100 760 S 1700 640, 2000 700" fill="none" stroke="rgba(224,58,60,.5)" stroke-width="3" pathLength="1"/>
+      <path class="draw" style="--d:.9s" d="M-50 900 C 500 820, 900 980, 1400 860 S 1800 760, 2000 820" fill="none" stroke="rgba(0,212,255,.35)" stroke-width="2" pathLength="1"/>
+      <path class="draw" style="--d:.6s" d="M-50 160 C 300 260, 800 120, 1200 220 S 1700 300, 2000 200" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2" pathLength="1"/>
+    </svg>
+    <div class="center">
+      <div class="mark pop" style="--d:.2s">Videl<b>.</b></div>
+      <div class="mark-sub r" style="--d:.7s">Transporte &amp; Logística</div>
+      <div class="mark-line wipe" style="--d:1.1s"></div>
+      <div class="tag r" style="--d:1.5s">Logística <b>asset-light</b> com cobertura nacional e uma <b>torre de controle operada por IA</b>.</div>
+    </div>
+    <div class="bottom r" style="--d:2.4s">Apresentação institucional · Empresa + Tecnologia · 2026</div>
+  </section>
+
+  <!-- ===== S2 · Quem somos ===== -->
+  <section class="scene s2" style="--in:8s;--out:19.6s">
+    <div class="pad">
+      <div class="cols">
+        <div>
+          <div class="eyebrow r" style="--d:.1s">Quem somos</div>
+          <h1 class="r" style="--d:.3s">Transporte dedicado e spot, <em>sem fronteira de estado</em></h1>
+          <p class="lead r" style="--d:.7s">A Videl opera fretes rodoviários em todo o Brasil com modelo <b>asset-light</b>: rede qualificada de motoristas agregados, contratação ágil e acompanhamento de ponta a ponta.</p>
+          <div class="chips">
+            <div class="chip r" style="--d:1.3s"><i></i>Cobertura nacional <small>· rodoviário porta a porta</small></div>
+            <div class="chip r" style="--d:1.6s;--acc:var(--yel)"><i></i>Especialistas na cadeia solar <small>· módulos, inversores, trackers e kits</small></div>
+            <div class="chip r" style="--d:1.9s;--acc:var(--cyan)"><i></i>Base em São Paulo <small>· foco Nordeste e Norte, rotas em todo o país</small></div>
+          </div>
+        </div>
+        <div class="truckbox r" style="--d:.9s">
+          <svg viewBox="0 0 760 520">
+            <line class="road" x1="0" y1="420" x2="760" y2="420"/>
+            <line class="roadline" x1="0" y1="420" x2="760" y2="420"/>
+            <g transform="translate(70,230)"><g class="truck">
+              <rect x="0" y="0" width="420" height="150" rx="14" fill="#1E293B" stroke="#3A4A6A" stroke-width="3"/>
+              <rect x="22" y="22" width="376" height="106" rx="8" fill="rgba(255,255,255,.04)"/>
+              <text x="210" y="92" text-anchor="middle" font-family="Inter" font-weight="900" font-size="54" fill="#E03A3C" letter-spacing="-2">Videl</text>
+              <path d="M420 40 h120 a22 22 0 0 1 22 22 v88 h-142z" fill="#E03A3C"/>
+              <path d="M440 52 h92 a12 12 0 0 1 12 12 v34 h-104z" fill="#0B0E14" opacity=".85"/>
+              <rect x="420" y="130" width="142" height="20" fill="#B62C2E"/>
+              <rect x="0" y="150" width="562" height="16" fill="#0F1524"/>
+              <g class="wheel"><circle cx="90" cy="176" r="30" fill="#0B0E14" stroke="#3A4A6A" stroke-width="6"/><circle cx="90" cy="176" r="10" fill="#3A4A6A"/><rect x="87" y="150" width="6" height="52" fill="#3A4A6A"/></g>
+              <g class="wheel"><circle cx="160" cy="176" r="30" fill="#0B0E14" stroke="#3A4A6A" stroke-width="6"/><circle cx="160" cy="176" r="10" fill="#3A4A6A"/><rect x="157" y="150" width="6" height="52" fill="#3A4A6A"/></g>
+              <g class="wheel"><circle cx="500" cy="176" r="30" fill="#0B0E14" stroke="#3A4A6A" stroke-width="6"/><circle cx="500" cy="176" r="10" fill="#3A4A6A"/><rect x="497" y="150" width="6" height="52" fill="#3A4A6A"/></g>
+            </g></g>
+            <g font-family="Inter" font-size="16" fill="#98A0B3" font-weight="600">
+              <text x="0" y="470">FÁBRICA · PORTO · CD</text>
+              <text x="760" y="470" text-anchor="end">OBRA · USINA · CLIENTE</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S3 · Operação ao vivo / malha ===== -->
+  <section class="scene s3" style="--in:20s;--out:32.6s">
+    <div class="pad">
+      <div class="cols">
+        <div class="mapwrap r" style="--d:.2s" id="map"></div>
+        <div>
+          <div class="eyebrow r" style="--d:.1s">Operação ao vivo</div>
+          <h1 class="r" style="--d:.3s;font-size:72px">Rotas recentes da <em>nossa malha</em></h1>
+          <p class="lead r" style="--d:.6s">Uma amostra real das últimas semanas: kits solares, equipamentos e carga geral cruzando o país.</p>
+          <div class="routes">
+            <div class="rt r" style="--d:1.2s"><div>Nova Odessa/SP <span class="arrow">→</span> Curitiba/PR</div><span class="bdg">KITS SOLARES ✓</span></div>
+            <div class="rt r" style="--d:2.4s"><div>Itaquaquecetuba/SP <span class="arrow">→</span> Trindade/GO</div><span class="bdg">KITS SOLARES ✓</span></div>
+            <div class="rt r" style="--d:3.6s"><div>Aguaí/SP <span class="arrow">→</span> Irecê/BA</div><span class="bdg">CARGA GERAL ✓</span></div>
+            <div class="rt r" style="--d:4.8s"><div>Três Lagoas/MS <span class="arrow">→</span> São José do Xingu/MT</div><span class="bdg o">EM ROTA</span></div>
+            <div class="rt r" style="--d:6s"><div>Nova Odessa/SP <span class="arrow">→</span> Londrina/PR</div><span class="bdg b">PROGRAMADO</span></div>
+          </div>
+          <div class="stats">
+            <div class="st r" style="--d:7.4s"><b>8+</b><span>estados atendidos nas últimas semanas</span></div>
+            <div class="st r" style="--d:7.7s;--acc:var(--green)"><b>100%</b><span>das operações com CT-e e seguro averbado</span></div>
+            <div class="st r" style="--d:8s;--acc:var(--cyan)"><b>24h</b><span>da cotação à contratação do veículo</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S4 · Como operamos ===== -->
+  <section class="scene s4" style="--in:33s;--out:43.6s">
+    <div class="pad">
+      <div class="eyebrow r" style="--d:.1s">O que fazemos</div>
+      <h1 class="r" style="--d:.3s">Do porto à usina, <em>porta a porta</em></h1>
+      <div class="grid">
+        <div class="card r" style="--d:.9s;--acc:var(--yel)"><div class="ic">🔆</div><h3>Cadeia solar completa</h3><p>Módulos fotovoltaicos, inversores, estruturas, trackers e kits completos — incluindo carga paletizada em pé, com veículo e amarração adequados.</p></div>
+        <div class="card r" style="--d:1.2s;--acc:var(--red)"><div class="ic">🚛</div><h3>Porta a porta</h3><p>Coleta na fábrica, porto ou CD e entrega na obra ou usina, com ajudantes para descarga e agendamento direto com o destinatário.</p></div>
+        <div class="card r" style="--d:1.5s;--acc:var(--green)"><div class="ic">🛡️</div><h3>Carga segurada</h3><p>Apólice RCV e RCDC com seguradora de primeira linha, averbação eletrônica de cada CT-e e documentação fiscal 100% digital.</p></div>
+        <div class="card r" style="--d:1.8s;--acc:var(--cyan)"><div class="ic">⏱️</div><h3>Cotação em 24h</h3><p>Composição de custo aberta, linha a linha, e frete-teste sem compromisso para você comparar com o que paga hoje.</p></div>
+      </div>
+      <div class="segs">
+        <div class="chip r" style="--d:2.6s;--acc:var(--yel)"><i></i>Energia Solar</div>
+        <div class="chip r" style="--d:2.75s;--acc:var(--muted)"><i></i>Metais e Siderurgia</div>
+        <div class="chip r" style="--d:2.9s;--acc:var(--orange)"><i></i>Alimentos</div>
+        <div class="chip r" style="--d:3.05s;--acc:var(--cyan)"><i></i>Distribuição B2B</div>
+        <div class="chip r" style="--d:3.2s;--acc:var(--red)"><i></i>Construção</div>
+        <div class="chip r" style="--d:3.35s;--acc:var(--vio)"><i></i>Químico</div>
+        <div class="chip r" style="--d:3.5s;--acc:var(--green)"><i></i>Elétrico</div>
+        <div class="chip r" style="--d:3.65s;--acc:var(--text)"><i></i>Contêineres e carga geral</div>
+      </div>
+      <div class="note r" style="--d:4.4s;margin-top:60px;max-width:1500px"><b>Limites da apólice de carga:</b> LMG R$ 1.000.000 por embarque · Grupo A até R$ 500.000 · contêineres até R$ 300.000 · RCV R$ 550.000 por veículo/viagem — averbação eletrônica antes de cada saída.</div>
+    </div>
+  </section>
+
+  <!-- ===== S5 · Tecnologia (capa) ===== -->
+  <section class="scene s5" style="--in:44s;--out:48.6s">
+    <div class="ring"></div><div class="ring b"></div>
+    <div class="center">
+      <div class="num r" style="--d:.1s">Parte 2 · Tecnologia</div>
+      <h1 class="r" style="--d:.3s">Uma torre de controle <em class="c">com IA de verdade</em></h1>
+      <p class="lead r" style="--d:.8s">No centro da operação está o <b>Moita Rev1</b>, nosso analista de logística virtual — com um humano aprovando cada passo crítico.</p>
+    </div>
+  </section>
+
+  <!-- ===== S6 · Moita Rev1 ===== -->
+  <section class="scene s6" style="--in:49s;--out:62.6s">
+    <div class="pad">
+      <div class="head">
+        <div>
+          <div class="eyebrow c r" style="--d:.1s">Moita Rev1 · IA operacional</div>
+          <h1 class="r" style="--d:.3s;font-size:72px">O maestro da <em class="c">operação logística</em></h1>
+        </div>
+        <div class="moita r" style="--d:.6s"><div class="av">🤖</div><div><b>Moita Rev1</b><span>Analista de Logística Virtual · Videl T&amp;L</span></div></div>
+      </div>
+      <div class="flow">
+        <div class="line"><i class="wipe" style="--d:1s;animation-duration:7s"></i></div>
+        <div class="steps">
+          <div class="step"><div class="n pop" style="--d:1s">📥</div><h4 class="r" style="--d:1.1s">Cotação</h4><p class="r" style="--d:1.2s">Captura a cotação do comercial na Plataforma Videl ou por e-mail</p></div>
+          <div class="step"><div class="n pop" style="--d:2s">📊</div><h4 class="r" style="--d:2.1s">Custo</h4><p class="r" style="--d:2.2s">Compara preço sugerido, mercado e meta de custo 60–62%</p></div>
+          <div class="step"><div class="n pop" style="--d:3s">📍</div><h4 class="r" style="--d:3.1s">Motorista</h4><p class="r" style="--d:3.2s">Busca por geolocalização, negocia via Telegram e WhatsApp</p></div>
+          <div class="step"><div class="n pop" style="--d:4s">🗂️</div><h4 class="r" style="--d:4.1s">Plataforma</h4><p class="r" style="--d:4.2s">Preenche motorista, veículo, datas e valores na Plataforma Videl</p></div>
+          <div class="step"><div class="n pop" style="--d:5s">✉️</div><h4 class="r" style="--d:5.1s">Cliente</h4><p class="r" style="--d:5.2s">Confirma embarque, motorista e previsão de coleta e entrega</p></div>
+          <div class="step"><div class="n pop" style="--d:6s">🧾</div><h4 class="r" style="--d:6.1s">CT-e rascunho</h4><p class="r" style="--d:6.2s">Prepara CT-e e MDF-e no Bsoft — humano revisa e emite</p></div>
+          <div class="step"><div class="n pop" style="--d:7s">📆</div><h4 class="r" style="--d:7.1s">Operação diária</h4><p class="r" style="--d:7.2s">KPIs, alertas e resumo enviados à equipe todos os dias</p></div>
+        </div>
+      </div>
+      <div class="foot2">
+        <div class="note r" style="--d:8.4s"><b>Humano no comando.</b> O Moita nunca emite documento sozinho: cria o rascunho, alerta e monitora — o analista revisa e aprova.</div>
+        <div class="gauge r" style="--d:8.8s">
+          <div class="t"><span>Custo do frete sobre o valor da operação</span><b>meta 60–62%</b></div>
+          <div class="bar"><div class="zone"></div><div class="mk" style="--d:9.2s"></div><span class="lbl" style="left:50%">60–62% ideal</span><span class="lbl" style="left:82%">&gt;65% crítico</span><span class="lbl" style="left:12%">&lt;60% margem excelente</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S7 · Stack ===== -->
+  <section class="scene s7" style="--in:63s;--out:77.6s">
+    <div class="pad" style="bottom:auto">
+      <div class="eyebrow c r" style="--d:.1s">Stack Videl</div>
+      <h1 class="r" style="--d:.3s;font-size:72px">Plataforma própria, <em class="c">integrada de ponta a ponta</em></h1>
+    </div>
+    <div class="arch" id="arch"></div>
+  </section>
+
+  <!-- ===== S8 · Agentes ===== -->
+  <section class="scene s8" style="--in:78s;--out:87.6s">
+    <div class="pad">
+      <div class="eyebrow c r" style="--d:.1s">Time de agentes de IA</div>
+      <h1 class="r" style="--d:.3s;font-size:72px">Uma diretoria virtual <em class="c">ao lado da equipe</em></h1>
+      <div class="agents">
+        <div class="ag r" style="--d:.8s;--acc:var(--red)"><div class="g">G0</div><div><b>Secretária Executiva</b><span>Agenda, e-mails, prioridades e briefing diário do CEO</span></div></div>
+        <div class="ag r" style="--d:.95s"><div class="g">G1</div><div><b>COO</b><span>Operações, rotas, motoristas, KPIs (OTD, custo/km, OTIF)</span></div></div>
+        <div class="ag r" style="--d:1.1s"><div class="g">G2</div><div><b>CMO</b><span>Marca, conteúdo, site e materiais comerciais</span></div></div>
+        <div class="ag r" style="--d:1.25s"><div class="g">G3</div><div><b>Engenheiro de Dados</b><span>Pipelines, ETL, dashboards e automações</span></div></div>
+        <div class="ag r" style="--d:1.4s"><div class="g">G5</div><div><b>Controller</b><span>DRE, fluxo de caixa e rentabilidade por rota e cliente</span></div></div>
+        <div class="ag r" style="--d:1.55s"><div class="g">G6</div><div><b>Compliance</b><span>ANTT, LGPD, segurança da informação e auditoria</span></div></div>
+        <div class="ag r" style="--d:1.7s"><div class="g">G7</div><div><b>Diretor Comercial</b><span>Estratégia, pricing, ICP e funil consultivo</span></div></div>
+        <div class="ag r" style="--d:1.85s"><div class="g">G8</div><div><b>Hunter de Vendas</b><span>Prospecção B2B, LinkedIn e negociação com motoristas</span></div></div>
+        <div class="ag r" style="--d:2s"><div class="g">G9</div><div><b>Cálculo de Frete</b><span>Custo/km, piso ANTT, GRIS, ad valorem, pedágio e margem</span></div></div>
+        <div class="ag r" style="--d:2.15s"><div class="g">G10</div><div><b>Preços e Tendências</b><span>Benchmark de frete, sazonalidade e cenário macro</span></div></div>
+        <div class="ag r" style="--d:2.3s;--acc:var(--green)"><div class="g">MOITA</div><div><b>Analista de Logística</b><span>Cotação → motorista → documentos → operação diária</span></div></div>
+        <div class="ag h r" style="--d:2.6s"><div class="g">CEO</div><div><b>Humano decide</b><span>Todos respondem ao CEO; cada passo crítico passa por uma pessoa</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S9 · Time + mundo ===== -->
+  <section class="scene s9" style="--in:88s;--out:96.6s">
+    <div class="pad">
+      <div class="eyebrow r" style="--d:.1s">Quem faz acontecer</div>
+      <h1 class="r" style="--d:.3s;font-size:72px">Gente de logística, <em>com tecnologia na mão</em></h1>
+      <div class="team">
+        <div class="tm r" style="--d:.8s"><div class="av">GC</div><b>Gearlison Caires</b><span>Diretor Geral · trajetória em multinacional, mercado chinês, Europa e África</span></div>
+        <div class="tm r" style="--d:1s"><div class="av">JA</div><b>José Adailton (Adam)</b><span>Gerente de Logística &amp; Supply · desenha a operação: veículo, amarração e prazo</span></div>
+        <div class="tm r" style="--d:1.2s"><div class="av">AF</div><b>Anderson Fernandes</b><span>Business Development · cotação em até 24h e frete-teste</span></div>
+        <div class="tm r" style="--d:1.4s"><div class="av">HM</div><b>Hudson Melônio</b><span>Coordenador de Logística · acompanha cada embarque em tempo real</span></div>
+      </div>
+      <div class="world">
+        <div class="chip r" style="--d:2.2s"><em>🇧🇷</em>Brasil <span>· operação nacional</span></div>
+        <div class="chip r" style="--d:2.35s"><em>🇨🇳</em>China <span>· sourcing e fornecedores</span></div>
+        <div class="chip r" style="--d:2.5s"><em>🇪🇺</em>Europa <span>· parcerias e distribuição</span></div>
+        <div class="chip r" style="--d:2.65s"><em>🌍</em>África <span>· rede de contatos</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== S10 · Encerramento ===== -->
+  <section class="scene s10" style="--in:97s;--out:105.4s">
+    <div class="center">
+      <div class="eyebrow r" style="--d:.1s;justify-content:center">Vamos conversar?</div>
+      <h1 class="r" style="--d:.3s">Sua carga merece uma <em>logística à altura</em></h1>
+      <div class="cta">
+        <div class="chip r" style="--d:.9s"><i></i>Cotação em até 24h</div>
+        <div class="chip r" style="--d:1.05s;--acc:var(--green)"><i></i>Frete-teste sem compromisso</div>
+        <div class="chip r" style="--d:1.2s;--acc:var(--cyan)"><i></i>Atendimento nacional</div>
+      </div>
+      <div class="contact">
+        <div class="r" style="--d:1.7s"><small>Site</small>videltel.com.br</div>
+        <div class="r" style="--d:1.85s"><small>Comercial</small>comercial@videltel.com.br</div>
+        <div class="r" style="--d:2s"><small>WhatsApp</small>(11) 93418-0768</div>
+      </div>
+      <div class="mark r" style="--d:2.6s">Videl<b>.</b></div>
+    </div>
+    <div class="cnpj r" style="--d:2.9s">Videl Transporte &amp; Logística · CNPJ 63.147.064/0001-30</div>
+  </section>
+
+  <div class="wm"><i></i>VIDEL <span>Transporte &amp; Logística</span></div>
+  <div class="foot">videltel.com.br</div>
+  <div class="vignette"></div>
+  <div class="prog"></div>
+</div>
+
+<script>
+(function(){
+  // ---------- Mapa do Brasil (projeção equirretangular simplificada) ----------
+  var outline=[[-60.6,5.2],[-59.8,4.4],[-58.5,1.5],[-56.5,1.9],[-54.0,2.3],[-52.5,2.2],[-51.6,4.2],[-51.0,3.0],[-50.3,1.5],[-50.0,0.1],[-48.5,-0.5],[-47.5,-0.8],[-46.0,-1.1],[-44.5,-2.4],[-43.0,-2.4],[-41.8,-2.9],[-40.0,-2.85],[-38.5,-3.7],[-37.2,-4.9],[-35.2,-5.2],[-34.8,-7.1],[-34.9,-8.1],[-35.7,-9.7],[-37.0,-11.0],[-38.5,-13.0],[-39.0,-15.0],[-39.7,-17.8],[-40.3,-20.3],[-41.0,-22.0],[-43.2,-23.0],[-45.0,-23.7],[-46.3,-24.0],[-48.5,-25.5],[-48.6,-27.6],[-50.0,-30.0],[-51.5,-32.0],[-53.4,-33.7],[-55.5,-31.0],[-57.6,-30.2],[-56.0,-28.5],[-55.5,-28.0],[-54.3,-25.5],[-54.6,-24.0],[-55.6,-23.5],[-55.4,-22.5],[-57.9,-22.1],[-57.6,-20.0],[-58.2,-17.5],[-58.0,-16.3],[-60.2,-15.1],[-60.5,-13.5],[-63.0,-12.5],[-65.3,-11.5],[-66.6,-9.9],[-68.0,-11.1],[-69.5,-10.9],[-70.6,-9.5],[-72.2,-9.9],[-73.8,-7.6],[-72.9,-5.0],[-71.5,-4.4],[-69.9,-4.3],[-70.0,-2.2],[-69.4,-1.0],[-70.0,0.5],[-69.2,1.0],[-67.0,1.2],[-65.5,0.8],[-64.0,4.0],[-62.7,4.0],[-61.0,4.5],[-60.6,5.2]];
+  var W=780,H=780,lonMin=-74.5,lonMax=-33.5,latMax=5.8,latMin=-34.2;
+  var k=Math.min(W/(lonMax-lonMin),H/(latMax-latMin));
+  function P(lon,lat){return [((lon-lonMin)*k+ (W-(lonMax-lonMin)*k)/2).toFixed(1), ((latMax-lat)*k).toFixed(1)];}
+  var cities={
+    'São Paulo':[-46.63,-23.55],'Nova Odessa':[-47.30,-22.78],'Curitiba':[-49.27,-25.43],'Itaquaquecetuba':[-46.35,-23.49],'Trindade':[-49.49,-16.65],
+    'Aguaí':[-46.97,-22.06],'Irecê':[-41.86,-11.30],'Três Lagoas':[-51.68,-20.79],'S. J. do Xingu':[-52.75,-10.80],'Londrina':[-51.17,-23.31],
+    'Recife':[-34.88,-8.05],'Fortaleza':[-38.53,-3.72],'Belém':[-48.50,-1.46],'Salvador':[-38.51,-12.97],'Itajaí':[-48.66,-26.91]
+  };
+  var routes=[
+    ['Nova Odessa','Curitiba','#22D38A',1.2],['Itaquaquecetuba','Trindade','#22D38A',2.4],['Aguaí','Irecê','#22D38A',3.6],
+    ['Três Lagoas','S. J. do Xingu','#FF8A3D',4.8],['Nova Odessa','Londrina','#00D4FF',6.0],
+    ['São Paulo','Salvador','rgba(224,58,60,.55)',7.0],['São Paulo','Recife','rgba(224,58,60,.55)',7.2],['São Paulo','Fortaleza','rgba(224,58,60,.55)',7.4],['São Paulo','Belém','rgba(224,58,60,.55)',7.6]
+  ];
+  var svg='<svg viewBox="0 0 780 780"><path class="br" d="M'+outline.map(function(p){return P(p[0],p[1]).join(' ')}).join(' L')+' Z"/>';
+  var dots='';
+  routes.forEach(function(r){
+    var a=P.apply(null,cities[r[0]]),b=P.apply(null,cities[r[1]]);
+    var mx=(+a[0]+ +b[0])/2, my=(+a[1]+ +b[1])/2;
+    var dx=+b[0]-+a[0], dy=+b[1]-+a[1], len=Math.hypot(dx,dy)||1;
+    var cx=mx - dy/len*len*0.22, cy=my + dx/len*len*0.22;
+    var d='M'+a[0]+' '+a[1]+' Q'+cx.toFixed(1)+' '+cy.toFixed(1)+' '+b[0]+' '+b[1];
+    svg+='<path class="route draw" pathLength="1" style="--d:'+r[3]+'s" d="'+d+'" stroke="'+r[2]+'"/>';
+    if(r[3]<7) dots+='<div class="mv" style="--d:'+r[3]+'s;--c:'+r[2]+';offset-path:path(\''+d+'\')"></div>';
+  });
+  var labels={'Nova Odessa':['end',-16,-4],'São Paulo':['start',16,18],'Três Lagoas':['end',-16,4],'Londrina':['end',-16,18],'Curitiba':['start',16,10],'Trindade':['start',16,4],'S. J. do Xingu':['start',16,-2],'Irecê':['end',-16,4],'Salvador':['start',16,6],'Recife':['start',16,6],'Fortaleza':['start',16,0],'Belém':['end',-16,-4]};
+  var shown={};
+  routes.forEach(function(r){[r[0],r[1]].forEach(function(c){
+    if(shown[c])return; shown[c]=1; var p=P.apply(null,cities[c]);
+    var L=labels[c];
+    svg+='<g class="pop" style="--d:'+(r[3]-0.2)+'s;transform-box:fill-box;transform-origin:center"><circle class="city" cx="'+p[0]+'" cy="'+p[1]+'" r="5"/><circle cx="'+p[0]+'" cy="'+p[1]+'" r="11" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="1.5"/></g>';
+    if(L) svg+='<text class="cityl pop" style="--d:'+(r[3]-0.1)+'s;transform-box:fill-box;transform-origin:center" x="'+(+p[0]+L[1])+'" y="'+(+p[1]+L[2])+'" text-anchor="'+L[0]+'">'+c+'</text>';
+  });});
+  svg+='</svg>';
+  document.getElementById('map').innerHTML=svg+dots;
+
+  // ---------- Arquitetura ----------
+  var C=[960,425];
+  var nodes=[
+    [960,110,'🗂️','Plataforma Videl','videltel.com.br/dashboard · embarques, cotações, clientes, motoristas',0.9],
+    [1400,215,'📊','FreteBI','BI de fretes em tempo real · preço por rota, demanda por região',1.3],
+    [1590,425,'🧾','Bsoft CT-e / MDF-e','emissão fiscal via API · rascunho pelo Moita, emissão humana',1.7],
+    [1400,640,'🔗','Integrações','Gmail · Drive · Calendar · Zapier · WhatsApp · Telegram · Lusha · Miro',2.1],
+    [960,745,'✉️','Motor comercial','cadência de e-mails com gate de seguro · Python, 47 testes, roda às 8h',2.5],
+    [520,640,'📋','Controle de Atividades','Google Sheets + Apps Script · painel ao vivo a cada 60 segundos',2.9],
+    [330,425,'☁️','Proxy Cloudflare','Worker somente leitura · credenciais em segredo, nunca no navegador',3.3],
+    [520,215,'🤖','Painel Moita Rev1','painel operacional · alertas, chat da equipe e status das operações',3.7]
+  ];
+  var a='<svg viewBox="0 0 1920 850">';
+  nodes.forEach(function(n){a+='<line class="aline draw" pathLength="1" style="--d:'+(n[5]-0.35)+'s" x1="'+C[0]+'" y1="'+C[1]+'" x2="'+n[0]+'" y2="'+n[1]+'"/>';});
+  a+='</svg>';
+  a+='<div class="core pop" style="--d:.5s"><div class="ic">🤖</div><b>Moita Rev1</b><span>IA operacional</span></div>';
+  nodes.forEach(function(n){a+='<div class="node pop" style="--d:'+n[5]+'s;left:'+n[0]+'px;top:'+n[1]+'px"><div class="ic">'+n[2]+'</div><div><b>'+n[3]+'</b><span>'+n[4]+'</span></div></div>';});
+  document.getElementById('arch').innerHTML=a;
+})();
+</script>
+</body>
+</html>
