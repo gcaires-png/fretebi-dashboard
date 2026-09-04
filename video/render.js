@@ -4,7 +4,7 @@ const { spawn } = require('child_process');
 (async () => {
   const [S, FF, out, fpsArg, durArg] = process.argv.slice(2);
   const fps = Number(fpsArg || 30), dur = Number(durArg || 106.5), total = Math.round(fps * dur);
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
   page.on('pageerror', e => console.log('PAGEERROR', e.message));
   await page.goto('file://' + S + '/videl-apresentacao.html');
