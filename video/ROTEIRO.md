@@ -10,8 +10,8 @@ terceiros) e legendas em português embutidas (faixa `mov_text`) + arquivo
 
 | # | Tempo | Cena | Conteúdo |
 |---|---|---|---|
-| 1 | 0:00–0:08 | Abertura | Marca Videl · "Logística asset-light com torre de controle operada por IA" |
-| 2 | 0:08–0:20 | Quem somos | Transporte dedicado e spot; modelo asset-light; cobertura nacional; cadeia solar; base SP |
+| 1 | 0:00–0:08 | Abertura | Marca Videl · "Dois modelos: frota própria e asset-light, torre de controle operada por IA" |
+| 2 | 0:08–0:20 | Quem somos | Transporte dedicado e spot; frota própria + asset-light; cobertura nacional; cadeia solar; base SP |
 | 3 | 0:20–0:33 | Operação ao vivo | Mapa do Brasil com rotas reais recentes; 8+ estados, 100% CT-e + seguro, 24h |
 | 4 | 0:33–0:44 | O que fazemos | Cadeia solar, porta a porta, carga segurada, cotação em 24h; segmentos; limites da apólice |
 | 5 | 0:44–0:49 | Capa Tecnologia | "Uma torre de controle com IA de verdade" |

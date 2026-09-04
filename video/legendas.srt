@@ -1,6 +1,6 @@
 1
 00:00:01,000 --> 00:00:07,200
-Videl Transporte & Logística: logística asset-light com cobertura nacional e uma torre de controle operada por inteligência artificial.
+Videl Transporte & Logística: dois modelos, frota própria e asset-light, cobertura nacional e uma torre de controle operada por inteligência artificial.
 
 2
 00:00:08,500 --> 00:00:14,000
@@ -8,7 +8,7 @@ A Videl opera fretes rodoviários em todo o Brasil, com transporte dedicado e sp
 
 3
 00:00:14,200 --> 00:00:19,400
-Modelo asset-light: rede qualificada de motoristas agregados, contratação ágil e acompanhamento de ponta a ponta.
+Frota própria para operações dedicadas e asset-light com rede qualificada de agregados: contratação ágil e acompanhamento de ponta a ponta.
 
 4
 00:00:20,500 --> 00:00:26,500

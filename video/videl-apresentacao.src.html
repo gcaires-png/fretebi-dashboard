@@ -60,6 +60,9 @@ h1 em.c{color:var(--cyan)}
 .mark-line{width:220px;height:6px;background:var(--red);border-radius:3px;margin:38px auto 30px}
 .s1 .tag{font-size:34px;color:var(--muted);font-weight:500;max-width:1100px;line-height:1.4}
 .s1 .tag b{color:var(--text);font-weight:700}
+.s1 .models{display:flex;gap:16px;margin-top:34px}
+.s1 .models .chip{font-size:24px;padding:14px 26px}
+.s1 .models small{color:var(--muted);font-weight:500}
 .s1 .bottom{position:absolute;bottom:80px;left:0;right:0;text-align:center;font-size:20px;letter-spacing:4px;text-transform:uppercase;color:var(--muted)}
 .s1 svg.lines{position:absolute;inset:0;width:1920px;height:1080px;opacity:.55}
 
@@ -167,12 +170,12 @@ h1 em.c{color:var(--cyan)}
 .ag.h .g{background:var(--red);color:#fff}
 
 /* S9 */
-.team{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:50px}
-.tm{background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.015));border:1px solid var(--border);border-radius:24px;padding:52px 36px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.tm .av{width:124px;height:124px;border-radius:50%;margin:0 auto 26px;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--red),#D73954);box-shadow:0 0 0 10px rgba(230,57,70,.15),0 4px 20px rgba(230,57,70,.3)}
-.tm b{display:block;font-size:26px;font-weight:800;letter-spacing:-.3px}
-.tm span{display:block;font-size:20px;color:var(--muted);margin-top:8px;line-height:1.3}
-.world{display:flex;gap:18px;margin-top:64px}
+.team{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:40px}
+.tm{background:linear-gradient(135deg,rgba(255,255,255,.05),rgba(255,255,255,.015));border:1px solid var(--border);border-radius:22px;padding:26px 22px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.tm .av{width:84px;height:84px;border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--acc,var(--red)),color-mix(in srgb,var(--acc,var(--red)) 70%,#000));box-shadow:0 0 0 8px color-mix(in srgb,var(--acc,var(--red)) 15%,transparent),0 4px 20px color-mix(in srgb,var(--acc,var(--red)) 30%,transparent)}
+.tm b{display:block;font-size:23px;font-weight:800;letter-spacing:-.3px}
+.tm span{display:block;font-size:17px;color:var(--muted);margin-top:6px;line-height:1.3}
+.world{display:flex;gap:18px;margin-top:34px}
 .world .chip{flex:1;justify-content:center;font-size:23px;padding:18px 20px}
 .world .chip em{font-style:normal;font-size:30px}
 .world .chip span{color:var(--muted);font-weight:500}
@@ -205,7 +208,8 @@ h1 em.c{color:var(--cyan)}
       <div class="mark pop" style="--d:.2s">Videl<b>.</b></div>
       <div class="mark-sub r" style="--d:.7s">Transporte &amp; Logística</div>
       <div class="mark-line wipe" style="--d:1.1s"></div>
-      <div class="tag r" style="--d:1.5s">Logística <b>asset-light</b> com cobertura nacional e uma <b>torre de controle operada por IA</b>.</div>
+      <div class="tag r" style="--d:1.5s">Dois modelos, <b>frota própria</b> e <b>asset-light</b>, cobertura nacional e uma <b>torre de controle operada por IA</b>.</div>
+      <div class="models r" style="--d:2s"><div class="chip" style="--acc:var(--red)"><i></i>Frota própria <small>· dedicado</small></div><div class="chip" style="--acc:var(--cyan)"><i></i>Asset-light <small>· rede de agregados</small></div></div>
     </div>
     <div class="bottom r" style="--d:2.4s">Apresentação institucional · Empresa + Tecnologia · 2026</div>
   </section>
@@ -217,9 +221,9 @@ h1 em.c{color:var(--cyan)}
         <div>
           <div class="eyebrow r" style="--d:.1s">Quem somos</div>
           <h1 class="r" style="--d:.3s">Transporte dedicado e spot, <em>sem fronteira de estado</em></h1>
-          <p class="lead r" style="--d:.7s">A Videl opera fretes rodoviários em todo o Brasil com modelo <b>asset-light</b>: rede qualificada de motoristas agregados, contratação ágil e acompanhamento de ponta a ponta.</p>
+          <p class="lead r" style="--d:.7s">A Videl opera fretes rodoviários em todo o Brasil em <b>dois modelos</b>: <b>frota própria</b> para operações dedicadas e <b>asset-light</b>, com rede qualificada de motoristas agregados, contratação ágil e acompanhamento de ponta a ponta.</p>
           <div class="chips">
-            <div class="chip r" style="--d:1.3s"><i></i>Cobertura nacional <small>· rodoviário porta a porta</small></div>
+            <div class="chip r" style="--d:1.3s"><i></i>Frota própria + asset-light <small>· dedicado e spot, porta a porta</small></div>
             <div class="chip r" style="--d:1.6s;--acc:var(--yel)"><i></i>Especialistas na cadeia solar <small>· módulos, inversores, trackers e kits</small></div>
             <div class="chip r" style="--d:1.9s;--acc:var(--cyan)"><i></i>Base em São Paulo <small>· foco Nordeste e Norte, rotas em todo o país</small></div>
           </div>
@@ -380,16 +384,20 @@ h1 em.c{color:var(--cyan)}
       <div class="eyebrow r" style="--d:.1s">Quem faz acontecer</div>
       <h1 class="r" style="--d:.3s;font-size:72px">Gente de logística, <em>com tecnologia na mão</em></h1>
       <div class="team">
-        <div class="tm r" style="--d:.8s"><div class="av">GC</div><b>Gearlison Caires</b><span>Diretor Geral · trajetória em multinacional, mercado chinês, Europa e África</span></div>
-        <div class="tm r" style="--d:1s"><div class="av">JA</div><b>José Adailton (Adam)</b><span>Gerente de Logística &amp; Supply · desenha a operação: veículo, amarração e prazo</span></div>
-        <div class="tm r" style="--d:1.2s"><div class="av">AF</div><b>Anderson Fernandes</b><span>Business Development · cotação em até 24h e frete-teste</span></div>
-        <div class="tm r" style="--d:1.4s"><div class="av">HM</div><b>Hudson Melônio</b><span>Coordenador de Logística · acompanha cada embarque em tempo real</span></div>
+        <div class="tm r" style="--d:.8s"><div class="av">GC</div><b>Gearlison Caires</b><span>Diretor Geral · multinacional, China, Europa e África</span></div>
+        <div class="tm r" style="--d:.95s"><div class="av">JF</div><b>Jennifer Freitas</b><span>Administrativo · financeiro, documentos e rotina da operação</span></div>
+        <div class="tm r" style="--d:1.1s"><div class="av">JA</div><b>José Adailton</b><span>Comercial · São Paulo · desenha a operação com o cliente</span></div>
+        <div class="tm r" style="--d:1.25s"><div class="av">GV</div><b>Gideoni Vieira</b><span>Comercial · Maranhão · Nordeste e Norte</span></div>
+        <div class="tm r" style="--d:1.4s"><div class="av">AF</div><b>Anderson Fernandes</b><span>Business Development · cotação em 24h e frete-teste</span></div>
+        <div class="tm r" style="--d:1.55s"><div class="av">HM</div><b>Hudson Melônio</b><span>Coordenador de Logística · cada embarque em tempo real</span></div>
+        <div class="tm r" style="--d:1.7s;--acc:var(--cyan)"><div class="av">MN</div><b>Manuel Nunes</b><span>Desenvolvedor · Plataforma Videl, FreteBI e integrações</span></div>
+        <div class="tm r" style="--d:1.85s;--acc:var(--cyan)"><div class="av">🤖</div><b>Moita Rev1</b><span>IA operacional · trabalha ao lado do time, humano aprova</span></div>
       </div>
       <div class="world">
-        <div class="chip r" style="--d:2.2s"><em>🇧🇷</em>Brasil <span>· operação nacional</span></div>
-        <div class="chip r" style="--d:2.35s"><em>🇨🇳</em>China <span>· sourcing e fornecedores</span></div>
-        <div class="chip r" style="--d:2.5s"><em>🇪🇺</em>Europa <span>· parcerias e distribuição</span></div>
-        <div class="chip r" style="--d:2.65s"><em>🌍</em>África <span>· rede de contatos</span></div>
+        <div class="chip r" style="--d:2.1s"><em>🇧🇷</em>Brasil <span>· operação nacional</span></div>
+        <div class="chip r" style="--d:2.25s"><em>🇨🇳</em>China <span>· sourcing e fornecedores</span></div>
+        <div class="chip r" style="--d:2.4s"><em>🇪🇺</em>Europa <span>· parcerias e distribuição</span></div>
+        <div class="chip r" style="--d:2.55s"><em>🌍</em>África <span>· rede de contatos</span></div>
       </div>
     </div>
   </section>
